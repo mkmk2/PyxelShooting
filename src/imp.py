@@ -1,5 +1,4 @@
-
-#_DEBUG_ = True
+# _DEBUG_ = True
 _DEBUG_ = True
 
 WINDOW_W = 255
@@ -72,6 +71,7 @@ pl_level = 0        # レベル
 pl_levelup_eff = 0  # レベルアップ点滅
 PL_ITEM_LEVEL_UP = 3    # レベルアップする個数
 
+
 # --------------------------------------------------
 # スプライト表示の共通クラス
 class Sprite:
@@ -111,12 +111,13 @@ class Sprite:
 
         self.tmp_ctr = 0
 
+
 #  ------------------------------------------
 # 画面内チェック
 def CheckScreenIn(self):
     if self.screen_time >= SCREEN_TIME:
         SafeArea = 10           # 画面外のチェックする幅
-        if _DEBUG_ == True:
+        if _DEBUG_:
             SafeArea = -20       # Debug 画面の中で判定する
 
         if -SafeArea < self.pos_x and self.pos_x < WINDOW_W + SafeArea:
@@ -124,7 +125,7 @@ def CheckScreenIn(self):
                 return True     # 画面内
 
         self.death = 1          # 消す
-        if _DEBUG_ == True:
+        if _DEBUG_:
             print("out:"+self.__class__.__name__)
         return False            # 画面外
 
@@ -132,10 +133,10 @@ def CheckScreenIn(self):
         self.screen_time += 1
     return True     # 画面内
 
+
 #  ------------------------------------------
 def GetPl(self):
     if len(pl) > 0:
         return pl[0]
-    
+
     return 0
-    

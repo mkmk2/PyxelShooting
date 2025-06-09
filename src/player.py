@@ -2,7 +2,6 @@ import pyxel
 import random
 import math
 import imp
-import random
 import shooting_sub
 import effect
 
@@ -23,7 +22,7 @@ class Player(imp.Sprite):
 
     # コンストラクタ
     def __init__(self, x, y, id0, id1, item):
-        imp.Sprite.__init__(self, imp.OBJPL, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
+        imp.Sprite.__init__(self, imp.OBJPL, x, y, id0, id1, item)
 
         self.pl_dir = 0              # 上下のパターン切り替え
         self.pl_st0 = PLST_DEMO      # st0
@@ -54,9 +53,9 @@ class Player(imp.Sprite):
 
             if imp.game_status == imp.GAME_STATUS_MAIN:     # ゲーム中のみ死にチェック
                 if self.life <= 0:          # 0以下なら死ぬ
-                    self.pl_st0 = PLST_DEATH # 死に
-                    self.mv_wait = 10        # 爆発数
-                    self.mv_time = 0         # 爆発タイマー
+                    self.pl_st0 = PLST_DEATH    # 死に
+                    self.mv_wait = 10           # 爆発数
+                    self.mv_time = 0            # 爆発タイマー
 
                 if self.hit != 0:           # 何かにあたった
                     self.pl_st0 = PLST_DAMAGE  # ダメージ
@@ -73,7 +72,9 @@ class Player(imp.Sprite):
                 self.PlayerLeverMove()
 
                 # 弾セット(スペースキー)
-                if pyxel.btn(pyxel.KEY_SPACE) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_A) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_B):
+                if pyxel.btn(pyxel.KEY_SPACE)\
+                        or pyxel.btn(pyxel.GAMEPAD1_BUTTON_A)\
+                        or pyxel.btn(pyxel.GAMEPAD1_BUTTON_B):
                     self.ShotTime -= 1
                     if self.ShotTime < 0:
                         self.ShotTime = 6
@@ -122,33 +123,33 @@ class Player(imp.Sprite):
             if self.mv_time <= 0:
                 self.pl_st0 = PLST_PLAY
 
-
         elif self.pl_st0 == PLST_DEATH:           # 死に
             # 爆発
             self.mv_time -= 1
             if self.mv_time <= 0:
-                imp.eff.append(effect.Effect(self.pos_x - 10 + random.randrange(0, 20, 1), self.pos_y - 10 + random.randrange(0, 20, 1), imp.EFF_BOOM, 0, 0))
-                imp.eff.append(effect.Effect(self.pos_x - 10 + random.randrange(0, 20, 1), self.pos_y - 10 + random.randrange(0, 20, 1), imp.EFF_BOOM, 0, 0))
+                imp.eff.append(effect.Effect(self.pos_x - 10 + random.randrange(0, 20, 1),
+                                             self.pos_y - 10 + random.randrange(0, 20, 1), imp.EFF_BOOM, 0, 0))
+                imp.eff.append(effect.Effect(self.pos_x - 10 + random.randrange(0, 20, 1),
+                                             self.pos_y - 10 + random.randrange(0, 20, 1), imp.EFF_BOOM, 0, 0))
                 self.mv_time = 4
                 self.Display = self.mv_wait & 1      # 点滅
                 self.mv_wait -= 1
                 if self.mv_wait <= 0:
                     self.death = 1          # 死ぬ
-                    if imp._DEBUG_ == True:
+                    if imp._DEBUG_ is True:
                         print("pl die")
 
         elif self.pl_st0 == PLST_CLEAR:           # クリア
             if self.pos_y > -100:
                 self.pos_y -= 2
 
-
-    # 描画
+# 描画
     def draw(self):
         x = self.pos_x + self.pos_adjx
         y = self.pos_y + self.pos_adjy
-        
+
         if self.pl_dir == 0:
-            pyxel.blt(x, y, 0, 16, 0, 16 ,16, 0)      # 前
+            pyxel.blt(x, y, 0, 16, 0, 16, 16, 0)      # 前
 
             if pyxel.frame_count & 0x04:
                 pyxel.blt(self.pos_x + 0, self.pos_y + 8, 0, 8, 16, 6, 6, 0)
@@ -158,9 +159,9 @@ class Player(imp.Sprite):
                 pyxel.blt(self.pos_x - 6, self.pos_y + 8, 0, 8, 24, -6, 6, 0)
         else:
             if self.pl_dir == 1:
-                pyxel.blt(x, y, 0,  0, 0, 16 ,16, 0)      # 左
+                pyxel.blt(x, y, 0,  0, 0, 16, 16, 0)      # 左
             else:
-                pyxel.blt(x, y, 0, 32, 0, 16 ,16, 0)      # 右
+                pyxel.blt(x, y, 0, 32, 0, 16, 16, 0)      # 右
 
             if pyxel.frame_count & 0x04:
                 pyxel.blt(self.pos_x - 1, self.pos_y + 8, 0, 8, 16, 6, 6, 0)
@@ -182,22 +183,27 @@ class Player(imp.Sprite):
         d = 0
 
         if pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.KEY_LEFT)\
-            or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_UP) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_DOWN) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT):
+                or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_UP) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_DOWN)\
+                or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT):
 
             # 上右
-            if (pyxel.btn(pyxel.KEY_UP) and pyxel.btn(pyxel.KEY_RIGHT)) or (pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_UP) and pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT)):
+            if (pyxel.btn(pyxel.KEY_UP) and pyxel.btn(pyxel.KEY_RIGHT))\
+                    or (pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_UP) and pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT)):
                 d = 315
                 self.pl_dir = 2                   # 右
             # 上左
-            elif (pyxel.btn(pyxel.KEY_UP) and pyxel.btn(pyxel.KEY_LEFT)) or (pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_UP) and pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT)):
+            elif (pyxel.btn(pyxel.KEY_UP) and pyxel.btn(pyxel.KEY_LEFT))\
+                    or (pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_UP) and pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT)):
                 d = 225
                 self.pl_dir = 1                   # 左
             # 下右
-            elif (pyxel.btn(pyxel.KEY_DOWN) and pyxel.btn(pyxel.KEY_RIGHT)) or (pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_DOWN) and pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT)):
+            elif (pyxel.btn(pyxel.KEY_DOWN) and pyxel.btn(pyxel.KEY_RIGHT))\
+                    or (pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_DOWN) and pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT)):
                 d = 45
                 self.pl_dir = 2                   # 右
             # 下左
-            elif (pyxel.btn(pyxel.KEY_DOWN) and pyxel.btn(pyxel.KEY_LEFT)) or (pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_DOWN) and pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT)):
+            elif (pyxel.btn(pyxel.KEY_DOWN) and pyxel.btn(pyxel.KEY_LEFT))\
+                    or (pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_DOWN) and pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT)):
                 d = 135
                 self.pl_dir = 1                   # 左
             else:
@@ -229,7 +235,6 @@ class Player(imp.Sprite):
             if self.pos_x < 8:
                 self.pos_x = 8
 
-        scX = self.pos_x - 128
 
 # --------------------------------------------------
 # プレイヤークラス
@@ -237,7 +242,7 @@ class PlayerBullet(imp.Sprite):
 
     # コンストラクタ
     def __init__(self, x, y, id_0, id_1, item):
-        imp.Sprite.__init__(self, imp.OBJPLB, x, y, id_0, id_1, item)       # Spriteクラスのコンストラクタ
+        imp.Sprite.__init__(self, imp.OBJPLB, x, y, id_0, id_1, item)
 
         self.pos_adjx = -3
         self.pos_adjy = -3
@@ -253,7 +258,7 @@ class PlayerBullet(imp.Sprite):
             self.vector_x = -0.25
             self.vector_y = -3.5
         if self.id0 == 2:   # 右側
-            self.vector_x =  0.25
+            self.vector_x = 0.25
             self.vector_y = -3.5
 
     # メイン
@@ -272,4 +277,3 @@ class PlayerBullet(imp.Sprite):
 
         # 中心の表示
 #        shooting_sub.DebugDrawPoshitRect(self)
-

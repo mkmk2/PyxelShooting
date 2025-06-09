@@ -1,11 +1,7 @@
 import pyxel
-import random
-import math
 import imp
 import player
-import enemy
 import effect
-import plitem
 import enemy_set
 
 
@@ -22,7 +18,8 @@ class App:
 
     # 初期化---------------------------------------
     def __init__(self):
-        pyxel.init(imp.WINDOW_W, imp.WINDOW_H, title="Pyxel Shooting", display_scale=3, fps=60)
+        pyxel.init(imp.WINDOW_W, imp.WINDOW_H, title="Pyxel Shooting",
+                   display_scale=3, fps=60)
         pyxel.load("assets/my_resource.pyxres")
 
         pyxel.images[0].load(0, 0, "assets/img0.png")
@@ -34,51 +31,51 @@ class App:
 
     # メイン---------------------------------------
     def update(self):
-        
+
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
 
         # メインシーン
-        if imp.main_scene != None:
+        if imp.main_scene is not None:
             imp.main_scene.update()
 
         # サブシーン
-        if imp.sub_scene != None:
+        if imp.sub_scene is not None:
             imp.sub_scene.update()
 
-
-    # 画面描画---------------------------------------
+# 画面描画---------------------------------------
     def draw(self):
         # 画面クリア
         pyxel.cls(0)
 
         # メインシーン
-        if imp.main_scene != None:
+        if imp.main_scene is not None:
             imp.main_scene.draw()
 
-            if imp._DEBUG_ == True:
+            if imp._DEBUG_:
                 sc = imp.main_scene.__class__.__name__
                 pyxel.text(0, 1, sc, 7)
 
         # サブシーン
-        if imp.sub_scene != None:
+        if imp.sub_scene is not None:
             imp.sub_scene.draw()
 
-            if imp._DEBUG_ == True:
+            if imp._DEBUG_:
                 sc = imp.sub_scene.__class__.__name__
                 pyxel.text(0, 9, sc, 7)
 
     # メインシーンセット-----------------------------
     def SetMainScene(self, scene):
-        if imp.main_scene != None:
+        if imp.main_scene is not None:
             del imp.main_scene
         imp.main_scene = scene
 
     # サブシーンセット-------------------------------
     def SetSubScene(self, scene):
-        if imp.sub_scene != None:
+        if imp.sub_scene is not None:
             del imp.sub_scene
         imp.sub_scene = scene
+
 
 # ==================================================
 # Scene タイトル
@@ -123,18 +120,18 @@ class SceneTitle:
             if self.select_pos == 1:
                 imp.stage_no += 10               # テストステージは+10
 
-            
-            # メインシーン ゲームメイン セット
+
+# メインシーン ゲームメイン セット
             imp.score = 0         # スコア
             imp.pl_item_num = 0     # アイテム取得数
             imp.pl_level = 0       # レベル
             imp.pl_levelup_eff = 0
 
-            App.SetMainScene(self,SceneGameMain())
+            App.SetMainScene(self, SceneGameMain())
 
             # サブシーン Start セット
-            App.SetSubScene(self,SceneStart())
-        
+            App.SetSubScene(self, SceneStart())
+
     def draw(self):
         # タイトル画面
         pyxel.bltm(0, 0, 0, 8 * 9, 0, 32, 30)
@@ -153,6 +150,7 @@ class SceneTitle:
         # ステージNoの表示
         no = "{:02}".format(imp.stage_no)
         pyxel.text(180, 180, no, 7)
+
 
 # ==================================================
 # Scene ゲームメイン
@@ -256,7 +254,7 @@ class SceneGameMain:
                 if p.obj_type == imp.OBJPL:
                     if p.death == 1:
                         # サブシーン ゲームオーバー セット
-                        App.SetSubScene(self,SceneGameOver())
+                        App.SetSubScene(self, SceneGameOver())
 
         # ボスが死んだらステージクリアへ
         if imp.game_status == imp.GAME_STATUS_MAIN:       # ゲーム中のみ
@@ -265,29 +263,29 @@ class SceneGameMain:
                     if e.death == 1:
 
                         # サブシーン ゲームクリアー　セット
-                        App.SetSubScene(self,SceneGameClear())
+                        App.SetSubScene(self, SceneGameClear())
 
         # オブジェクトを消す ---------------------------------
         # プレイヤー・プレイヤーの弾を消す
-        for n,p in enumerate(imp.pl):
+        for n, p in enumerate(imp.pl):
             if p.death != 0:
                 del imp.pl[n]     # リストから削除する
 
         # 敵を消す
-        for n,e in enumerate(imp.em):
+        for n, e in enumerate(imp.em):
             if e.death != 0:
                 del imp.em[n]        # リストから削除する
 
         # エフェクトを消す
-        for n,e in enumerate(imp.eff):
+        for n, e in enumerate(imp.eff):
             if e.death != 0:
                 del imp.eff[n]        # リストから削除する
 
         # アイテムを消す
-        for n,e in enumerate(imp.itm):
+        for n, e in enumerate(imp.itm):
             if e.death != 0:
                 del imp.itm[n]        # リストから削除する
-        
+
     def draw(self):
         # ゲーム画面
         if imp.game_status == imp.GAME_STATUS_MAIN or imp.game_status == imp.GAME_STATUS_GAMEOVER or imp.game_status == imp.GAME_STATUS_STAGECLEAR:
@@ -311,7 +309,6 @@ class SceneGameMain:
                 if e.obj_type == imp.OBJEMB:
                     e.draw()
 
-
             # エフェクト
             for n in imp.eff:
                 n.draw()
@@ -331,16 +328,19 @@ class SceneGameMain:
                     if imp.pl_levelup_eff == 0:
                         for n in range(imp.PL_ITEM_LEVEL_UP):
                             if n >= imp.pl_item_num:
-                                pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
+                                pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
+                                          imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
                             else:
-                                pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
+                                pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
+                                          imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
                     else:
-        # ステージの位置から敵をセットする
-                    # 点滅
+                        # ステージの位置から敵をセットする
+                        # 点滅
                         imp.pl_levelup_eff -= 1
                         if pyxel.frame_count & 0x02:
                             for n in range(imp.PL_ITEM_LEVEL_UP):
-                                pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
+                                pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
+                                          imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
 
                     # lifeゲージ
                     for n in range(3):
@@ -349,18 +349,17 @@ class SceneGameMain:
                         else:
                             pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
             # スクロールPos
-            if imp._DEBUG_ == True:
+            if imp._DEBUG_:
                 pos = "{:5}".format(self.stage_pos)
                 pyxel.text(220, 200, pos, 7)
 
-
-    #  ------------------------------------------
+#  ------------------------------------------
     def SetStageEnemy(self):
-        l = len(imp.StageSetTbl)                # ステージTbl数
+        sl = len(imp.StageSetTbl)                # ステージTbl数
         n = 0                                   # 頭からの順番
         pos = 0
 
-        while l > 0:
+        while sl > 0:
             e = imp.StageSetTbl[n]
             pos += e[0]
             if self.stage_pos == pos:          # 等しい時のみ敵セットする
@@ -372,7 +371,7 @@ class SceneGameMain:
                     e = imp.StageSetTbl[n]
                     pos += e[0]
                 break
-            l -= 1                              # 次のTblへ
+            sl -= 1                              # 次のTblへ
             n += 1
 
     #  ------------------------------------------
@@ -395,7 +394,7 @@ class SceneGameMain:
                     embd.life -= plat.hit_point      # ダメージ計算
                     if embd.life <= 0:              # 0以下なら死ぬ
                         embd.life = 0
-                        if imp._DEBUG_ == True:
+                        if imp._DEBUG_:
                             print("hit")
                         return True                 # 当たり
 
@@ -416,7 +415,7 @@ class SceneGameMain:
                         at.death = 1          # 攻撃側は消える
                     # エフェクト
                     imp.eff.append(effect.Effect(at.pos_x, at.pos_y, 0, 0, 0))
-                    if imp._DEBUG_ == True:
+                    if imp._DEBUG_:
                         print("hit body:" + bd.__class__.__name__)
 
                     at.hit = 1
@@ -438,8 +437,8 @@ class SceneGameMain:
 
         if xx < rx and yy < ry:
             i.death = 1
-            
-            if imp._DEBUG_ == True:
+
+            if imp._DEBUG_:
                 print("item")
             imp.pl_item_num += 1          # 1個とる
             return True                 # 当たり
@@ -460,6 +459,7 @@ class SceneGameMain:
         # アイテムを消す
         imp.itm.clear()
 
+
 # ==================================================
 # Scene スタート
 class SceneStart:
@@ -476,11 +476,12 @@ class SceneStart:
         self.WaitTime -= 1
         if self.WaitTime <= 0:
             imp.sub_scene = None
-        
+
     def draw(self):
         # タイトル画面
         st = "START"
         pyxel.text(100, 100, st, 7)
+
 
 # ==================================================
 # Scene ゲームオーバー
@@ -502,14 +503,15 @@ class SceneGameOver:
         self.WaitTime -= 1
         if self.WaitTime <= 0:
             # メイン ゲームシーンのデリート
-            App.SetMainScene(self,None)
+            App.SetMainScene(self, None)
             # サブScene タイトル　セット
-            App.SetSubScene(self,SceneTitle())
-        
+            App.SetSubScene(self, SceneTitle())
+
     def draw(self):
         # GAME OVER
         pyxel.blt(self.pos_x,      self.pos_y, 0, 0,    8*18, 8*4, 16, 0)
         pyxel.blt(self.pos_x + 40, self.pos_y, 0, 8*4,  8*18, 8*4, 16, 0)
+
 
 # ==================================================
 # Scene ゲームクリアー
@@ -530,13 +532,14 @@ class SceneGameClear:
         self.WaitTime -= 1
         if self.WaitTime <= 0:
             # メイン ゲームシーンのデリート
-            App.SetMainScene(self,None)
+            App.SetMainScene(self, None)
             # サブScene タイトル　セット
-            App.SetSubScene(self,SceneNextStage())
-        
+            App.SetSubScene(self, SceneNextStage())
+
     def draw(self):
         # STAGE CLEAR
         pyxel.blt(self.pos_x - (8 * 2.5),      self.pos_y, 0, 8*9,  8*18, 8*5, 16, 0)
+
 
 # ==================================================
 # Scene 次のステージへ送る
@@ -550,19 +553,19 @@ class SceneNextStage:
 
     # メイン---------------------------------------
     def update(self):
-            # メインシーン ゲームメイン セット
-            imp.stage_no += 1
-            if imp.stage_no > imp.STAGE_NO_MAX:
-                # メイン ゲームシーンのデリート
-                App.SetMainScene(self,None)
-                # サブシーン Start セット
-                App.SetSubScene(self,SceneTitle())
-            else:
-                # 次のステージ
-                App.SetMainScene(self,SceneGameMain())
+        # メインシーン ゲームメイン セット
+        imp.stage_no += 1
+        if imp.stage_no > imp.STAGE_NO_MAX:
+            # メイン ゲームシーンのデリート
+            App.SetMainScene(self, None)
+            # サブシーン Start セット
+            App.SetSubScene(self, SceneTitle())
+        else:
+            # 次のステージ
+            App.SetMainScene(self, SceneGameMain())
 
-                # サブシーン Start セット
-                App.SetSubScene(self,SceneStart())
+            # サブシーン Start セット
+            App.SetSubScene(self, SceneStart())
 
     def draw(self):
         pass

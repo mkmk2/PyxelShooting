@@ -1,11 +1,10 @@
 import pyxel
 import imp
-import random
-import shooting_sub
 
 # id0
 # 0:基本爆発
 # 1:基本爆発移動有り
+
 
 # --------------------------------------------------
 # 敵クラス

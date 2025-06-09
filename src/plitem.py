@@ -3,7 +3,8 @@ import imp
 
 # Id0
 # 0:
-# 1: 
+# 1:
+
 
 # --------------------------------------------------
 # 敵クラス
@@ -37,7 +38,7 @@ class PlItem(imp.Sprite):
             self.PosVectorY = 0
 
         self.pos_y += 0.5
-        
+
     #    self.PtnTime -= 1
     #    if self.PtnTime <= 0:
     #        self.Death = 1
@@ -45,7 +46,7 @@ class PlItem(imp.Sprite):
         # 画面内チェック
         self.ScreenTime -= 1
         if self.ScreenTime < 0:
-            if imp.CheckScreenIn(self) == False:
+            if imp.CheckScreenIn(self) is False:
                 self.Death = 1
 
     # 描画

@@ -1,10 +1,7 @@
 import pyxel
-import random
-import math
 import imp
-import shooting_sub
 import plitem
-import effect
+
 
 # ==================================================
 # 敵Normクラス
@@ -19,8 +16,8 @@ class EnemyNorm(imp.Sprite):
     BossMoveTblPtr = 0
 
     # コンストラクタ
-    def __init__(self, x, y, id0, id1, item):
-        imp.Sprite.__init__(self, imp.OBJEM, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
+    def __init__(self, x, y, i0, i1, item):
+        imp.Sprite.__init__(self, imp.OBJEM, x, y, i0, i1, item)       # Spriteクラスのコンストラクタ
 
         self.pos_adjx = -6
         self.pos_adjy = -6
@@ -67,13 +64,13 @@ class EnemyNorm(imp.Sprite):
         if self.life <= 0:          # 0以下なら死ぬ
             self.death = 1          # 死ぬ
             imp.score += self.score     # scoreを加算
-            if imp._DEBUG_ == True:
+            if imp._DEBUG_:
                 print("enemy die")
             # アイテムセット
             if self.item_set != 0:
-                if imp._DEBUG_ == True:
+                if imp._DEBUG_:
                     print("item")
-                imp.itm.append(plitem.PlItem(self.pos_x,self.pos_y,0,0,0))
+                imp.itm.append(plitem.PlItem(self.pos_x, self.pos_y, 0, 0, 0))
 
         # 画面内チェック
         imp.CheckScreenIn(self)
@@ -111,6 +108,7 @@ class EnemyNorm(imp.Sprite):
         # 中心の表示
 #        shooting_sub.DebugDrawPosHitRect(self)
 
+
 # ==================================================
 # 敵ItemGroupクラス
 # セットされたグループNoにより、全滅させた際にアイテムを落とす
@@ -131,8 +129,8 @@ class EnemyItemGroup(imp.Sprite):
     BossMoveTblPtr = 0
 
     # コンストラクタ
-    def __init__(self, x, y, id0, id1, item):
-        imp.Sprite.__init__(self, imp.OBJEM, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
+    def __init__(self, x, y, i0, i1, item):
+        imp.Sprite.__init__(self, imp.OBJEM, x, y, i0, i1, item)       # Spriteクラスのコンストラクタ
 
         self.pos_adjx = -6
         self.pos_adjy = -6
@@ -171,24 +169,24 @@ class EnemyItemGroup(imp.Sprite):
         if self.life <= 0:          # 0以下なら死ぬ
             self.death = 1          # 死ぬ
             imp.score += self.score     # scoreを加算
-            if imp._DEBUG_ == True:
+            if imp._DEBUG_:
                 print("enemy die")
             # アイテムセット
             if self.item_set != 0:
                 # GroupIdのチェック
                 find_group = 0
-                for eg in imp.Em:
-                    if eg.ObjType == imp.OBJEM:
+                for eg in imp.em:
+                    if eg.obj_type == imp.OBJEM:
                         if eg.__class__.__name__ == "EnemyItemGroup":
-                            if self.Id1 == eg.Id1:
+                            if self.id1 == eg.id1:
                                 find_group += 1         # 同じId1を見つけた、同じGroup
                                 if find_group >= 2:     # 2以上になったら > 1の時、自分自身も含んでいるため、2個目を発見したら、自分以外の同じGroupが居るということ
                                     break
 
                 if find_group == 1:
-                    if imp._DEBUG_ == True:
+                    if imp._DEBUG_:
                         print("item")
-                    imp.itm.append(plitem.PlItem(self.pos_x,self.pos_y,0,0,0))
+                    imp.itm.append(plitem.PlItem(self.pos_x, self.pos_y, 0, 0, 0))
 
         # 画面内チェック
         imp.CheckScreenIn(self)
@@ -225,4 +223,3 @@ class EnemyItemGroup(imp.Sprite):
 
         # 中心の表示
 #        shooting_sub.DebugDrawPosHitRect(self)
-
