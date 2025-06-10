@@ -63,14 +63,14 @@ class EnemyNorm(imp.Sprite):
         # 死にチェック
         if self.life <= 0:          # 0以下なら死ぬ
             self.death = 1          # 死ぬ
-            imp.score += self.score     # scoreを加算
+            imp.game_state.score += self.score     # scoreを加算
             if imp._DEBUG_:
                 print("enemy die")
             # アイテムセット
             if self.item_set != 0:
                 if imp._DEBUG_:
                     print("item")
-                imp.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
+                imp.game_state.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
 
         # 画面内チェック
         imp.CheckScreenIn(self)
@@ -168,14 +168,14 @@ class EnemyItemGroup(imp.Sprite):
         # 死にチェック
         if self.life <= 0:          # 0以下なら死ぬ
             self.death = 1          # 死ぬ
-            imp.score += self.score     # scoreを加算
+            imp.game_state.score += self.score     # scoreを加算
             if imp._DEBUG_:
                 print("enemy die")
             # アイテムセット
             if self.item_set != 0:
                 # GroupIdのチェック
                 find_group = 0
-                for eg in imp.em:
+                for eg in imp.game_state.em:
                     if eg.obj_type == imp.OBJEM:
                         if eg.__class__.__name__ == "EnemyItemGroup":
                             if self.id1 == eg.id1:
@@ -186,7 +186,7 @@ class EnemyItemGroup(imp.Sprite):
                 if find_group == 1:
                     if imp._DEBUG_:
                         print("item")
-                    imp.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
+                    imp.game_state.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
 
         # 画面内チェック
         imp.CheckScreenIn(self)

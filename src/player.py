@@ -21,7 +21,7 @@ class PlayerState(Enum):
 # プレイヤークラス
 class Player(imp.Sprite):
 
-    ShotTime = 0
+    shot_time = 0
 
     # コンストラクタ
     def __init__(self, x, y, id0, id1, item):
@@ -57,7 +57,7 @@ class Player(imp.Sprite):
 
         elif self.pl_st0 == PlayerState.PLAY:           # ゲームプレイ中
 
-            if imp.game_status == imp.GAME_STATUS_MAIN:     # ゲーム中のみ死にチェック
+            if imp.game_state.game_status == imp.GAME_STATUS_MAIN:     # ゲーム中のみ死にチェック
                 if self.life <= 0:          # 0以下なら死ぬ
                     self.pl_st0 = PlayerState.DEATH    # 死に
                     self.mv_wait = 10           # 爆発数
@@ -69,7 +69,7 @@ class Player(imp.Sprite):
                     self.mv_wait = 0
                     self.mv_time = 40
 
-            if imp.game_status == imp.GAME_STATUS_STAGECLEAR:    # ステージクリア
+            if imp.game_state.game_status == imp.GAME_STATUS_STAGECLEAR:    # ステージクリア
                 self.pl_st0 = PlayerState.CLEAR     # クリア
                 self.pl_dir = 0                       # 前
 
@@ -81,26 +81,26 @@ class Player(imp.Sprite):
                 if pyxel.btn(pyxel.KEY_SPACE)\
                         or pyxel.btn(pyxel.GAMEPAD1_BUTTON_A)\
                         or pyxel.btn(pyxel.GAMEPAD1_BUTTON_B):
-                    self.ShotTime -= 1
-                    if self.ShotTime < 0:
-                        self.ShotTime = 6
-                        if imp.pl_level == 0:
-                            imp.pl.append(PlayerBullet(self.pos.x, self.pos.y, 0, 0, 0))
-                        elif imp.pl_level == 1:
-                            imp.pl.append(PlayerBullet(self.pos.x - 5, self.pos.y, 0, 0, 0))
-                            imp.pl.append(PlayerBullet(self.pos.x + 5, self.pos.y, 0, 0, 0))
+                    self.shot_time -= 1
+                    if self.shot_time < 0:
+                        self.shot_time = 6
+                        if imp.game_state.pl_level == 0:
+                            imp.game_state.pl.append(PlayerBullet(self.pos.x, self.pos.y, 0, 0, 0))
+                        elif imp.game_state.pl_level == 1:
+                            imp.game_state.pl.append(PlayerBullet(self.pos.x - 5, self.pos.y, 0, 0, 0))
+                            imp.game_state.pl.append(PlayerBullet(self.pos.x + 5, self.pos.y, 0, 0, 0))
                         else:
-                            imp.pl.append(PlayerBullet(self.pos.x - 6, self.pos.y, 1, 0, 0))  # 左側
-                            imp.pl.append(PlayerBullet(self.pos.x, self.pos.y, 0, 0, 0))
-                            imp.pl.append(PlayerBullet(self.pos.x + 6, self.pos.y, 2, 0, 0))  # 右側
+                            imp.game_state.pl.append(PlayerBullet(self.pos.x - 6, self.pos.y, 1, 0, 0))  # 左側
+                            imp.game_state.pl.append(PlayerBullet(self.pos.x, self.pos.y, 0, 0, 0))
+                            imp.game_state.pl.append(PlayerBullet(self.pos.x + 6, self.pos.y, 2, 0, 0))  # 右側
 
                 else:
-                    self.ShotTime = 0
+                    self.shot_time = 0
 
-                if imp.pl_item_num >= imp.PL_ITEM_LEVEL_UP:
-                    imp.pl_item_num = 0
-                    imp.pl_level += 1
-                    imp.pl_levelup_eff = 40      # 点滅時間
+                if imp.game_state.pl_item_num >= imp.PL_ITEM_LEVEL_UP:
+                    imp.game_state.pl_item_num = 0
+                    imp.game_state.pl_level += 1
+                    imp.game_state.pl_levelup_eff = 40      # 点滅時間
 
         elif self.pl_st0 == PlayerState.DAMAGE:           # ダメージ
             self.hit_st = 1                          # 当たりナシ
@@ -133,10 +133,20 @@ class Player(imp.Sprite):
             # 爆発
             self.mv_time -= 1
             if self.mv_time <= 0:
-                imp.eff.append(effect.Effect(self.pos.x - 10 + random.randrange(0, 20, 1),
-                                             self.pos.y - 10 + random.randrange(0, 20, 1), imp.EFF_BOOM, 0, 0))
-                imp.eff.append(effect.Effect(self.pos.x - 10 + random.randrange(0, 20, 1),
-                                             self.pos.y - 10 + random.randrange(0, 20, 1), imp.EFF_BOOM, 0, 0))
+                imp.game_state.eff.append(
+                    effect.Effect(
+                        self.pos.x - 10 + random.randrange(0, 20, 1),
+                        self.pos.y - 10 + random.randrange(0, 20, 1),
+                        imp.EFF_BOOM, 0, 0
+                    )
+                )
+                imp.game_state.eff.append(
+                    effect.Effect(
+                        self.pos.x - 10 + random.randrange(0, 20, 1),
+                        self.pos.y - 10 + random.randrange(0, 20, 1),
+                        imp.EFF_BOOM, 0, 0
+                    )
+                )
                 self.mv_time = 4
                 self.Display = self.mv_wait & 1      # 点滅
                 self.mv_wait -= 1

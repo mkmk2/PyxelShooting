@@ -35,41 +35,8 @@ OBJITM = "OBJITM"
 EFF_BOOM = 0
 EFF_BOOM_MOVE = 1
 
-# サブシーン
-main_scene = None
-sub_scene = None             # Nextsub_scene から sub_scene へ入れるときにインスタンス化する、SubScnenに何か入ってたらdelしてから入れる
-
-
-#
-#  プレイヤー・プレイヤーの弾オブジェクト
-pl = []
-
-# 敵・敵の弾オブジェクト
-em = []
-
-# エフェクト
-eff = []
-
-# アイテム
-itm = []
-
-game_status = GAME_STATUS_TITLE
-
-# スコア
-score = 0
-
-# ステージNo(1から)
-stage_no = 0
-
 STAGE_NO_MAX = 4       # 最終ステージ
-
-# 敵セットTbl
-StageSetTbl = ""
-
 # プレイヤーレベル
-pl_item_num = 0     # アイテム取得数
-pl_level = 0        # レベル
-pl_levelup_eff = 0  # レベルアップ点滅
 PL_ITEM_LEVEL_UP = 3    # レベルアップする個数
 
 
@@ -134,8 +101,8 @@ def CheckScreenIn(self):
 
 #  ------------------------------------------
 def GetPl(self):
-    if len(pl) > 0:
-        return pl[0]
+    if len(game_state.pl) > 0:
+        return game_state.pl[0]
 
     return 0
 
@@ -160,3 +127,29 @@ class Vector2:
 
     def __repr__(self):
         return f"Vector2({self.x}, {self.y})"
+
+
+class GameState:
+    def __init__(self):
+        # シーン
+        # Nextsub_scene から sub_scene へ入れるときにインスタンス化する、SubScnenに何か入ってたらdelしてから入れる
+        self.main_scene = None
+        self.sub_scene = None
+
+        self.pl = []                # プレイヤー・プレイヤーの弾オブジェクト
+        self.em = []                # 敵・敵の弾オブジェクト
+        self.eff = []               # エフェクト
+        self.itm = []               # アイテム
+        self.game_status = GAME_STATUS_TITLE
+        self.score = 0
+        self.stage_no = 0           # ステージNo(1から)
+        self.StageSetTbl = ""       # 敵セットTbl
+        # プレイヤーレベル
+        self.pl_item_num = 0        # アイテム取得数
+        self.pl_level = 0           # アイテム取得数
+        self.pl_levelup_eff = 0     # レベルアップ点滅
+
+
+# GameStateのインスタンスを作成
+# これを他ファイルでimportして使う
+game_state = GameState()

@@ -18,9 +18,6 @@ def SetVector(self, r, rate):
     self.vector.x = math.cos(r) * rate
     self.vector.y = math.sin(r) * rate
 
-#        print(self.vector_x)
-#        print(self.vector_y)
-
 
 #  ------------------------------------------
 def DebugDrawPosHitRect(self):

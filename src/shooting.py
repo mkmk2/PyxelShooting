@@ -9,12 +9,12 @@ import enemy_set
 class App:
 
     # ゲームの状態
-    imp.game_status = imp.GAME_STATUS_TITLE
+    imp.game_state.game_status = imp.GAME_STATUS_TITLE
 
     # メインシーン
-    imp.main_scene = None
+    imp.game_state.main_scene = None
     # サブシーン
-    imp.sub_scene = None
+    imp.game_state.sub_scene = None
 
     # 初期化---------------------------------------
     def __init__(self):
@@ -36,12 +36,12 @@ class App:
             pyxel.quit()
 
         # メインシーン
-        if imp.main_scene is not None:
-            imp.main_scene.update()
+        if imp.game_state.main_scene is not None:
+            imp.game_state.main_scene.update()
 
         # サブシーン
-        if imp.sub_scene is not None:
-            imp.sub_scene.update()
+        if imp.game_state.sub_scene is not None:
+            imp.game_state.sub_scene.update()
 
 # 画面描画---------------------------------------
     def draw(self):
@@ -49,32 +49,32 @@ class App:
         pyxel.cls(0)
 
         # メインシーン
-        if imp.main_scene is not None:
-            imp.main_scene.draw()
+        if imp.game_state.main_scene is not None:
+            imp.game_state.main_scene.draw()
 
             if imp._DEBUG_:
-                sc = imp.main_scene.__class__.__name__
+                sc = imp.game_state.main_scene.__class__.__name__
                 pyxel.text(0, 1, sc, 7)
 
         # サブシーン
-        if imp.sub_scene is not None:
-            imp.sub_scene.draw()
+        if imp.game_state.sub_scene is not None:
+            imp.game_state.sub_scene.draw()
 
             if imp._DEBUG_:
-                sc = imp.sub_scene.__class__.__name__
+                sc = imp.game_state.sub_scene.__class__.__name__
                 pyxel.text(0, 9, sc, 7)
 
     # メインシーンセット-----------------------------
     def SetMainScene(self, scene):
-        if imp.main_scene is not None:
-            del imp.main_scene
-        imp.main_scene = scene
+        if imp.game_state.main_scene is not None:
+            del imp.game_state.main_scene
+        imp.game_state.main_scene = scene
 
     # サブシーンセット-------------------------------
     def SetSubScene(self, scene):
-        if imp.sub_scene is not None:
-            del imp.sub_scene
-        imp.sub_scene = scene
+        if imp.game_state.sub_scene is not None:
+            del imp.game_state.sub_scene
+        imp.game_state.sub_scene = scene
 
 
 # ==================================================
@@ -85,10 +85,10 @@ class SceneTitle:
 
     # 初期化---------------------------------------
     def __init__(self):
-        imp.game_status = imp.GAME_STATUS_TITLE    # タイトルに戻る
+        imp.game_state.game_status = imp.GAME_STATUS_TITLE    # タイトルに戻る
 
         self.select_pos = 0
-        imp.stage_no = 1
+        imp.game_state.stage_no = 1
 
     # メイン---------------------------------------
     def update(self):
@@ -105,24 +105,24 @@ class SceneTitle:
 
         # 右移動(右カーソルキー) UP
         if pyxel.btnp(pyxel.KEY_RIGHT) or pyxel.btnp(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT):
-            if imp.stage_no < imp.STAGE_NO_MAX:
-                imp.stage_no += 1
+            if imp.game_state.stage_no < imp.STAGE_NO_MAX:
+                imp.game_state.stage_no += 1
 
         # 左移動(左カーソルキー) DOWN
         if pyxel.btnp(pyxel.KEY_LEFT) or pyxel.btnp(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT):
-            if imp.stage_no > 1:
-                imp.stage_no -= 1
+            if imp.game_state.stage_no > 1:
+                imp.game_state.stage_no -= 1
 
         if pyxel.btnp(pyxel.KEY_SPACE) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_A) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_B):
             if self.select_pos == 1:
-                imp.stage_no += 10               # テストステージは+10
+                imp.game_state.stage_no += 10               # テストステージは+10
 
 
 # メインシーン ゲームメイン セット
-            imp.score = 0         # スコア
-            imp.pl_item_num = 0     # アイテム取得数
-            imp.pl_level = 0       # レベル
-            imp.pl_levelup_eff = 0
+            imp.game_state.score = 0         # スコア
+            imp.game_state.pl_item_num = 0     # アイテム取得数
+            imp.game_state.pl_level = 0       # レベル
+            imp.game_state.pl_levelup_eff = 0
 
             App.SetMainScene(self, SceneGameMain())
 
@@ -145,7 +145,7 @@ class SceneTitle:
         pyxel.text(100, 190, test, 7)
 
         # ステージNoの表示
-        no = "{:02}".format(imp.stage_no)
+        no = "{:02}".format(imp.game_state.stage_no)
         pyxel.text(180, 180, no, 7)
 
 
@@ -158,19 +158,19 @@ class SceneGameMain:
     # 初期化---------------------------------------
     def __init__(self):
 
-        imp.game_status = imp.GAME_STATUS_MAIN
+        imp.game_state.game_status = imp.GAME_STATUS_MAIN
 
         # 敵セットのテーブル
-        if imp.stage_no < 10:
-            if imp.stage_no == 1:
-                imp.StageSetTbl = enemy_set.STAGE_SET_1
+        if imp.game_state.stage_no < 10:
+            if imp.game_state.stage_no == 1:
+                imp.game_state.StageSetTbl = enemy_set.STAGE_SET_1
         else:
-            imp.StageSetTbl = enemy_set.STAGE_SET_TEST
+            imp.game_state.StageSetTbl = enemy_set.STAGE_SET_TEST
 
         self.stage_pos = 0              # ステージ
 
         # プレイヤーのセット
-        imp.pl.append(player.Player(30, 40, 0, 100, 0))
+        imp.game_state.pl.append(player.Player(30, 40, 0, 100, 0))
 
     def __del__(self):
         # 全てのオブジェクトを消す
@@ -179,83 +179,83 @@ class SceneGameMain:
     # メイン---------------------------------------
     def update(self):
         # ゲームオーバーになったらスクロール(敵セット)止める
-        if imp.game_status == imp.GAME_STATUS_MAIN:
+        if imp.game_state.game_status == imp.GAME_STATUS_MAIN:
             self.stage_pos += 1
 
         self.SetStageEnemy()
 
         # プレイヤー
-        for p in imp.pl:
+        for p in imp.game_state.pl:
             if p.obj_type == imp.OBJPL:
                 p.update()
                 p.hit = 0
 
         # プレイヤーの弾
-        for p in imp.pl:
+        for p in imp.game_state.pl:
             if p.obj_type == imp.OBJPLB:
                 p.update()
                 p.hit = 0
 
         # 敵
-        for e in imp.em:
+        for e in imp.game_state.em:
             if e.obj_type == imp.OBJEM:
                 e.update()
                 e.hit = 0
 
         # 敵の弾
-        for e in imp.em:
+        for e in imp.game_state.em:
             if e.obj_type == imp.OBJEMB:
                 e.update()
                 e.hit = 0
 
         # エフェクト
-        for n in imp.eff:
+        for n in imp.game_state.eff:
             n.update()
 
         # アイテム
-        for n in imp.itm:
+        for n in imp.game_state.itm:
             n.update()
             n.hit = 0
 
         # 当たり判定 ---------------------------------
         # プレイヤーの弾と敵
-        for p in imp.pl:
+        for p in imp.game_state.pl:
             if p.obj_type == imp.OBJPLB:
-                for embd in imp.em:
+                for embd in imp.game_state.em:
                     if embd.obj_type == imp.OBJEM:
                         self.CheckColli(p, embd)
 
         # 敵の弾とプレイヤー
-        for em in imp.em:
+        for em in imp.game_state.em:
             if em.obj_type == imp.OBJEMB:
-                for p in imp.pl:
+                for p in imp.game_state.pl:
                     if p.obj_type == imp.OBJPL:
                         self.CheckColli(em, p)
 
         # 敵とプレイヤー
-        for em in imp.em:
+        for em in imp.game_state.em:
             if em.obj_type == imp.OBJEM:
-                for p in imp.pl:
+                for p in imp.game_state.pl:
                     if p.obj_type == imp.OBJPL:
                         self.CheckColliBody(em, p)
 
         # プレイヤーがアイテムをとる
-        for p in imp.pl:
+        for p in imp.game_state.pl:
             if p.obj_type == imp.OBJPL:
-                for i in imp.itm:
+                for i in imp.game_state.itm:
                     self.CheckColliPlItm(p, i)
 
         # プレイヤーが死んだらゲームオーバーへ
-        if imp.game_status != imp.GAME_STATUS_GAMEOVER:       # ゲームオーバーでないとき
-            for p in imp.pl:
+        if imp.game_state.game_status != imp.GAME_STATUS_GAMEOVER:       # ゲームオーバーでないとき
+            for p in imp.game_state.pl:
                 if p.obj_type == imp.OBJPL:
                     if p.death == 1:
                         # サブシーン ゲームオーバー セット
                         App.SetSubScene(self, SceneGameOver())
 
         # ボスが死んだらステージクリアへ
-        if imp.game_status == imp.GAME_STATUS_MAIN:       # ゲーム中のみ
-            for e in imp.em:
+        if imp.game_state.game_status == imp.GAME_STATUS_MAIN:       # ゲーム中のみ
+            for e in imp.game_state.em:
                 if e.__class__.__name__ == "EnemyBoss":
                     if e.death == 1:
 
@@ -264,80 +264,87 @@ class SceneGameMain:
 
         # オブジェクトを消す ---------------------------------
         # プレイヤー・プレイヤーの弾を消す
-        for n, p in enumerate(imp.pl):
+        for n, p in enumerate(imp.game_state.pl):
             if p.death != 0:
-                del imp.pl[n]     # リストから削除する
+                del imp.game_state.pl[n]     # リストから削除する
 
         # 敵を消す
-        for n, e in enumerate(imp.em):
+        for n, e in enumerate(imp.game_state.em):
             if e.death != 0:
-                del imp.em[n]        # リストから削除する
+                del imp.game_state.em[n]        # リストから削除する
 
         # エフェクトを消す
-        for n, e in enumerate(imp.eff):
+        for n, e in enumerate(imp.game_state.eff):
             if e.death != 0:
-                del imp.eff[n]        # リストから削除する
+                del imp.game_state.eff[n]        # リストから削除する
 
         # アイテムを消す
-        for n, e in enumerate(imp.itm):
+        for n, e in enumerate(imp.game_state.itm):
             if e.death != 0:
-                del imp.itm[n]        # リストから削除する
+                del imp.game_state.itm[n]        # リストから削除する
 
     def draw(self):
         # ゲーム画面
-        if imp.game_status == imp.GAME_STATUS_MAIN or imp.game_status == imp.GAME_STATUS_GAMEOVER or imp.game_status == imp.GAME_STATUS_STAGECLEAR:
+        if imp.game_state.game_status == imp.GAME_STATUS_MAIN or imp.game_state.game_status == imp.GAME_STATUS_GAMEOVER\
+                or imp.game_state.game_status == imp.GAME_STATUS_STAGECLEAR:
             # プレイヤー
-            for p in imp.pl:
+            for p in imp.game_state.pl:
                 if p.obj_type == imp.OBJPL:
                     p.draw()
 
             # プレイヤーの弾
-            for p in imp.pl:
+            for p in imp.game_state.pl:
                 if p.obj_type == imp.OBJPLB:
                     p.draw()
 
             # 敵
-            for e in imp.em:
+            for e in imp.game_state.em:
                 if e.obj_type == imp.OBJEM:
                     e.draw()
 
             # 敵の弾
-            for e in imp.em:
+            for e in imp.game_state.em:
                 if e.obj_type == imp.OBJEMB:
                     e.draw()
 
             # エフェクト
-            for n in imp.eff:
+            for n in imp.game_state.eff:
                 n.draw()
 
             # アイテム
-            for n in imp.itm:
+            for n in imp.game_state.itm:
                 n.draw()
 
             # スコアの表示
-            sc = "{:5}".format(imp.score)
+            sc = "{:5}".format(imp.game_state.score)
             pyxel.text(220, 230, sc, 7)
 
             # ゲージ
-            for p in imp.pl:
+            for p in imp.game_state.pl:
                 if p.obj_type == imp.OBJPL:
                     # Itemゲージ
-                    if imp.pl_levelup_eff == 0:
+                    if imp.game_state.pl_levelup_eff == 0:
                         for n in range(imp.PL_ITEM_LEVEL_UP):
-                            if n >= imp.pl_item_num:
-                                pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
-                                          imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
+                            if n >= imp.game_state.pl_item_num:
+                                pyxel.blt(
+                                    ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
+                                    imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0
+                                )
                             else:
-                                pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
-                                          imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
+                                pyxel.blt(
+                                    ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
+                                    imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0
+                                )
                     else:
                         # ステージの位置から敵をセットする
                         # 点滅
-                        imp.pl_levelup_eff -= 1
+                        imp.game_state.pl_levelup_eff -= 1
                         if pyxel.frame_count & 0x02:
                             for n in range(imp.PL_ITEM_LEVEL_UP):
-                                pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
-                                          imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
+                                pyxel.blt(
+                                    ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
+                                    imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0
+                                )
 
                     # lifeゲージ
                     for n in range(3):
@@ -352,20 +359,20 @@ class SceneGameMain:
 
 #  ------------------------------------------
     def SetStageEnemy(self):
-        sl = len(imp.StageSetTbl)                # ステージTbl数
+        sl = len(imp.game_state.StageSetTbl)                # ステージTbl数
         n = 0                                   # 頭からの順番
         pos = 0
 
         while sl > 0:
-            e = imp.StageSetTbl[n]
+            e = imp.game_state.StageSetTbl[n]
             pos += e[0]
             if self.stage_pos == pos:          # 等しい時のみ敵セットする
                 while self.stage_pos == pos:   # 同じPosを繰り返しセット
                     t = e[3]
-                    imp.em.append(t(e[1], e[2], e[4], e[5], e[6]))
+                    imp.game_state.em.append(t(e[1], e[2], e[4], e[5], e[6]))
 
                     n += 1                      # 次のTblへ
-                    e = imp.StageSetTbl[n]
+                    e = imp.game_state.StageSetTbl[n]
                     pos += e[0]
                 break
             sl -= 1                              # 次のTblへ
@@ -384,7 +391,7 @@ class SceneGameMain:
                 if xx < rx and yy < ry:
                     plat.death = 1          # 攻撃側は消える
                     # エフェクト
-                    imp.eff.append(effect.Effect(plat.pos.x, plat.pos.y, 0, 0, 0))
+                    imp.game_state.eff.append(effect.Effect(plat.pos.x, plat.pos.y, 0, 0, 0))
 
                     plat.hit = 1
                     embd.hit = 1
@@ -411,7 +418,7 @@ class SceneGameMain:
                     if at.__class__.__name__ != "EnemyBoss":    # ボス以外
                         at.death = 1          # 攻撃側は消える
                     # エフェクト
-                    imp.eff.append(effect.Effect(at.pos.x, at.pos.y, 0, 0, 0))
+                    imp.game_state.eff.append(effect.Effect(at.pos.x, at.pos.y, 0, 0, 0))
                     if imp._DEBUG_:
                         print("hit body:" + bd.__class__.__name__)
 
@@ -437,7 +444,7 @@ class SceneGameMain:
 
             if imp._DEBUG_:
                 print("item")
-            imp.pl_item_num += 1          # 1個とる
+            imp.game_state.pl_item_num += 1          # 1個とる
             return True                 # 当たり
 
         return False                    # 外れ
@@ -445,16 +452,16 @@ class SceneGameMain:
     #  ------------------------------------------
     def deathAllObject(self):
         # プレイヤー・プレイヤーの弾を消す
-        imp.pl.clear()
+        imp.game_state.pl.clear()
 
         # 敵を消す
-        imp.em.clear()
+        imp.game_state.em.clear()
 
         # エフェクトを消す
-        imp.eff.clear()
+        imp.game_state.eff.clear()
 
         # アイテムを消す
-        imp.itm.clear()
+        imp.game_state.itm.clear()
 
 
 # ==================================================
@@ -469,7 +476,7 @@ class SceneStart:
     def update(self):
         self.WaitTime -= 1
         if self.WaitTime <= 0:
-            imp.sub_scene = None
+            imp.game_state.sub_scene = None
 
     def draw(self):
         # タイトル画面
@@ -483,7 +490,7 @@ class SceneGameOver:
 
     # 初期化---------------------------------------
     def __init__(self):
-        imp.game_status = imp.GAME_STATUS_GAMEOVER       # ゲームオーバー
+        imp.game_state.game_status = imp.GAME_STATUS_GAMEOVER       # ゲームオーバー
 
         self.pos_x = 128 - (8 * 4) - 4
         self.pos_y = 100
@@ -509,7 +516,7 @@ class SceneGameOver:
 class SceneGameClear:
     # 初期化---------------------------------------
     def __init__(self):
-        imp.game_status = imp.GAME_STATUS_STAGECLEAR       # ステージクリア
+        imp.game_state.game_status = imp.GAME_STATUS_STAGECLEAR       # ステージクリア
 
         self.pos_x = 128 - (8 * 2.5)
         self.pos_y = 100
@@ -534,13 +541,13 @@ class SceneGameClear:
 class SceneNextStage:
     # 初期化---------------------------------------
     def __init__(self):
-        imp.game_status = imp.GAME_STATUS_NEXTSTAGE       # 次のステージ
+        imp.game_state.game_status = imp.GAME_STATUS_NEXTSTAGE       # 次のステージ
 
     # メイン---------------------------------------
     def update(self):
         # メインシーン ゲームメイン セット
-        imp.stage_no += 1
-        if imp.stage_no > imp.STAGE_NO_MAX:
+        imp.game_state.stage_no += 1
+        if imp.game_state.stage_no > imp.STAGE_NO_MAX:
             # メイン ゲームシーンのデリート
             App.SetMainScene(self, None)
             # サブシーン Start セット
