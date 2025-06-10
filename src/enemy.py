@@ -19,8 +19,8 @@ class EnemyNorm(imp.Sprite):
     def __init__(self, x, y, i0, i1, item):
         imp.Sprite.__init__(self, imp.OBJEM, x, y, i0, i1, item)       # Spriteクラスのコンストラクタ
 
-        self.pos_adjx = -6
-        self.pos_adjy = -6
+        self.pos_adj.x = -6
+        self.pos_adj.y = -6
         self.hit_point = 1
         self.hit_rectx = 8
         self.hit_recty = 8
@@ -37,18 +37,18 @@ class EnemyNorm(imp.Sprite):
     def update(self):
         if self.id0 == 0:           # カーブ
             if self.st0 == 0:
-                self.pos_y += 1.2
-                if self.pos_y > 40:
+                self.pos.y += 1.2
+                if self.pos.y > 40:
                     pl = imp.GetPl(self)
                     if pl != 0:
-                        if self.pos_x < pl.pos_x:
-                            self.vector_x += 0.015
+                        if self.pos.x < pl.pos.x:
+                            self.vector.x += 0.015
                             self.st1 = 1    # 右回転
                         else:
-                            self.vector_x -= 0.015
+                            self.vector.x -= 0.015
                             self.st1 = 2    # 左回転
 
-                self.pos_x += self.vector_x
+                self.pos.x += self.vector.x
 
 #                self.BulletTime -= 1
 #                if self.BulletTime <= 0:
@@ -57,7 +57,7 @@ class EnemyNorm(imp.Sprite):
 #                    imp.Em.append(EnemyBullet(self.pos_x,self.pos_y,0,0,0))
 
         elif self.id0 == 1:         # まっすぐ
-            self.pos_y += 0.9
+            self.pos.y += 0.9
 
         # -----------------------------------------------
         # 死にチェック
@@ -70,15 +70,15 @@ class EnemyNorm(imp.Sprite):
             if self.item_set != 0:
                 if imp._DEBUG_:
                     print("item")
-                imp.itm.append(plitem.PlItem(self.pos_x, self.pos_y, 0, 0, 0))
+                imp.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
 
         # 画面内チェック
         imp.CheckScreenIn(self)
 
         # -----------------------------------------------
     def draw(self):
-        x = self.pos_x + self.pos_adjx
-        y = self.pos_y + self.pos_adjy
+        x = self.pos.x + self.pos_adj.x
+        y = self.pos.y + self.pos_adj.y
 
         if self.id0 == 0:
             if self.st1 == 0:
@@ -132,8 +132,8 @@ class EnemyItemGroup(imp.Sprite):
     def __init__(self, x, y, i0, i1, item):
         imp.Sprite.__init__(self, imp.OBJEM, x, y, i0, i1, item)       # Spriteクラスのコンストラクタ
 
-        self.pos_adjx = -6
-        self.pos_adjy = -6
+        self.pos_adj.x = -6
+        self.pos_adj.y = -6
         self.hit_point = 1
         self.hit_rectx = 8
         self.hit_recty = 8
@@ -148,21 +148,21 @@ class EnemyItemGroup(imp.Sprite):
     def update(self):
         if self.id0 == 0:           # カーブ
             if self.st0 == 0:
-                self.pos_y += 1.2
-                if self.pos_y > 40:
+                self.pos.y += 1.2
+                if self.pos.y > 40:
                     pl = imp.GetPl(self)
                     if pl != 0:
-                        if self.pos_x < pl.pos_x:
-                            self.vector_x += 0.015
+                        if self.pos.x < pl.pos.x:
+                            self.vector.x += 0.015
                             self.st1 = 1    # 右回転
                         else:
-                            self.vector_x -= 0.015
+                            self.vector.x -= 0.015
                             self.st1 = 2    # 左回転
 
-                self.pos_x += self.vector_x
+                self.pos.x += self.vector.x
 
         elif self.id0 == 1:         # まっすぐ
-            self.pos_y += 0.9
+            self.pos.y += 0.9
 
         # -----------------------------------------------
         # 死にチェック
@@ -186,15 +186,15 @@ class EnemyItemGroup(imp.Sprite):
                 if find_group == 1:
                     if imp._DEBUG_:
                         print("item")
-                    imp.itm.append(plitem.PlItem(self.pos_x, self.pos_y, 0, 0, 0))
+                    imp.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
 
         # 画面内チェック
         imp.CheckScreenIn(self)
 
         # -----------------------------------------------
     def draw(self):
-        x = self.pos_x + self.pos_adjx
-        y = self.pos_y + self.pos_adjy
+        x = self.pos.x + self.pos_adj.x
+        y = self.pos.y + self.pos_adj.y
 
         if self.id0 == 0:
             if self.st1 == 0:

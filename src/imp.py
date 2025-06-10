@@ -1,5 +1,6 @@
 # _DEBUG_ = True
 _DEBUG_ = True
+_DEBUG_LV_ = True
 
 WINDOW_W = 255
 WINDOW_H = 240
@@ -79,12 +80,9 @@ class Sprite:
     # コンストラクタ
     def __init__(self, obj, x, y, id_0, id_1, item):
         self.obj_type = obj
-        self.pos_x = x
-        self.pos_y = y
-        self.vector_x = 0
-        self.vector_y = 0
-        self.pos_adjx = 0
-        self.pos_adjy = 0
+        self.pos = Vector2(x, y)
+        self.vector = Vector2(0, 0)
+        self.pos_adj = Vector2(0, 0)
         self.rot = 0
         self.id0 = id_0
         self.id1 = id_1
@@ -120,8 +118,8 @@ def CheckScreenIn(self):
         if _DEBUG_:
             SafeArea = -20       # Debug 画面の中で判定する
 
-        if -SafeArea < self.pos_x and self.pos_x < WINDOW_W + SafeArea:
-            if -SafeArea < self.pos_y and self.pos_y < WINDOW_H + SafeArea:
+        if -SafeArea < self.pos.x and self.pos.x < WINDOW_W + SafeArea:
+            if -SafeArea < self.pos.y and self.pos.y < WINDOW_H + SafeArea:
                 return True     # 画面内
 
         self.death = 1          # 消す
@@ -140,3 +138,25 @@ def GetPl(self):
         return pl[0]
 
     return 0
+
+
+# Vector2型の定義
+class Vector2:
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Vector2(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return Vector2(self.x - other.x, self.y - other.y)
+
+    def __mul__(self, scalar):
+        return Vector2(self.x * scalar, self.y * scalar)
+
+    def __truediv__(self, scalar):
+        return Vector2(self.x / scalar, self.y / scalar)
+
+    def __repr__(self):
+        return f"Vector2({self.x}, {self.y})"

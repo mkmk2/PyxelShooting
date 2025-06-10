@@ -14,8 +14,8 @@ class PlItem(imp.Sprite):
     def __init__(self, x, y, id_0, id_1, item):
         imp.Sprite.__init__(self, imp.OBJITM, x, y, id_0, id_1, item)       # Spriteクラスのコンストラクタ
 
-        self.PosAdjX = -4
-        self.PosAdjY = -4
+        self.pos_adj.x = -4
+        self.pos_adj.y = -4
 
         self.PosVectorY = -4
 
@@ -33,11 +33,11 @@ class PlItem(imp.Sprite):
 
         if self.PosVectorY < 0:
             self.PosVectorY += 0.2
-            self.pos_y += self.PosVectorY
+            self.pos.y += self.PosVectorY
         else:
             self.PosVectorY = 0
 
-        self.pos_y += 0.5
+        self.pos.y += 0.5
 
     #    self.PtnTime -= 1
     #    if self.PtnTime <= 0:
@@ -51,8 +51,8 @@ class PlItem(imp.Sprite):
 
     # 描画
     def draw(self):
-        x = self.pos_x - 4
-        y = self.pos_y - 4
+        x = self.pos.x - 4
+        y = self.pos.y - 4
         pyxel.blt(x, y, 0, 48, 0, 8, 8, 0)
 
 # --------------------------------------------------

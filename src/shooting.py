@@ -90,9 +90,6 @@ class SceneTitle:
         self.select_pos = 0
         imp.stage_no = 1
 
-    def __del__(self):
-        pass
-
     # メイン---------------------------------------
     def update(self):
         # タイトル画面
@@ -378,8 +375,8 @@ class SceneGameMain:
     def CheckColli(self, plat, embd):       # plat 攻撃側　　embd ダメージ側
         if plat.hit_st == 0:
             if embd.hit_st == 0:
-                xx = abs(plat.pos_x - embd.pos_x)
-                yy = abs(plat.pos_y - embd.pos_y)
+                xx = abs(plat.pos.x - embd.pos.x)
+                yy = abs(plat.pos.y - embd.pos.y)
 
                 rx = (plat.hit_rectx / 2) + (embd.hit_rectx / 2)
                 ry = (plat.hit_recty / 2) + (embd.hit_recty / 2)
@@ -387,7 +384,7 @@ class SceneGameMain:
                 if xx < rx and yy < ry:
                     plat.death = 1          # 攻撃側は消える
                     # エフェクト
-                    imp.eff.append(effect.Effect(plat.pos_x, plat.pos_y, 0, 0, 0))
+                    imp.eff.append(effect.Effect(plat.pos.x, plat.pos.y, 0, 0, 0))
 
                     plat.hit = 1
                     embd.hit = 1
@@ -404,8 +401,8 @@ class SceneGameMain:
     def CheckColliBody(self, at, bd):       # at 攻撃側　　bd ダメージ側
         if at.hit_st == 0:
             if bd.hit_st == 0:
-                xx = abs(at.pos_x - bd.pos_x)
-                yy = abs(at.pos_y - bd.pos_y)
+                xx = abs(at.pos.x - bd.pos.x)
+                yy = abs(at.pos.y - bd.pos.y)
 
                 rx = (at.hit_rectx / 2) + (bd.hit_rectx / 2)
                 ry = (at.hit_recty / 2) + (bd.hit_recty / 2)
@@ -414,7 +411,7 @@ class SceneGameMain:
                     if at.__class__.__name__ != "EnemyBoss":    # ボス以外
                         at.death = 1          # 攻撃側は消える
                     # エフェクト
-                    imp.eff.append(effect.Effect(at.pos_x, at.pos_y, 0, 0, 0))
+                    imp.eff.append(effect.Effect(at.pos.x, at.pos.y, 0, 0, 0))
                     if imp._DEBUG_:
                         print("hit body:" + bd.__class__.__name__)
 
@@ -429,8 +426,8 @@ class SceneGameMain:
 
     #  ------------------------------------------
     def CheckColliPlItm(self, p, i):
-        xx = abs(p.pos_x - i.pos_x)
-        yy = abs(p.pos_y - i.pos_y)
+        xx = abs(p.pos.x - i.pos.x)
+        yy = abs(p.pos.y - i.pos.y)
 
         rx = p.hit_rectx + i.hit_rectx
         ry = p.hit_recty + i.hit_recty
@@ -468,9 +465,6 @@ class SceneStart:
     def __init__(self):
         self.WaitTime = 60 * 3
 
-    def __del__(self):
-        pass
-
     # メイン---------------------------------------
     def update(self):
         self.WaitTime -= 1
@@ -494,9 +488,6 @@ class SceneGameOver:
         self.pos_x = 128 - (8 * 4) - 4
         self.pos_y = 100
         self.WaitTime = 60 * 5
-
-    def __del__(self):
-        pass
 
     # メイン---------------------------------------
     def update(self):
@@ -524,9 +515,6 @@ class SceneGameClear:
         self.pos_y = 100
         self.WaitTime = 60 * 5
 
-    def __del__(self):
-        pass
-
     # メイン---------------------------------------
     def update(self):
         self.WaitTime -= 1
@@ -547,9 +535,6 @@ class SceneNextStage:
     # 初期化---------------------------------------
     def __init__(self):
         imp.game_status = imp.GAME_STATUS_NEXTSTAGE       # 次のステージ
-
-    def __del__(self):
-        pass
 
     # メイン---------------------------------------
     def update(self):

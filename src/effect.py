@@ -14,8 +14,8 @@ class Effect(imp.Sprite):
     def __init__(self, x, y, id_0, id_1, item):
         imp.Sprite.__init__(self, imp.OBJEFF, x, y, id_0, id_1, item)       # Spriteクラスのコンストラクタ
 
-        self.pos_adjx = -8
-        self.pos_adjy = -4
+        self.pos_adj.x = -8
+        self.pos_adj.y = -4
 
         self.ptn_time = 4
         self.ptn_no = 0
@@ -38,26 +38,26 @@ class Effect(imp.Sprite):
                 self.death = 1
 
         if self.id0 == 1:       # 移動する
-            self.pos_x += self.vector_x
-            self.pos_y += self.vector_y
+            self.pos.x += self.vector.x
+            self.pos.y += self.vector.y
 
     # 描画
     def draw(self):
         if self.ptn_no == 0:
-            x = self.pos_x - 4
-            y = self.pos_y - 4
+            x = self.pos.x - 4
+            y = self.pos.y - 4
             pyxel.blt(x, y, 0, 0, 8*20, 8, 8, 0)
         elif self.ptn_no == 1:
-            x = self.pos_x - 4
-            y = self.pos_y - 4
+            x = self.pos.x - 4
+            y = self.pos.y - 4
             pyxel.blt(x, y, 0, 8, 8*20, 8, 8, 0)
         elif self.ptn_no == 2:
-            x = self.pos_x - 4
-            y = self.pos_y - 4
+            x = self.pos.x - 4
+            y = self.pos.y - 4
             pyxel.blt(x, y, 0, 16, 8*20, 12, 12, 0)
         elif self.ptn_no == 3:
-            x = self.pos_x - 4
-            y = self.pos_y - 4
+            x = self.pos.x - 4
+            y = self.pos.y - 4
             pyxel.blt(x, y, 0, 32, 8*20, 12, 12, 0)
 
 # --------------------------------------------------

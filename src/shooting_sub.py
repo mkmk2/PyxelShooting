@@ -15,8 +15,8 @@ def GetDirection(self, x1, y1, x2, y2):
 
 #  ------------------------------------------
 def SetVector(self, r, rate):
-    self.vector_x = math.cos(r) * rate
-    self.vector_y = math.sin(r) * rate
+    self.vector.x = math.cos(r) * rate
+    self.vector.y = math.sin(r) * rate
 
 #        print(self.vector_x)
 #        print(self.vector_y)
@@ -25,6 +25,6 @@ def SetVector(self, r, rate):
 #  ------------------------------------------
 def DebugDrawPosHitRect(self):
     if imp._DEBUG_:
-        pyxel.pset(self.pos_x, self.pos_y, pyxel.frame_count % 16)
-        pyxel.rectb(self.pos_x - (self.hit_rectx / 2), self.pos_y - (self.hit_recty / 2), self.hit_rectx, self.hit_recty, pyxel.frame_count % 16)
+        pyxel.pset(self.pos.x, self.pos.y, pyxel.frame_count % 16)
+        pyxel.rectb(self.pos.x - (self.hit_rectx / 2), self.pos.y - (self.hit_recty / 2), self.hit_rectx, self.hit_recty, pyxel.frame_count % 16)
     return
