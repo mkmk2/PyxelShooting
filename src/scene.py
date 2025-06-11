@@ -28,7 +28,7 @@ class SceneTitle:
 
     # 初期化---------------------------------------
     def __init__(self):
-        imp.game_state.game_status = imp.GAME_STATUS_TITLE    # タイトルに戻る
+        imp.game_state.game_status = imp.GameStatus.TITLE    # タイトルに戻る
 
         self.select_pos = 0
         imp.game_state.stage_no = 1
@@ -101,7 +101,7 @@ class SceneGameMain:
     # 初期化---------------------------------------
     def __init__(self):
 
-        imp.game_state.game_status = imp.GAME_STATUS_MAIN
+        imp.game_state.game_status = imp.GameStatus.MAIN
 
         # 敵セットのテーブル
         if imp.game_state.stage_no < 10:
@@ -122,7 +122,7 @@ class SceneGameMain:
     # メイン---------------------------------------
     def update(self):
         # ゲームオーバーになったらスクロール(敵セット)止める
-        if imp.game_state.game_status == imp.GAME_STATUS_MAIN:
+        if imp.game_state.game_status == imp.GameStatus.MAIN:
             self.stage_pos += 1
 
         self.SetStageEnemy()
@@ -189,7 +189,7 @@ class SceneGameMain:
                     collision.CheckColliPlItm(self, p, i)
 
         # プレイヤーが死んだらゲームオーバーへ
-        if imp.game_state.game_status != imp.GAME_STATUS_GAMEOVER:       # ゲームオーバーでないとき
+        if imp.game_state.game_status != imp.GameStatus.GAMEOVER:       # ゲームオーバーでないとき
             for p in imp.game_state.pl:
                 if p.obj_type == imp.OBJPL:
                     if p.death == 1:
@@ -197,7 +197,7 @@ class SceneGameMain:
                         SetSubScene(self, SceneGameOver())
 
         # ボスが死んだらステージクリアへ
-        if imp.game_state.game_status == imp.GAME_STATUS_MAIN:       # ゲーム中のみ
+        if imp.game_state.game_status == imp.GameStatus.MAIN:       # ゲーム中のみ
             for e in imp.game_state.em:
                 if e.__class__.__name__ == "EnemyBoss":
                     if e.death == 1:
@@ -228,8 +228,8 @@ class SceneGameMain:
 
     def draw(self):
         # ゲーム画面
-        if imp.game_state.game_status == imp.GAME_STATUS_MAIN or imp.game_state.game_status == imp.GAME_STATUS_GAMEOVER\
-                or imp.game_state.game_status == imp.GAME_STATUS_STAGECLEAR:
+        if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.GAMEOVER\
+                or imp.game_state.game_status == imp.GameStatus.STAGECLEAR:
             # プレイヤー
             for p in imp.game_state.pl:
                 if p.obj_type == imp.OBJPL:
@@ -362,7 +362,7 @@ class SceneGameOver:
 
     # 初期化---------------------------------------
     def __init__(self):
-        imp.game_state.game_status = imp.GAME_STATUS_GAMEOVER       # ゲームオーバー
+        imp.game_state.game_status = imp.GameStatus.GAMEOVER       # ゲームオーバー
 
         self.pos_x = 128 - (8 * 4) - 4
         self.pos_y = 100
@@ -388,7 +388,7 @@ class SceneGameOver:
 class SceneGameClear:
     # 初期化---------------------------------------
     def __init__(self):
-        imp.game_state.game_status = imp.GAME_STATUS_STAGECLEAR       # ステージクリア
+        imp.game_state.game_status = imp.GameStatus.STAGECLEAR       # ステージクリア
 
         self.pos_x = 128 - (8 * 2.5)
         self.pos_y = 100
@@ -413,7 +413,7 @@ class SceneGameClear:
 class SceneNextStage:
     # 初期化---------------------------------------
     def __init__(self):
-        imp.game_state.game_status = imp.GAME_STATUS_NEXTSTAGE       # 次のステージ
+        imp.game_state.game_status = imp.GameStatus.NEXTSTAGE       # 次のステージ
 
     # メイン---------------------------------------
     def update(self):

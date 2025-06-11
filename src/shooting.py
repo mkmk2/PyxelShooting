@@ -7,8 +7,7 @@ import scene
 class App:
 
     # ゲームの状態
-    imp.game_state.game_status = imp.GAME_STATUS_TITLE
-
+    imp.game_state.game_status = imp.GameStatus.TITLE
     # メインシーン
     imp.game_state.main_scene = None
     # サブシーン
@@ -64,5 +63,4 @@ class App:
 
 
 App()
-
 # ==================================================

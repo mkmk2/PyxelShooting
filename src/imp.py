@@ -1,3 +1,5 @@
+from enum import Enum
+
 # _DEBUG_ = True
 _DEBUG_ = True
 _DEBUG_LV_ = True
@@ -7,16 +9,16 @@ WINDOW_H = 240
 CAT_H = 16
 CAT_W = 16
 
-COLOR_WhitE = 7
+COLOR_WHITE = 7
 COLOR_RED = 8
 
-BLOCK_DOWN_WAIT = 6
 
-GAME_STATUS_TITLE = 0
-GAME_STATUS_MAIN = 1
-GAME_STATUS_GAMEOVER = 2
-GAME_STATUS_STAGECLEAR = 3
-GAME_STATUS_NEXTSTAGE = 4
+class GameStatus(Enum):
+    TITLE = 0
+    MAIN = 1
+    GAMEOVER = 2
+    STAGECLEAR = 3
+    NEXTSTAGE = 4
 
 
 POS_FIELD_X = 10
@@ -131,16 +133,14 @@ class Vector2:
 
 class GameState:
     def __init__(self):
-        # シーン
-        # Nextsub_scene から sub_scene へ入れるときにインスタンス化する、SubScnenに何か入ってたらdelしてから入れる
-        self.main_scene = None
+        self.main_scene = None      # シーン
         self.sub_scene = None
 
         self.pl = []                # プレイヤー・プレイヤーの弾オブジェクト
         self.em = []                # 敵・敵の弾オブジェクト
         self.eff = []               # エフェクト
         self.itm = []               # アイテム
-        self.game_status = GAME_STATUS_TITLE
+        self.game_status = GameStatus.TITLE
         self.score = 0
         self.stage_no = 0           # ステージNo(1から)
         self.StageSetTbl = ""       # 敵セットTbl

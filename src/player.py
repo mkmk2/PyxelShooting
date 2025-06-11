@@ -57,7 +57,7 @@ class Player(imp.Sprite):
 
         elif self.pl_st0 == PlayerState.PLAY:           # ゲームプレイ中
 
-            if imp.game_state.game_status == imp.GAME_STATUS_MAIN:     # ゲーム中のみ死にチェック
+            if imp.game_state.game_status == imp.GameStatus.MAIN:     # ゲーム中のみ死にチェック
                 if self.life <= 0:          # 0以下なら死ぬ
                     self.pl_st0 = PlayerState.DEATH    # 死に
                     self.mv_wait = 10           # 爆発数
@@ -69,7 +69,7 @@ class Player(imp.Sprite):
                     self.mv_wait = 0
                     self.mv_time = 40
 
-            if imp.game_state.game_status == imp.GAME_STATUS_STAGECLEAR:    # ステージクリア
+            if imp.game_state.game_status == imp.GameStatus.STAGECLEAR:    # ステージクリア
                 self.pl_st0 = PlayerState.CLEAR     # クリア
                 self.pl_dir = 0                       # 前
 
