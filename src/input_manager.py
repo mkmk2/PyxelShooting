@@ -37,37 +37,37 @@ class InputManager:
 
 # プレイヤーの移動
     # 上
-    def is_player_up_held(self):
+    def is_input_up_held(self):
         return (pyxel.btn(pyxel.KEY_UP) or
                 pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_UP))
 
     # 下
-    def is_player_down_held(self):
+    def is_input_down_held(self):
         return (pyxel.btn(pyxel.KEY_DOWN) or
                 pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_DOWN))
 
     # 右
-    def is_player_left_held(self):
+    def is_input_left_held(self):
         return (pyxel.btn(pyxel.KEY_LEFT) or
                 pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT))
 
     # 左
-    def is_player_right_held(self):
+    def is_input_right_held(self):
         return (pyxel.btn(pyxel.KEY_RIGHT) or
                 pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT))
 
     # 上下右左
     def is_any_movement_held(self):
-        return (self.is_player_up_held() or
-                self.is_player_down_held() or
-                self.is_player_left_held() or
-                self.is_player_right_held())
+        return (self.is_input_up_held() or
+                self.is_input_down_held() or
+                self.is_input_left_held() or
+                self.is_input_right_held())
 
     def get_movement_direction(self):
-        up = self.is_player_up_held()
-        down = self.is_player_down_held()
-        left = self.is_player_left_held()
-        right = self.is_player_right_held()
+        up = self.is_input_up_held()
+        down = self.is_input_down_held()
+        left = self.is_input_left_held()
+        right = self.is_input_right_held()
 
         # 8方向の判定
         if up and right:
@@ -91,9 +91,9 @@ class InputManager:
 
     def get_player_direction_sprite(self):
 
-        if self.is_player_left_held():
+        if self.is_input_left_held():
             return 1  # 左向き
-        elif self.is_player_right_held():
+        elif self.is_input_right_held():
             return 2  # 右向き
         else:
             return 0  # 前向き
