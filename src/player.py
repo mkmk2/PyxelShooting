@@ -223,12 +223,11 @@ class PlayerBullet(imp.Sprite):
     def __init__(self, x, y, id_0, id_1, item):
         imp.Sprite.__init__(self, imp.OBJPLB, x, y, id_0, id_1, item)
 
-        self.pos_adj.x = -3
-        self.pos_adj.y = -3
+        self.pos_adj = imp.Vector2(-3, -3)
         self.life = 1
         self.hit_point = 1
-        self.hit_rectx = 2
-        self.hit_recty = 3
+        self.hit_rectx = 8
+        self.hit_recty = 8
 
         if self.id0 == 0:   # 前
             self.vector = imp.Vector2(0, -6.5)
