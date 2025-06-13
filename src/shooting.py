@@ -1,6 +1,7 @@
 import pyxel
 import imp
 import scene
+import input_manager
 
 
 # ==================================================
@@ -29,7 +30,7 @@ class App:
     # メイン---------------------------------------
     def update(self):
 
-        if pyxel.btnp(pyxel.KEY_Q):
+        if input_manager.input_manager.is_quit_pressed():
             pyxel.quit()
 
         # メインシーン

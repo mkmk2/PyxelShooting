@@ -4,9 +4,10 @@ import math
 import imp
 import shooting_sub
 import effect
+import input_manager
 from enum import Enum
 
-PL_SPEED = 1.5
+PL_SPEED = 2.5
 
 
 class PlayerState(Enum):
@@ -30,17 +31,14 @@ class Player(imp.Sprite):
         self.pl_dir = 0              # 上下のパターン切り替え
         self.pl_st0 = PlayerState.DEMO      # st0
 
-        self.pos.x = 128
-        self.pos.y = 250
-        self.pos_adj.x = -8
-        self.pos_adj.y = -8
+        self.pos = imp.Vector2(128, 250)
+        self.pos_adj = imp.Vector2(-8, -8)
 
         self.life = 3
         self.hit_rectx = 4
         self.hit_recty = 4
 
-        self.vector.x = 0
-        self.vector.y = 0
+        self.vector = imp.Vector2(0, 0)
 
     def __del__(self):
         pass
@@ -78,9 +76,7 @@ class Player(imp.Sprite):
                 self.PlayerLeverMove()
 
                 # 弾セット(スペースキー)
-                if pyxel.btn(pyxel.KEY_SPACE)\
-                        or pyxel.btn(pyxel.GAMEPAD1_BUTTON_A)\
-                        or pyxel.btn(pyxel.GAMEPAD1_BUTTON_B):
+                if input_manager.input_manager.is_shot_held():
                     self.shot_time -= 1
                     if self.shot_time < 0:
                         self.shot_time = 6
@@ -152,7 +148,7 @@ class Player(imp.Sprite):
                 self.mv_wait -= 1
                 if self.mv_wait <= 0:
                     self.death = 1          # 死ぬ
-                    if imp._DEBUG_ is True:
+                    if imp._DEBUG_:
                         print("pl die")
 
         elif self.pl_st0 == PlayerState.CLEAR:           # クリア
@@ -187,7 +183,8 @@ class Player(imp.Sprite):
                 pyxel.blt(self.pos.x - 5, self.pos.y + 8, 0, 8, 24, -6, 6, 0)
 
         # 中心の表示
-#        shooting_sub.DebugDrawPoshitRect(self)
+        if imp._DEBUG_:
+            shooting_sub.DebugDrawPosHitRect(self)
 
 # --------------------------------------------------
     # プレイヤー移動
@@ -196,52 +193,18 @@ class Player(imp.Sprite):
         self.pl_dir = 0                       # 前
         self.vector.x = 0
         self.vector.y = 0
-        d = 0
 
-        if pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.KEY_LEFT)\
-                or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_UP) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_DOWN)\
-                or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT):
+        # キー入力
+        direction = input_manager.input_manager.get_movement_direction()
 
-            # 上右
-            if (pyxel.btn(pyxel.KEY_UP) and pyxel.btn(pyxel.KEY_RIGHT))\
-                    or (pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_UP) and pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT)):
-                d = 315
-                self.pl_dir = 2                   # 右
-            # 上左
-            elif (pyxel.btn(pyxel.KEY_UP) and pyxel.btn(pyxel.KEY_LEFT))\
-                    or (pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_UP) and pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT)):
-                d = 225
-                self.pl_dir = 1                   # 左
-            # 下右
-            elif (pyxel.btn(pyxel.KEY_DOWN) and pyxel.btn(pyxel.KEY_RIGHT))\
-                    or (pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_DOWN) and pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT)):
-                d = 45
-                self.pl_dir = 2                   # 右
-            # 下左
-            elif (pyxel.btn(pyxel.KEY_DOWN) and pyxel.btn(pyxel.KEY_LEFT))\
-                    or (pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_DOWN) and pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT)):
-                d = 135
-                self.pl_dir = 1                   # 左
-            else:
-                # 上移動(上カーソルキー)
-                if pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_UP):
-                    d = 270
-                # 下移動(下カーソルキー)
-                elif pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_DOWN):
-                    d = 90
-                # 右移動(右カーソルキー)
-                elif pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT):
-                    d = 0
-                    self.pl_dir = 2                   # 右
-                # 左移動(左カーソルキー)
-                elif pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT):
-                    d = 180
-                    self.pl_dir = 1                   # 左
+        if direction is not None:
+            # 移動方向設定
+            self.pl_dir = input_manager.input_manager.get_player_direction_sprite()
 
-            shooting_sub.SetVector(self, math.radians(d), PL_SPEED)
-            self.pos.x += self.vector.x
-            self.pos.y += self.vector.y
+            shooting_sub.SetVector(self, math.radians(direction), PL_SPEED)
+            self.pos += self.vector
 
+            # 画面内制限
             if self.pos.y < 50:
                 self.pos.y = 50
             if self.pos.y > imp.WINDOW_H - 16:
@@ -268,28 +231,26 @@ class PlayerBullet(imp.Sprite):
         self.hit_recty = 3
 
         if self.id0 == 0:   # 前
-            self.vector.x = 0
-            self.vector.y = -3.5
+            self.vector = imp.Vector2(0, -6.5)
+
         if self.id0 == 1:   # 左側
-            self.vector.x = -0.25
-            self.vector.y = -3.5
+            self.vector = imp.Vector2(-0.25, -6.5)
+
         if self.id0 == 2:   # 右側
-            self.vector.x = 0.25
-            self.vector.y = -3.5
+            self.vector = imp.Vector2(0.25, -6.5)
 
     # メイン
     def update(self):
-        self.pos.x += self.vector.x
-        self.pos.y += self.vector.y
+        self.pos += self.vector
 
         # 画面内チェック
         imp.CheckScreenIn(self)
 
     # 描画
     def draw(self):
-        x = self.pos.x + self.pos_adj.x
-        y = self.pos.y + self.pos_adj.y
-        pyxel.blt(x, y, 0, 0, 16, 6, 6, 0)
+        pos = self.pos + self.pos_adj
+        pyxel.blt(pos.x, pos.y, 0, 0, 16, 6, 6, 0)
 
         # 中心の表示
-#        shooting_sub.DebugDrawPoshitRect(self)
+        if imp._DEBUG_:
+            shooting_sub.DebugDrawPosHitRect(self)

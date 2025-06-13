@@ -143,11 +143,13 @@ class GameState:
         self.game_status = GameStatus.TITLE
         self.score = 0
         self.stage_no = 0           # ステージNo(1から)
+        self.stage_pos = 0          # 敵セット
         self.StageSetTbl = ""       # 敵セットTbl
         # プレイヤーレベル
         self.pl_item_num = 0        # アイテム取得数
         self.pl_level = 0           # アイテム取得数
         self.pl_levelup_eff = 0     # レベルアップ点滅
+        self.tile_pos = Vector2(0, 0)   # タイルPos
 
 
 # GameStateのインスタンスを作成

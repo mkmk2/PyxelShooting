@@ -1,6 +1,7 @@
 import pyxel
 import imp
 import plitem
+import shooting_sub
 
 
 # ==================================================
@@ -19,8 +20,7 @@ class EnemyNorm(imp.Sprite):
     def __init__(self, x, y, i0, i1, item):
         imp.Sprite.__init__(self, imp.OBJEM, x, y, i0, i1, item)       # Spriteクラスのコンストラクタ
 
-        self.pos_adj.x = -6
-        self.pos_adj.y = -6
+        self.pos_adj = imp.Vector2(-6, -6)
         self.hit_point = 1
         self.hit_rectx = 8
         self.hit_recty = 8
@@ -77,12 +77,12 @@ class EnemyNorm(imp.Sprite):
 
         # -----------------------------------------------
     def draw(self):
-        x = self.pos.x + self.pos_adj.x
-        y = self.pos.y + self.pos_adj.y
+        pos = self.pos + self.pos_adj
+        pyxel.blt(pos.x, pos.y, 0, 0, 56, 12, 12, 0)
 
         if self.id0 == 0:
             if self.st1 == 0:
-                pyxel.blt(x, y, 0, 0, 56, 12, 12, 0)
+                pyxel.blt(pos.x, pos.y, 0, 0, 56, 12, 12, 0)
             else:
                 self.ptn_time -= 1
                 if self.ptn_time <= 0:
@@ -97,16 +97,17 @@ class EnemyNorm(imp.Sprite):
                         if self.ptn_no < 0:
                             self.ptn_no = 7
 
-                pyxel.blt(x, y, 0, 16 * self.ptn_no, 56, 12, 12, 0)
+                pyxel.blt(pos.x, pos.y, 0, 16 * self.ptn_no, 56, 12, 12, 0)
 
         elif self.id0 == 1:
             if pyxel.frame_count & 0x08:
-                pyxel.blt(x, y, 0, 40, 72, 12, 12, 0)
+                pyxel.blt(pos.x, pos.y, 0, 40, 72, 12, 12, 0)
             else:
-                pyxel.blt(x, y, 0, 56, 72, 12, 12, 0)
+                pyxel.blt(pos.x, pos.y, 0, 56, 72, 12, 12, 0)
 
         # 中心の表示
-#        shooting_sub.DebugDrawPosHitRect(self)
+        if imp._DEBUG_:
+            shooting_sub.DebugDrawPosHitRect(self)
 
 
 # ==================================================
@@ -132,8 +133,7 @@ class EnemyItemGroup(imp.Sprite):
     def __init__(self, x, y, i0, i1, item):
         imp.Sprite.__init__(self, imp.OBJEM, x, y, i0, i1, item)       # Spriteクラスのコンストラクタ
 
-        self.pos_adj.x = -6
-        self.pos_adj.y = -6
+        self.pos_adj = imp.Vector2(-6, -6)
         self.hit_point = 1
         self.hit_rectx = 8
         self.hit_recty = 8
@@ -193,12 +193,11 @@ class EnemyItemGroup(imp.Sprite):
 
         # -----------------------------------------------
     def draw(self):
-        x = self.pos.x + self.pos_adj.x
-        y = self.pos.y + self.pos_adj.y
+        pos = self.pos + self.pos_adj
 
         if self.id0 == 0:
             if self.st1 == 0:
-                pyxel.blt(x, y, 0, 0, 56, 12, 12, 0)
+                pyxel.blt(pos.x, pos.y, 0, 0, 56, 12, 12, 0)
             else:
                 self.ptn_time -= 1
                 if self.ptn_time <= 0:
@@ -213,13 +212,14 @@ class EnemyItemGroup(imp.Sprite):
                         if self.ptn_no < 0:
                             self.ptn_no = 7
 
-                pyxel.blt(x, y, 0, 16 * self.ptn_no, 56, 12, 12, 0)
+                pyxel.blt(pos.x, pos.y, 0, 16 * self.ptn_no, 56, 12, 12, 0)
 
         elif self.id0 == 1:
             if pyxel.frame_count & 0x08:
-                pyxel.blt(x, y, 0, 40, 72, 12, 12, 0)
+                pyxel.blt(pos.x, pos.y, 0, 40, 72, 12, 12, 0)
             else:
-                pyxel.blt(x, y, 0, 56, 72, 12, 12, 0)
+                pyxel.blt(pos.x, pos.y, 0, 56, 72, 12, 12, 0)
 
         # 中心の表示
-#        shooting_sub.DebugDrawPosHitRect(self)
+        if imp._DEBUG_:
+            shooting_sub.DebugDrawPosHitRect(self)

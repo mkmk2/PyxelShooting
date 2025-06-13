@@ -3,6 +3,7 @@ import imp
 import player
 import enemy_set
 import collision
+import input_manager
 
 
 # ==================================================
@@ -36,27 +37,27 @@ class SceneTitle:
     # メイン---------------------------------------
     def update(self):
         # タイトル画面
-        # 上移動(上カーソルキー)
-        if pyxel.btnp(pyxel.KEY_UP) or pyxel.btnp(pyxel.GAMEPAD1_BUTTON_DPAD_UP):
+        # 上
+        if input_manager.input_manager.is_menu_up_pressed():
             if self.select_pos > 0:
                 self.select_pos -= 1
 
-        # 下移動(下カーソルキー)
-        if pyxel.btnp(pyxel.KEY_DOWN) or pyxel.btnp(pyxel.GAMEPAD1_BUTTON_DPAD_DOWN):
+        # 下
+        if input_manager.input_manager.is_menu_down_pressed():
             if self.select_pos == 0:
                 self.select_pos += 1
 
-        # 右移動(右カーソルキー) UP
-        if pyxel.btnp(pyxel.KEY_RIGHT) or pyxel.btnp(pyxel.GAMEPAD1_BUTTON_DPAD_RIGHT):
+        # 右
+        if input_manager.input_manager.is_menu_right_pressed():
             if imp.game_state.stage_no < imp.STAGE_NO_MAX:
                 imp.game_state.stage_no += 1
 
-        # 左移動(左カーソルキー) DOWN
-        if pyxel.btnp(pyxel.KEY_LEFT) or pyxel.btnp(pyxel.GAMEPAD1_BUTTON_DPAD_LEFT):
+        # 左
+        if input_manager.input_manager.is_menu_left_pressed():
             if imp.game_state.stage_no > 1:
                 imp.game_state.stage_no -= 1
 
-        if pyxel.btnp(pyxel.KEY_SPACE) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_A) or pyxel.btn(pyxel.GAMEPAD1_BUTTON_B):
+        if input_manager.input_manager.is_menu_select_pressed():
             if self.select_pos == 1:
                 imp.game_state.stage_no += 10               # テストステージは+10
 
@@ -74,7 +75,7 @@ class SceneTitle:
 
     def draw(self):
         # タイトル画面
-        pyxel.bltm(0, 0, 0, 8 * 9, 0, 32, 30)
+        pyxel.bltm(32, 32, 0, 0, 0, 80, 64)
 
 #        ti = "TITLE"
 #        pyxel.text(100, 100, ti, 7)
@@ -96,8 +97,6 @@ class SceneTitle:
 # Scene ゲームメイン
 class SceneGameMain:
 
-    stage_pos = 0
-
     # 初期化---------------------------------------
     def __init__(self):
 
@@ -110,7 +109,9 @@ class SceneGameMain:
         else:
             imp.game_state.StageSetTbl = enemy_set.STAGE_SET_TEST
 
-        self.stage_pos = 0              # ステージ
+        imp.game_state.stage_pos = 0              # ステージ
+        imp.game_state.tile_pos.x = 0
+        imp.game_state.tile_pos.y = 256
 
         # プレイヤーのセット
         imp.game_state.pl.append(player.Player(30, 40, 0, 100, 0))
@@ -123,7 +124,7 @@ class SceneGameMain:
     def update(self):
         # ゲームオーバーになったらスクロール(敵セット)止める
         if imp.game_state.game_status == imp.GameStatus.MAIN:
-            self.stage_pos += 1
+            imp.game_state.stage_pos += 1
 
         self.SetStageEnemy()
 
@@ -228,6 +229,12 @@ class SceneGameMain:
 
     def draw(self):
         # ゲーム画面
+        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, 256, 256)
+        if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.STAGECLEAR:
+            imp.game_state.tile_pos.y -= 0.1
+            if imp.game_state.tile_pos.y > 0:
+                imp.game_state.tile_pos.y = 0
+
         if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.GAMEOVER\
                 or imp.game_state.game_status == imp.GameStatus.STAGECLEAR:
             # プレイヤー
@@ -297,7 +304,7 @@ class SceneGameMain:
                             pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
             # スクロールPos
             if imp._DEBUG_:
-                pos = "{:5}".format(self.stage_pos)
+                pos = "{:5}".format(imp.game_state.stage_pos)
                 pyxel.text(220, 200, pos, 7)
 
 #  ------------------------------------------
@@ -309,8 +316,8 @@ class SceneGameMain:
         while sl > 0:
             e = imp.game_state.StageSetTbl[n]
             pos += e[0]
-            if self.stage_pos == pos:          # 等しい時のみ敵セットする
-                while self.stage_pos == pos:   # 同じPosを繰り返しセット
+            if imp.game_state.stage_pos == pos:          # 等しい時のみ敵セットする
+                while imp.game_state.stage_pos == pos:   # 同じPosを繰り返しセット
                     t = e[3]
                     imp.game_state.em.append(t(e[1], e[2], e[4], e[5], e[6]))
 
