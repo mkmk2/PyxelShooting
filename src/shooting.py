@@ -7,7 +7,7 @@ import input_manager
 # ==================================================
 class App:
 
-    # ゲームの状態
+    # ゲームの状態 
     imp.game_state.game_status = imp.GameStatus.TITLE
     # メインシーン
     imp.game_state.main_scene = None

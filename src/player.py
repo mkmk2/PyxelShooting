@@ -157,34 +157,69 @@ class Player(imp.Sprite):
 
 # 描画
     def draw(self):
-        x = self.pos.x + self.pos_adj.x
-        y = self.pos.y + self.pos_adj.y
+        x = self.pos.x
+        y = self.pos.y
 
         if self.pl_dir == 0:
-            pyxel.blt(x, y, 0, 16, 0, 16, 16, 0)      # 前
-
-            if pyxel.frame_count & 0x04:
-                pyxel.blt(self.pos.x + 0, self.pos.y + 8, 0, 8, 16, 6, 6, 0)
-                pyxel.blt(self.pos.x - 6, self.pos.y + 8, 0, 8, 16, -6, 6, 0)
-            else:
-                pyxel.blt(self.pos.x + 0, self.pos.y + 8, 0, 8, 24, 6, 6, 0)
-                pyxel.blt(self.pos.x - 6, self.pos.y + 8, 0, 8, 24, -6, 6, 0)
+            self.DrawPlayer00(x, y)
+        elif self.pl_dir == 1:
+            self.DrawPlayer01(x, y)
         else:
-            if self.pl_dir == 1:
-                pyxel.blt(x, y, 0,  0, 0, 16, 16, 0)      # 左
-            else:
-                pyxel.blt(x, y, 0, 32, 0, 16, 16, 0)      # 右
-
-            if pyxel.frame_count & 0x04:
-                pyxel.blt(self.pos.x - 1, self.pos.y + 8, 0, 8, 16, 6, 6, 0)
-                pyxel.blt(self.pos.x - 5, self.pos.y + 8, 0, 8, 16, -6, 6, 0)
-            else:
-                pyxel.blt(self.pos.x - 1, self.pos.y + 8, 0, 8, 24, 6, 6, 0)
-                pyxel.blt(self.pos.x - 5, self.pos.y + 8, 0, 8, 24, -6, 6, 0)
+            self.DrawPlayer02(x, y)
 
         # 中心の表示
         if imp._DEBUG_:
             shooting_sub.DebugDrawPosHitRect(self)
+
+# --------------------------------------------------
+# 前
+    def DrawPlayer00(self, x, y):
+        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0, 16, 0, 16, 16)      # 前
+
+        if pyxel.frame_count & 0x04:
+            self.sprite_draw(x + 0, y + 8, 0, 8, 16, 6, 6)
+            self.sprite_draw(x - 6, y + 8, 0, 8, 16, -6, 6)
+        else:
+            self.sprite_draw(x + 0, y + 8, 0, 8, 24, 6, 6)
+            self.sprite_draw(x - 6, y + 8, 0, 8, 24, -6, 6)
+
+# --------------------------------------------------
+# 左
+    def DrawPlayer01(self, x, y):
+        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0,  0, 0, 16, 16)      # 左
+
+        if pyxel.frame_count & 0x04:
+            self.sprite_draw(x + 0, y + 8, 0, 8, 16, 6, 6)
+            self.sprite_draw(x - 6, y + 8, 0, 8, 16, -6, 6)
+        else:
+            self.sprite_draw(x + 0, y + 8, 0, 8, 24, 6, 6)
+            self.sprite_draw(x - 6, y + 8, 0, 8, 24, -6, 6)
+
+        if pyxel.frame_count & 0x04:
+            self.sprite_draw(x - 1, y + 8, 0, 8, 16, 6, 6)
+            self.sprite_draw(x - 5, y + 8, 0, 8, 16, -6, 6)
+        else:
+            self.sprite_draw(x - 1, y + 8, 0, 8, 24, 6, 6)
+            self.sprite_draw(x - 5, y + 8, 0, 8, 24, -6, 6)
+
+# --------------------------------------------------
+# 右
+    def DrawPlayer02(self, x, y):
+        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0,  32, 0, 16, 16)      # 右
+
+        if pyxel.frame_count & 0x04:
+            self.sprite_draw(x + 0, y + 8, 0, 8, 16, 6, 6)
+            self.sprite_draw(x - 6, y + 8, 0, 8, 16, -6, 6)
+        else:
+            self.sprite_draw(x + 0, y + 8, 0, 8, 24, 6, 6)
+            self.sprite_draw(x - 6, y + 8, 0, 8, 24, -6, 6)
+
+        if pyxel.frame_count & 0x04:
+            self.sprite_draw(x - 1, y + 8, 0, 8, 16, 6, 6)
+            self.sprite_draw(x - 5, y + 8, 0, 8, 16, -6, 6)
+        else:
+            self.sprite_draw(x - 1, y + 8, 0, 8, 24, 6, 6)
+            self.sprite_draw(x - 5, y + 8, 0, 8, 24, -6, 6)
 
 # --------------------------------------------------
     # プレイヤー移動
@@ -243,12 +278,12 @@ class PlayerBullet(imp.Sprite):
         self.pos += self.vector
 
         # 画面内チェック
-        imp.CheckScreenIn(self)
+        self.CheckScreenIn()
 
     # 描画
     def draw(self):
         pos = self.pos + self.pos_adj
-        pyxel.blt(pos.x, pos.y, 0, 0, 16, 6, 6, 0)
+        self.sprite_draw(pos.x, pos.y, 0, 0, 16, 6, 6)
 
         # 中心の表示
         if imp._DEBUG_:

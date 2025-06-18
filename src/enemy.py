@@ -73,16 +73,16 @@ class EnemyNorm(imp.Sprite):
                 imp.game_state.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
 
         # 画面内チェック
-        imp.CheckScreenIn(self)
+        self.CheckScreenIn()
 
         # -----------------------------------------------
     def draw(self):
         pos = self.pos + self.pos_adj
-        pyxel.blt(pos.x, pos.y, 0, 0, 56, 12, 12, 0)
+        self.sprite_draw(pos.x, pos.y, 0, 0, 56, 12, 12)
 
         if self.id0 == 0:
             if self.st1 == 0:
-                pyxel.blt(pos.x, pos.y, 0, 0, 56, 12, 12, 0)
+                self.sprite_draw(pos.x, pos.y, 0, 0, 56, 12, 12)
             else:
                 self.ptn_time -= 1
                 if self.ptn_time <= 0:
@@ -97,13 +97,13 @@ class EnemyNorm(imp.Sprite):
                         if self.ptn_no < 0:
                             self.ptn_no = 7
 
-                pyxel.blt(pos.x, pos.y, 0, 16 * self.ptn_no, 56, 12, 12, 0)
+                self.sprite_draw(pos.x, pos.y, 0, 16 * self.ptn_no, 56, 12, 12)
 
         elif self.id0 == 1:
             if pyxel.frame_count & 0x08:
-                pyxel.blt(pos.x, pos.y, 0, 40, 72, 12, 12, 0)
+                self.sprite_draw(pos.x, pos.y, 0, 40, 72, 12, 12)
             else:
-                pyxel.blt(pos.x, pos.y, 0, 56, 72, 12, 12, 0)
+                self.sprite_draw(pos.x, pos.y, 0, 56, 72, 12, 12)
 
         # 中心の表示
         if imp._DEBUG_:
@@ -189,7 +189,7 @@ class EnemyItemGroup(imp.Sprite):
                     imp.game_state.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
 
         # 画面内チェック
-        imp.CheckScreenIn(self)
+        self.CheckScreenIn(self)
 
         # -----------------------------------------------
     def draw(self):
@@ -197,7 +197,7 @@ class EnemyItemGroup(imp.Sprite):
 
         if self.id0 == 0:
             if self.st1 == 0:
-                pyxel.blt(pos.x, pos.y, 0, 0, 56, 12, 12, 0)
+                self.sprite_draw(pos.x, pos.y, 0, 0, 56, 12, 12)
             else:
                 self.ptn_time -= 1
                 if self.ptn_time <= 0:
@@ -212,13 +212,13 @@ class EnemyItemGroup(imp.Sprite):
                         if self.ptn_no < 0:
                             self.ptn_no = 7
 
-                pyxel.blt(pos.x, pos.y, 0, 16 * self.ptn_no, 56, 12, 12, 0)
+                self.sprite_draw(pos.x, pos.y, 0, 16 * self.ptn_no, 56, 12, 12)
 
         elif self.id0 == 1:
             if pyxel.frame_count & 0x08:
-                pyxel.blt(pos.x, pos.y, 0, 40, 72, 12, 12, 0)
+                self.sprite_draw(pos.x, pos.y, 0, 40, 72, 12, 12)
             else:
-                pyxel.blt(pos.x, pos.y, 0, 56, 72, 12, 12, 0)
+                self.sprite_draw(pos.x, pos.y, 0, 56, 72, 12, 12)
 
         # 中心の表示
         if imp._DEBUG_:

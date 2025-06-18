@@ -1,4 +1,3 @@
-import pyxel
 import imp
 
 # Id0
@@ -46,14 +45,14 @@ class PlItem(imp.Sprite):
         # 画面内チェック
         self.screen_time -= 1
         if self.screen_time < 0:
-            if imp.CheckScreenIn(self) is False:
+            if self.CheckScreenIn(self) is False:
                 self.death = 1
 
     # 描画
     def draw(self):
         x = self.pos.x - 4
         y = self.pos.y - 4
-        pyxel.blt(x, y, 0, 48, 0, 8, 8, 0)
+        self.sprite_draw(x, y, 0, 48, 0, 8, 8)
 
 # --------------------------------------------------
 

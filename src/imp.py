@@ -1,3 +1,4 @@
+import pyxel
 from enum import Enum
 
 # _DEBUG_ = True
@@ -78,27 +79,31 @@ class Sprite:
 
         self.tmp_ctr = 0
 
+#  ------------------------------------------
+# スプライト表示
+    def sprite_draw(self, x, y, img, u, v, w, h):
+        pyxel.blt(x, y, img, u, v, w, h, 0)
 
 #  ------------------------------------------
 # 画面内チェック
-def CheckScreenIn(self):
-    if self.screen_time >= SCREEN_TIME:
-        SafeArea = 10           # 画面外のチェックする幅
-        if _DEBUG_:
-            SafeArea = -20       # Debug 画面の中で判定する
+    def CheckScreenIn(self):
+        if self.screen_time >= SCREEN_TIME:
+            SafeArea = 10           # 画面外のチェックする幅
+            if _DEBUG_:
+                SafeArea = -20       # Debug 画面の中で判定する
 
-        if -SafeArea < self.pos.x and self.pos.x < WINDOW_W + SafeArea:
-            if -SafeArea < self.pos.y and self.pos.y < WINDOW_H + SafeArea:
-                return True     # 画面内
+            if -SafeArea < self.pos.x and self.pos.x < WINDOW_W + SafeArea:
+                if -SafeArea < self.pos.y and self.pos.y < WINDOW_H + SafeArea:
+                    return True     # 画面内
 
-        self.death = 1          # 消す
-        if _DEBUG_:
-            print("out:"+self.__class__.__name__)
-        return False            # 画面外
+            self.death = 1          # 消す
+            if _DEBUG_:
+                print("out:"+self.__class__.__name__)
+            return False            # 画面外
 
-    else:
-        self.screen_time += 1
-    return True     # 画面内
+        else:
+            self.screen_time += 1
+        return True     # 画面内
 
 
 #  ------------------------------------------
