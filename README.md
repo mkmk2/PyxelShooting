@@ -3,7 +3,7 @@
 
 **現在はゲームのシステム部分（シーン管理や基本的な操作など）のみ実装されており、ゲーム内容や演出などはこれから追加予定です。**
 
-https://kitao.github.io/pyxel/wasm/launcher/?play=mkmk2.PyxelShooting.src.PyxelShooting&gamepad=enabled
+https://kitao.github.io/pyxel/wasm/launcher/?play=mkmk2.PyxelShooting.src.shooting&gamepad=enabled
 
 ## 主な特徴
 - タイトル画面、メインゲーム、サブシーン（例：ポーズやゲームオーバー）を管理するシーン制を採用しています。
