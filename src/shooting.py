@@ -20,7 +20,7 @@ class App:
                    display_scale=3, fps=60)
         pyxel.load("assets/my_resource.pyxres")
 
-        pyxel.images[0].load(0, 0, "assets/img0.png")
+        pyxel.images[0].load(0, 0, "assets/img00.png")
 
         # メインScene タイトル　セット
         scene.SetSubScene(self, scene.SceneTitle())

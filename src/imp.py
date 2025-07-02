@@ -20,6 +20,7 @@ class GameStatus(Enum):
     GAMEOVER = 2
     STAGECLEAR = 3
     NEXTSTAGE = 4
+    TEST = 5
 
 
 POS_FIELD_X = 10

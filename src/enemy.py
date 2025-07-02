@@ -109,6 +109,17 @@ class EnemyNorm(imp.Sprite):
         if imp._DEBUG_:
             shooting_sub.DebugDrawPosHitRect(self)
 
+    def TestSpriteUpdate(self):
+        self.ptn_time -= 1
+        if self.ptn_time <= 0:
+            self.ptn_time = 10
+            self.ptn_no += 1
+            if self.ptn_no >= 7:
+                self.ptn_no = 0
+
+    def TestSprite(self):
+        self.sprite_draw(self.pos.x, self.pos.y, 0, 16 * self.ptn_no, 56, 12, 12)
+
 
 # ==================================================
 # 敵ItemGroupクラス

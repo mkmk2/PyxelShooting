@@ -31,7 +31,11 @@ class Player(imp.Sprite):
         self.pl_dir = 0              # 上下のパターン切り替え
         self.pl_st0 = PlayerState.DEMO      # st0
 
-        self.pos = imp.Vector2(128, 250)
+        if imp.game_state.game_status != imp.GameStatus.TEST:       # テスト
+            self.pos = imp.Vector2(128, 250)
+        else:
+            self.pos = imp.Vector2(x, y)
+
         self.pos_adj = imp.Vector2(-8, -8)
 
         self.life = 3
@@ -222,6 +226,25 @@ class Player(imp.Sprite):
             self.sprite_draw(x - 5, y + 8, 0, 8, 24, -6, 6)
 
 # --------------------------------------------------
+# テスト用
+    def TestSpriteUpdate(self):
+        self.ptn_time -= 1
+        if self.ptn_time <= 0:
+            self.ptn_time = 20
+            self.ptn_no += 1
+            if self.ptn_no > 3:
+                self.ptn_no = 0
+
+    def TestSprite(self):
+        test_plptn = [0, 1, 2, 1]
+
+        x = self.pos.x
+        y = self.pos.y
+        self.sprite_draw(x, y, 0, 16 * test_plptn[self.ptn_no], 0, 16, 16)
+
+        pyxel.text(80, 80, str(self.ptn_no), 7)
+
+# --------------------------------------------------
     # プレイヤー移動
     def PlayerLeverMove(self):
         # プレイヤー移動
@@ -288,3 +311,4 @@ class PlayerBullet(imp.Sprite):
         # 中心の表示
         if imp._DEBUG_:
             shooting_sub.DebugDrawPosHitRect(self)
+

@@ -2,9 +2,12 @@ import pyxel
 import imp
 import player
 import enemy_set
+import enemy
 import collision
 import input_manager
 
+import os           # タイムスタンプ
+import pathlib
 
 # ==================================================
 # メインシーンセット-----------------------------
@@ -44,7 +47,7 @@ class SceneTitle:
 
         # 下
         if input_manager.input_manager.is_menu_down_pressed():
-            if self.select_pos == 0:
+            if self.select_pos < 2:
                 self.select_pos += 1
 
         # 右
@@ -57,6 +60,7 @@ class SceneTitle:
             if imp.game_state.stage_no > 1:
                 imp.game_state.stage_no -= 1
 
+        # スペース
         if input_manager.input_manager.is_menu_select_pressed():
             if self.select_pos == 1:
                 imp.game_state.stage_no += 10               # テストステージは+10
@@ -68,10 +72,14 @@ class SceneTitle:
             imp.game_state.pl_level = 0       # レベル
             imp.game_state.pl_levelup_eff = 0
 
-            SetMainScene(self, SceneGameMain())
-
-            # サブシーン Start セット
-            SetSubScene(self, SceneStart())
+            if self.select_pos <= 1:
+                # ゲームメイン、ゲームテスト
+                SetMainScene(self, SceneGameMain())
+                SetSubScene(self, SceneStart())
+            else:
+                # テスト
+                SetMainScene(self, SceneTest())
+                SetSubScene(self, None)
 
     def draw(self):
         # タイトル画面
@@ -85,8 +93,10 @@ class SceneTitle:
 
         st = " START"
         pyxel.text(100, 180, st, 7)
-        test = " TEST"
-        pyxel.text(100, 190, test, 7)
+        st = " GAME TEST"
+        pyxel.text(100, 190, st, 7)
+        st = " SPRITE"
+        pyxel.text(100, 200, st, 7)
 
         # ステージNoの表示
         no = "{:02}".format(imp.game_state.stage_no)
@@ -441,4 +451,87 @@ class SceneNextStage:
     def draw(self):
         pass
 
+
 # ==================================================
+# ==================================================
+# Scene テスト
+class SceneTest:
+
+    # 初期化---------------------------------------
+    def __init__(self):
+        imp.game_state.game_status = imp.GameStatus.TEST       # テスト
+        self.select_pos = 0
+
+        self.file_anim = "assets/img00.png"
+        self.file_anim_time = 0
+        pyxel.images[0].load(0, 0, self.file_anim, incl_colors=True)
+        self.file_anim_time = os.path.getmtime(self.file_anim)
+        self.reload_text_time = 0
+
+        imp.game_state.pl.append(player.Player(128, 128, 0, 0, 0))
+
+    def __del__(self):
+        # 全てのオブジェクトを消す
+        self.DeathAllObject()
+
+    # メイン---------------------------------------
+    def update(self):
+        if input_manager.input_manager.is_menu_up_pressed() or input_manager.input_manager.is_menu_down_pressed():
+            if input_manager.input_manager.is_menu_up_pressed():
+                if self.select_pos > 0:
+                    self.select_pos -= 1
+
+            if input_manager.input_manager.is_menu_down_pressed():
+                if self.select_pos < 2:
+                    self.select_pos += 1
+
+            if self.select_pos == 0:
+                # プレイヤー
+                imp.game_state.pl.append(player.Player(128, 128, 0, 0, 0))
+            elif self.select_pos == 1:
+                # 敵
+                imp.game_state.em.append(enemy.EnemyNorm(128, 128, 0, 0, 0))
+            elif self.select_pos == 2:
+                # 弾
+                imp.game_state.pl.append(player.Player(128, 128, 0, 100, 0))
+
+        for p in imp.game_state.pl:
+            p.TestSpriteUpdate()
+        for e in imp.game_state.em:
+            e.TestSpriteUpdate()
+
+        # ファイルのタイムスタンプが更新されたらリロードする
+        t = os.path.getmtime(self.file_anim)
+        if self.file_anim_time != t:
+            self.file_anim_time = t
+            pyxel.images[0].load(0, 0, self.file_anim, incl_colors=True)
+            self.reload_text_time = 60
+
+    def draw(self):
+        st = ">"
+        pyxel.text(32-10, 100 + (self.select_pos * 10), st, 7)
+
+        st = " pl"
+        pyxel.text(32, 100, st, 7)
+        st = " em00"
+        pyxel.text(32, 110, st, 7)
+        st = " XXX"
+        pyxel.text(32, 120, st, 7)
+
+        # ステージNoの表示
+        no = "{:02}".format(imp.game_state.stage_no)
+        pyxel.text(180, 180, no, 7)
+
+        if self.reload_text_time > 0:
+            self.reload_text_time -= 1
+            pyxel.text(100, 60, "Reload", pyxel.frame_count % 16)
+
+        # プレイヤー
+        for p in imp.game_state.pl:
+            p.TestSprite()
+        # 敵
+        for e in imp.game_state.em:
+            e.TestSprite()
+
+
+
