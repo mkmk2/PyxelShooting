@@ -311,4 +311,3 @@ class PlayerBullet(imp.Sprite):
         # 中心の表示
         if imp._DEBUG_:
             shooting_sub.DebugDrawPosHitRect(self)
-
