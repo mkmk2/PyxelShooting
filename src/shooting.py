@@ -1,7 +1,7 @@
 import pyxel
 import imp
 import scene
-import input_manager
+# import input_manager
 
 
 # ==================================================
@@ -29,8 +29,8 @@ class App:
     # メイン---------------------------------------
     def update(self):
 
-        if input_manager.input_manager.is_quit_pressed():
-            pyxel.quit()
+        # if input_manager.input_manager.is_quit_pressed():
+        #    pyxel.quit()
 
         # メインシーン
         if imp.game_state.main_scene is not None:

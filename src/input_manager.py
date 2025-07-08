@@ -104,6 +104,11 @@ class InputManager:
                 pyxel.btn(pyxel.GAMEPAD1_BUTTON_A) or
                 pyxel.btn(pyxel.GAMEPAD1_BUTTON_B))
 
+    def is_shot_pressed(self):
+        return (pyxel.btnp(pyxel.KEY_SPACE) or
+                pyxel.btnp(pyxel.GAMEPAD1_BUTTON_A) or
+                pyxel.btnp(pyxel.GAMEPAD1_BUTTON_B))
+
 
 # インスタンス化
 input_manager = InputManager()

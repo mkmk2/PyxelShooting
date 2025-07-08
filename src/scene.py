@@ -7,7 +7,7 @@ import collision
 import input_manager
 
 import os           # タイムスタンプ
-import pathlib
+
 
 # ==================================================
 # メインシーンセット-----------------------------
@@ -284,18 +284,18 @@ class SceneGameMain:
                 if p.obj_type == imp.OBJPL:
                     # Itemゲージ
                     if imp.game_state.pl_levelup_eff == 0:
-                        for n in range(imp.PL_ITEM_LEVEL_UP):
-                            if n >= imp.game_state.pl_item_num:
-                                pyxel.blt(
-                                    ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
-                                    imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0
-                                )
-                            else:
-                                pyxel.blt(
-                                    ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
-                                    imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0
-                                )
-                    else:
+                        # for n in range(imp.PL_ITEM_LEVEL_UP):
+                        #    if n >= imp.game_state.pl_item_num:
+                        #        pyxel.blt(
+                        #            ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
+                        #            imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0
+                        #        )
+                        #    else:
+                        #        pyxel.blt(
+                        #            ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
+                        #            imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0
+                        #        )
+                        #    else:
                         # ステージの位置から敵をセットする
                         # 点滅
                         imp.game_state.pl_levelup_eff -= 1
@@ -485,6 +485,11 @@ class SceneTest:
                 if self.select_pos < 2:
                     self.select_pos += 1
 
+            # オブジェクトを消す
+            imp.game_state.pl.clear()
+            imp.game_state.em.clear()
+            
+            # オブジェクトのセット
             if self.select_pos == 0:
                 # プレイヤー
                 imp.game_state.pl.append(player.Player(128, 128, 0, 0, 0))
@@ -532,6 +537,3 @@ class SceneTest:
         # 敵
         for e in imp.game_state.em:
             e.TestSprite()
-
-
-

@@ -9,6 +9,9 @@ from enum import Enum
 
 PL_SPEED = 2.5
 
+# 溜めMAX
+SHOT_TIME_MAX = 50
+
 
 class PlayerState(Enum):
     DEMO = 0
@@ -47,7 +50,8 @@ class Player(imp.Sprite):
     def __del__(self):
         pass
 
-    # メイン
+# --------------------------------------------------
+# メイン
     def update(self):
 
         self.hit_st = 0                  # 当たりアリ
@@ -80,21 +84,26 @@ class Player(imp.Sprite):
                 self.PlayerLeverMove()
 
                 # 弾セット(スペースキー)
-                if input_manager.input_manager.is_shot_held():
-                    self.shot_time -= 1
-                    if self.shot_time < 0:
-                        self.shot_time = 6
-                        if imp.game_state.pl_level == 0:
-                            imp.game_state.pl.append(PlayerBullet(self.pos.x, self.pos.y, 0, 0, 0))
-                        elif imp.game_state.pl_level == 1:
-                            imp.game_state.pl.append(PlayerBullet(self.pos.x - 5, self.pos.y, 0, 0, 0))
-                            imp.game_state.pl.append(PlayerBullet(self.pos.x + 5, self.pos.y, 0, 0, 0))
-                        else:
-                            imp.game_state.pl.append(PlayerBullet(self.pos.x - 6, self.pos.y, 1, 0, 0))  # 左側
-                            imp.game_state.pl.append(PlayerBullet(self.pos.x, self.pos.y, 0, 0, 0))
-                            imp.game_state.pl.append(PlayerBullet(self.pos.x + 6, self.pos.y, 2, 0, 0))  # 右側
+                if input_manager.input_manager.is_shot_pressed():
+                    if imp.game_state.pl_level == 0:
+                        imp.game_state.pl.append(PlayerBullet(self.pos.x, self.pos.y, 0, 0, 0))
+                    elif imp.game_state.pl_level == 1:
+                        imp.game_state.pl.append(PlayerBullet(self.pos.x - 5, self.pos.y, 0, 0, 0))
+                        imp.game_state.pl.append(PlayerBullet(self.pos.x + 5, self.pos.y, 0, 0, 0))
+                    else:
+                        imp.game_state.pl.append(PlayerBullet(self.pos.x - 6, self.pos.y, 1, 0, 0))  # 左側
+                        imp.game_state.pl.append(PlayerBullet(self.pos.x, self.pos.y, 0, 0, 0))
+                        imp.game_state.pl.append(PlayerBullet(self.pos.x + 6, self.pos.y, 2, 0, 0))  # 右側
 
+                # 弾セット(溜め)
+                if input_manager.input_manager.is_shot_held():
+                    self.shot_time += 1
+                    if self.shot_time > SHOT_TIME_MAX:
+                        self.shot_time = SHOT_TIME_MAX
                 else:
+                    # 溜めが終わったら弾セット
+                    if self.shot_time == SHOT_TIME_MAX:
+                        imp.game_state.pl.append(PlayerBullet(self.pos.x, self.pos.y, 0, 1, 0))
                     self.shot_time = 0
 
                 if imp.game_state.pl_item_num >= imp.PL_ITEM_LEVEL_UP:
@@ -159,6 +168,7 @@ class Player(imp.Sprite):
             if self.pos.y > -100:
                 self.pos.y -= 2
 
+# --------------------------------------------------
 # 描画
     def draw(self):
         x = self.pos.x
@@ -170,6 +180,11 @@ class Player(imp.Sprite):
             self.DrawPlayer01(x, y)
         else:
             self.DrawPlayer02(x, y)
+
+        # 溜めの表示
+        if self.shot_time > 0:
+            pyxel.rect(imp.WINDOW_W / 2, imp.WINDOW_H - 12, self.shot_time / 2, 4, 7)
+            pyxel.rect(imp.WINDOW_W / 2 - self.shot_time / 2, imp.WINDOW_H - 12, self.shot_time / 2, 4, 7)
 
         # 中心の表示
         if imp._DEBUG_:
@@ -287,14 +302,19 @@ class PlayerBullet(imp.Sprite):
         self.hit_rectx = 8
         self.hit_recty = 8
 
-        if self.id0 == 0:   # 前
+        if self.id1 == 0:
+            # 通常弾
+            if self.id0 == 0:   # 前
+                self.vector = imp.Vector2(0, -6.5)
+
+            if self.id0 == 1:   # 左側
+                self.vector = imp.Vector2(-0.25, -6.5)
+
+            if self.id0 == 2:   # 右側
+                self.vector = imp.Vector2(0.25, -6.5)
+        else:
+            # 溜め弾
             self.vector = imp.Vector2(0, -6.5)
-
-        if self.id0 == 1:   # 左側
-            self.vector = imp.Vector2(-0.25, -6.5)
-
-        if self.id0 == 2:   # 右側
-            self.vector = imp.Vector2(0.25, -6.5)
 
     # メイン
     def update(self):
@@ -305,8 +325,14 @@ class PlayerBullet(imp.Sprite):
 
     # 描画
     def draw(self):
-        pos = self.pos + self.pos_adj
-        self.sprite_draw(pos.x, pos.y, 0, 0, 16, 6, 6)
+        if self.id1 == 0:
+            # 通常弾
+            pos = self.pos + self.pos_adj
+            self.sprite_draw(pos.x, pos.y, 0, 0, 16, 6, 6)
+        else:
+            # 溜め弾
+            pos = self.pos + self.pos_adj
+            self.sprite_draw(pos.x, pos.y, 0, 80, 8, 8, 16)
 
         # 中心の表示
         if imp._DEBUG_:
