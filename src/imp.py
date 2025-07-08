@@ -2,8 +2,10 @@ import pyxel
 from enum import Enum
 
 # _DEBUG_ = True
-_DEBUG_ = True
-_DEBUG_LV_ = True
+_DEBUG_ = False
+_DEBUG_LV_ = False
+_DEBUG_CONSOLE_ = 0  # 0:無効 1:screen,hit  2:  3:
+
 
 WINDOW_W = 255
 WINDOW_H = 240
@@ -98,7 +100,7 @@ class Sprite:
                     return True     # 画面内
 
             self.death = 1          # 消す
-            if _DEBUG_:
+            if _DEBUG_CONSOLE_ == 1:
                 print("out:"+self.__class__.__name__)
             return False            # 画面外
 

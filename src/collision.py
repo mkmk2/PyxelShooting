@@ -22,7 +22,7 @@ def CheckColli(self, plat, embd):       # plat 攻撃側　　embd ダメージ�
                 embd.life -= plat.hit_point      # ダメージ計算
                 if embd.life <= 0:              # 0以下なら死ぬ
                     embd.life = 0
-                    if imp._DEBUG_:
+                    if imp._DEBUG_CONSOLE_ == 1:
                         print("hit")
                     return True                 # 当たり
 
@@ -44,7 +44,7 @@ def CheckColliBody(self, at, bd):       # at 攻撃側　　bd ダメージ側
                     at.death = 1          # 攻撃側は消える
                 # エフェクト
                 imp.game_state.eff.append(effect.Effect(at.pos.x, at.pos.y, 0, 0, 0))
-                if imp._DEBUG_:
+                if imp._DEBUG_CONSOLE_ == 1:
                     print("hit body:" + bd.__class__.__name__)
 
                 at.hit = 1
@@ -68,7 +68,7 @@ def CheckColliPlItm(self, p, i):
     if xx < rx and yy < ry:
         i.death = 1
 
-        if imp._DEBUG_:
+        if imp._DEBUG_CONSOLE_ == 1:
             print("item")
         imp.game_state.pl_item_num += 1          # 1個とる
         return True                 # 当たり
