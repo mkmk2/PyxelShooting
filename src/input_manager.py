@@ -35,6 +35,9 @@ class InputManager:
                 pyxel.btnp(pyxel.GAMEPAD1_BUTTON_A) or
                 pyxel.btnp(pyxel.GAMEPAD1_BUTTON_B))
 
+    def is_menu_enemy_set_pressed(self):            # テスト 敵セット
+        return (pyxel.btnp(pyxel.KEY_A))
+
 # プレイヤーの移動
     # 上
     def is_input_up_held(self):

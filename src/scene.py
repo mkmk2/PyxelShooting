@@ -136,6 +136,7 @@ class SceneGameMain:
         if imp.game_state.game_status == imp.GameStatus.MAIN:
             imp.game_state.stage_pos += 1
 
+        # ステージに合わせて敵をセット
         self.SetStageEnemy()
 
         # プレイヤー
@@ -365,7 +366,7 @@ class SceneStart:
     def update(self):
         self.WaitTime -= 1
         if self.WaitTime <= 0:
-            imp.game_state.sub_scene = None
+            SetSubScene(self, SceneGameTest())
 
     def draw(self):
         # タイトル画面
@@ -445,8 +446,8 @@ class SceneNextStage:
             # 次のステージ
             SetMainScene(self, SceneGameMain())
 
-            # サブシーン Start セット
-            SetSubScene(self, SceneStart())
+            # サブシーン Game Test セット
+            SetSubScene(self, SceneGameTest())
 
     def draw(self):
         pass
@@ -454,15 +455,46 @@ class SceneNextStage:
 
 # ==================================================
 # ==================================================
+# Scene Game Test
+class SceneGameTest:
+
+    # 初期化---------------------------------------
+    def __init__(self):
+        self.select_pos = 0
+        self.WaitTime = 60 * 3
+
+    # メイン---------------------------------------
+    def update(self):
+        # 敵選択
+        if input_manager.input_manager.is_menu_right_pressed():
+            if self.select_pos < 10:
+                self.select_pos += 1
+
+        if input_manager.input_manager.is_menu_left_pressed():
+            if self.select_pos > 1:
+                self.select_pos -= 1
+
+        # スペース
+        if input_manager.input_manager.is_menu_enemy_set_pressed():
+            # 敵セット
+            pass
+
+    def draw(self):
+        # 敵Noの表示
+        no = "{:02}".format(self.select_pos)
+        pyxel.text(80, 80, no, 7)
+
+
+# ==================================================
 # Scene テスト
 class SceneTest:
 
     # 初期化---------------------------------------
     def __init__(self):
         imp.game_state.game_status = imp.GameStatus.TEST       # テスト
-        self.select_pos = 0
+        self.select_pos = 0                     # 敵No
 
-        self.file_anim = "assets/img00.png"
+        self.file_anim = "assets/img00.png"             # セットしたい敵に応じてロードを変える必要？
         self.file_anim_time = 0
         pyxel.images[0].load(0, 0, self.file_anim, incl_colors=True)
         self.file_anim_time = os.path.getmtime(self.file_anim)
@@ -488,7 +520,7 @@ class SceneTest:
             # オブジェクトを消す
             imp.game_state.pl.clear()
             imp.game_state.em.clear()
-            
+
             # オブジェクトのセット
             if self.select_pos == 0:
                 # プレイヤー

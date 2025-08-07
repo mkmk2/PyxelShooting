@@ -5,10 +5,10 @@ import shooting_sub
 
 
 # ==================================================
-# 敵Normクラス
+# 敵：ノーマルクラス
 # id0
-# 0: まっすぐ下に降りてきてプレイヤーに向かってカーブ
-# 1: まっすぐ下に移動するだけ
+# 0: まっすぐ下に移動するだけ
+# 1: まっすぐ下に降りてきてプレイヤーに向かってカーブ
 class EnemyNorm(imp.Sprite):
     BulletTime = 0
 
@@ -25,9 +25,11 @@ class EnemyNorm(imp.Sprite):
         self.hit_rectx = 10
         self.hit_recty = 10
         if self.id0 == 0:
+            # まっすぐ下
             self.score = 10
-            self.life = 2
+            self.life = 1
         elif self.id0 == 1:
+            # まっすぐ下、プレイヤーにカーブ
             self.score = 10
             self.life = 1
 
@@ -35,29 +37,28 @@ class EnemyNorm(imp.Sprite):
 
     # メイン
     def update(self):
-        if self.id0 == 0:           # カーブ
-            if self.st0 == 0:
-                self.pos.y += 1.2
-                if self.pos.y > 40:
-                    pl = imp.GetPl(self)
-                    if pl != 0:
-                        if self.pos.x < pl.pos.x:
-                            self.vector.x += 0.015
-                            self.st1 = 1    # 右回転
-                        else:
-                            self.vector.x -= 0.015
-                            self.st1 = 2    # 左回転
+        if self.id0 == 0:           # まっすぐ
+            self.pos.y += 0.9
 
-                self.pos.x += self.vector.x
+        elif self.id0 == 1:         # カーブ
+            self.pos.y += 0.9
+            if self.pos.y > 40:
+                pl = imp.GetPl(self)
+                if pl != 0:
+                    if self.pos.x < pl.pos.x:
+                        self.vector.x += 0.015
+                        self.st1 = 1    # 右へカーブ、右回転
+                    else:
+                        self.vector.x -= 0.015
+                        self.st1 = 2    # 左へカーブ、左回転
+
+            self.pos.x += self.vector.x
 
 #                self.BulletTime -= 1
 #                if self.BulletTime <= 0:
 #                    self.BulletTime = random.randrange(10, 20, 1)
 #                    self.BulletTime = 99999     # 1回しか打たない
 #                    imp.Em.append(EnemyBullet(self.pos_x,self.pos_y,0,0,0))
-
-        elif self.id0 == 1:         # まっすぐ
-            self.pos.y += 0.9
 
         # -----------------------------------------------
         # 死にチェック
@@ -81,7 +82,16 @@ class EnemyNorm(imp.Sprite):
         self.sprite_draw(pos.x, pos.y, 0, 0, 56, 12, 12)
 
         if self.id0 == 0:
+            # まっすぐ下
+            if pyxel.frame_count & 0x08:
+                self.sprite_draw(pos.x, pos.y, 0, 40, 72, 12, 12)
+            else:
+                self.sprite_draw(pos.x, pos.y, 0, 56, 72, 12, 12)
+
+        elif self.id0 == 1:
+            # まっすぐ下、プレイヤーにカーブ
             if self.st1 == 0:
+                # まっすぐ下
                 self.sprite_draw(pos.x, pos.y, 0, 0, 56, 12, 12)
             else:
                 self.ptn_time -= 1
@@ -89,21 +99,17 @@ class EnemyNorm(imp.Sprite):
                     self.ptn_time = 7
 
                     if self.st1 == 1:
+                        # 右回転
                         self.ptn_no += 1
                         if self.ptn_no >= 7:
                             self.ptn_no = 0
                     else:
+                        # 左回転
                         self.ptn_no -= 1
                         if self.ptn_no < 0:
                             self.ptn_no = 7
 
                 self.sprite_draw(pos.x, pos.y, 0, 16 * self.ptn_no, 56, 12, 12)
-
-        elif self.id0 == 1:
-            if pyxel.frame_count & 0x08:
-                self.sprite_draw(pos.x, pos.y, 0, 40, 72, 12, 12)
-            else:
-                self.sprite_draw(pos.x, pos.y, 0, 56, 72, 12, 12)
 
         # 中心の表示
         if imp._DEBUG_:
