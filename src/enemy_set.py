@@ -59,4 +59,13 @@ STAGE_SET_TEST = [
     [100000, 128+60,   0,  enemy.EnemyNorm,  1, 0, 0,],
 ]
 
+
+STAGE_SET_TEST_ENEMY = [
+    # 時間, X, Y, class, id0, id1, item
+    [0,    128,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [0,    128,   0,  enemy.EnemyNorm,  1, 0, 0,],
+
+
+    [9999, 128,   0,  enemy.EnemyNorm,  1, 0, 0,],
+]
 # ==================================================
