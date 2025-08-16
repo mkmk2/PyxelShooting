@@ -47,7 +47,7 @@ class SceneTitle:
 
         # 下
         if input_manager.input_manager.is_menu_down_pressed():
-            if self.select_pos < 2:
+            if self.select_pos < 3:
                 self.select_pos += 1
 
         # 右
@@ -76,9 +76,13 @@ class SceneTitle:
                 # ゲームメイン、ゲームテスト
                 SetMainScene(self, SceneGameMain())
                 SetSubScene(self, SceneStart())
-            else:
+            elif self.select_pos == 2:
                 # テスト
                 SetMainScene(self, SceneTest())
+                SetSubScene(self, None)
+            elif self.select_pos == 3:
+                # BG
+                SetMainScene(self, SceneTestBG())
                 SetSubScene(self, None)
 
     def draw(self):
@@ -97,6 +101,8 @@ class SceneTitle:
         pyxel.text(100, 190, st, 7)
         st = " SPRITE"
         pyxel.text(100, 200, st, 7)
+        st = " BG"
+        pyxel.text(100, 210, st, 7)
 
         # ステージNoの表示
         no = "{:02}".format(imp.game_state.stage_no)
@@ -240,12 +246,14 @@ class SceneGameMain:
 
     def draw(self):
         # ゲーム画面
-        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, 256, 256)
+        # 背景
+        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H)
         if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.STAGECLEAR:
             imp.game_state.tile_pos.y -= 0.1
             if imp.game_state.tile_pos.y > 0:
                 imp.game_state.tile_pos.y = 0
 
+        # オブジェクト
         if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.GAMEOVER\
                 or imp.game_state.game_status == imp.GameStatus.STAGECLEAR:
             # プレイヤー
@@ -366,7 +374,10 @@ class SceneStart:
     def update(self):
         self.WaitTime -= 1
         if self.WaitTime <= 0:
-            SetSubScene(self, SceneGameTest())
+            if imp.game_state.stage_no < 10:
+                imp.game_state.sub_scene = None
+            else:
+                SetSubScene(self, SceneGameTest())
 
     def draw(self):
         # タイトル画面
@@ -554,7 +565,7 @@ class SceneTest:
         t = os.path.getmtime(self.file_anim)
         if self.file_anim_time != t:
             self.file_anim_time = t
-            pyxel.images[0].load(0, 0, self.file_anim, incl_colors=True)
+            pyxel.images[0].from_image(0, 0, self.file_anim, incl_colors=True)
             self.reload_text_time = 60
 
     def draw(self):
@@ -582,3 +593,78 @@ class SceneTest:
         # 敵
         for e in imp.game_state.em:
             e.TestSprite()
+
+
+# ==================================================
+# Scene テストBG
+class SceneTestBG:
+
+    # 初期化---------------------------------------
+    def __init__(self):
+        imp.game_state.game_status = imp.GameStatus.TEST       # テスト
+
+        self.file = "assets/img00.png"
+        pyxel.images[0].from_image(self.file, incl_colors=True)
+
+        self.file_tmx = "assets/bg00.tmx"
+        pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx("assets/bg00.tmx", 0)
+        
+        self.select_pos = 0                     # 敵No
+
+        imp.game_state.pl.append(player.Player(128, 128, 0, 0, 0))
+        imp.game_state.tile_pos.x = 0
+        imp.game_state.tile_pos.y = 0
+
+    def __del__(self):
+        # 全てのオブジェクトを消す
+        self.DeathAllObject()
+
+    # メイン---------------------------------------
+    def update(self):
+        step = 1.0
+        if input_manager.input_manager.is_shot_held():
+            step = 10.0
+
+        if input_manager.input_manager.is_input_up_held():
+            imp.game_state.tile_pos.y -= step
+            if imp.game_state.tile_pos.y < 0:
+                imp.game_state.tile_pos.y = 0
+        if input_manager.input_manager.is_input_down_held():
+            imp.game_state.tile_pos.y += step
+            if imp.game_state.tile_pos.y > 256 * 8:
+                imp.game_state.tile_pos.y = 0
+        if input_manager.input_manager.is_input_left_held():
+            imp.game_state.tile_pos.x -= step
+            if imp.game_state.tile_pos.x < 0:
+                imp.game_state.tile_pos.x = 0
+        if input_manager.input_manager.is_input_right_held():
+            imp.game_state.tile_pos.x += step
+            if imp.game_state.tile_pos.x > 256 * 8:
+                imp.game_state.tile_pos.x = 0
+
+    def draw(self):
+        # 背景
+        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H)
+
+        no = "{:02}".format(imp.game_state.tile_pos.x)
+        pyxel.text(100, 80, no, 7)
+        no = "{:02}".format(imp.game_state.tile_pos.y)
+        pyxel.text(100, 100, no, 7)
+
+        st = ">"
+        pyxel.text(32-10, 100 + (self.select_pos * 10), st, 7)
+
+        st = " pl"
+        pyxel.text(32, 100, st, 7)
+        st = " em00"
+        pyxel.text(32, 110, st, 7)
+        st = " XXX"
+        pyxel.text(32, 120, st, 7)
+
+        # ステージNoの表示
+        no = "{:02}".format(imp.game_state.stage_no)
+        pyxel.text(180, 180, no, 7)
+
+        # プレイヤー
+        for p in imp.game_state.pl:
+            p.TestSprite()

@@ -193,7 +193,7 @@ class Player(imp.Sprite):
 # --------------------------------------------------
 # 前
     def DrawPlayer00(self, x, y):
-        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0, 16, 0, 16, 16)      # 前
+        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0, 16, 8, 16, 16)      # 前
 
         if pyxel.frame_count & 0x04:
             self.sprite_draw(x + 0, y + 8, 0, 8, 16, 6, 6)
@@ -205,7 +205,7 @@ class Player(imp.Sprite):
 # --------------------------------------------------
 # 左
     def DrawPlayer01(self, x, y):
-        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0,  0, 0, 16, 16)      # 左
+        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0,  0, 8, 16, 16)      # 左
 
         if pyxel.frame_count & 0x04:
             self.sprite_draw(x + 0, y + 8, 0, 8, 16, 6, 6)
@@ -224,7 +224,7 @@ class Player(imp.Sprite):
 # --------------------------------------------------
 # 右
     def DrawPlayer02(self, x, y):
-        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0,  32, 0, 16, 16)      # 右
+        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0,  32, 8, 16, 16)      # 右
 
         if pyxel.frame_count & 0x04:
             self.sprite_draw(x + 0, y + 8, 0, 8, 16, 6, 6)
