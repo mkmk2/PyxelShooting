@@ -2,7 +2,7 @@ import pyxel
 from enum import Enum
 
 # _DEBUG_ = True
-_DEBUG_ = False
+_DEBUG_ = True
 _DEBUG_LV_ = False
 _DEBUG_CONSOLE_ = 0  # 0:無効 1:screen,hit  2:  3:
 

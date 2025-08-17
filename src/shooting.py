@@ -17,7 +17,6 @@ class App:
     def __init__(self):
         pyxel.init(imp.WINDOW_W, imp.WINDOW_H, title="Pyxel Shooting",
                    display_scale=3, fps=60)
-        pyxel.load("assets/my_resource.pyxres")
 
         pyxel.images[0].load(0, 0, "assets/img00.png")
 

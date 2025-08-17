@@ -34,6 +34,12 @@ class SceneTitle:
     def __init__(self):
         imp.game_state.game_status = imp.GameStatus.TITLE    # タイトルに戻る
 
+        self.file = "assets/img00.png"
+        pyxel.images[0].from_image(self.file, incl_colors=True)
+
+        self.file_tmx = "assets/bg00.tmx"
+        pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
+
         self.select_pos = 0
         imp.game_state.stage_no = 1
 
@@ -87,7 +93,7 @@ class SceneTitle:
 
     def draw(self):
         # タイトル画面
-        pyxel.bltm(32, 32, 0, 0, 0, 80, 64)
+        pyxel.bltm(0, 0, 0, 0, 0, imp.WINDOW_W, imp.WINDOW_H)
 
 #        ti = "TITLE"
 #        pyxel.text(100, 100, ti, 7)
@@ -118,6 +124,12 @@ class SceneGameMain:
 
         imp.game_state.game_status = imp.GameStatus.MAIN
 
+        self.file = "assets/img00.png"
+        pyxel.images[0].from_image(self.file, incl_colors=True)
+
+        self.file_tmx = "assets/bg00.tmx"
+        pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
+
         # 敵セットのテーブル
         if imp.game_state.stage_no < 10:
             if imp.game_state.stage_no == 1:
@@ -127,7 +139,7 @@ class SceneGameMain:
 
         imp.game_state.stage_pos = 0              # ステージ
         imp.game_state.tile_pos.x = 0
-        imp.game_state.tile_pos.y = 256
+        imp.game_state.tile_pos.y = 256 * 2
 
         # プレイヤーのセット
         imp.game_state.pl.append(player.Player(30, 40, 0, 100, 0))
@@ -141,6 +153,12 @@ class SceneGameMain:
         # ゲームオーバーになったらスクロール(敵セット)止める
         if imp.game_state.game_status == imp.GameStatus.MAIN:
             imp.game_state.stage_pos += 1
+
+        # 背景
+        if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.STAGECLEAR:
+            imp.game_state.tile_pos.y -= 0.2
+            if imp.game_state.tile_pos.y < 0:
+                imp.game_state.tile_pos.y = 0
 
         # ステージに合わせて敵をセット
         self.SetStageEnemy()
@@ -248,10 +266,6 @@ class SceneGameMain:
         # ゲーム画面
         # 背景
         pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H)
-        if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.STAGECLEAR:
-            imp.game_state.tile_pos.y -= 0.1
-            if imp.game_state.tile_pos.y > 0:
-                imp.game_state.tile_pos.y = 0
 
         # オブジェクト
         if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.GAMEOVER\
@@ -323,7 +337,10 @@ class SceneGameMain:
                             pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
             # スクロールPos
             if imp._DEBUG_:
-                pos = "{:5}".format(imp.game_state.stage_pos)
+                pos = "{:3}".format(imp.game_state.tile_pos.y)
+                pyxel.text(220, 190, pos, 7)
+
+                pos = "{:3}".format(imp.game_state.stage_pos)
                 pyxel.text(220, 200, pos, 7)
 
 #  ------------------------------------------
@@ -607,9 +624,7 @@ class SceneTestBG:
         pyxel.images[0].from_image(self.file, incl_colors=True)
 
         self.file_tmx = "assets/bg00.tmx"
-        pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx("assets/bg00.tmx", 0)
-        
-        self.select_pos = 0                     # 敵No
+        pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
 
         imp.game_state.pl.append(player.Player(128, 128, 0, 0, 0))
         imp.game_state.tile_pos.x = 0
@@ -650,16 +665,6 @@ class SceneTestBG:
         pyxel.text(100, 80, no, 7)
         no = "{:02}".format(imp.game_state.tile_pos.y)
         pyxel.text(100, 100, no, 7)
-
-        st = ">"
-        pyxel.text(32-10, 100 + (self.select_pos * 10), st, 7)
-
-        st = " pl"
-        pyxel.text(32, 100, st, 7)
-        st = " em00"
-        pyxel.text(32, 110, st, 7)
-        st = " XXX"
-        pyxel.text(32, 120, st, 7)
 
         # ステージNoの表示
         no = "{:02}".format(imp.game_state.stage_no)
