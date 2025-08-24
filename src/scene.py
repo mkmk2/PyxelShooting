@@ -41,20 +41,22 @@ class SceneTitle:
         pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
 
         self.select_pos = 0
-        imp.game_state.stage_no = 1
+        imp.game_state.stage_no = 0
 
     # メイン---------------------------------------
     def update(self):
         # タイトル画面
         # 上
         if input_manager.input_manager.is_menu_up_pressed():
-            if self.select_pos > 0:
-                self.select_pos -= 1
+            self.select_pos -= 1
+            if self.select_pos < 0:
+                self.select_pos = 3
 
         # 下
         if input_manager.input_manager.is_menu_down_pressed():
-            if self.select_pos < 3:
-                self.select_pos += 1
+            self.select_pos += 1
+            if self.select_pos > 3:
+                self.select_pos = 0
 
         # 右
         if input_manager.input_manager.is_menu_right_pressed():
@@ -114,6 +116,8 @@ class SceneTitle:
         no = "{:02}".format(imp.game_state.stage_no)
         pyxel.text(180, 180, no, 7)
 
+        pyxel.text(0, 232, "Q:Quit", 7)
+
 
 # ==================================================
 # Scene ゲームメイン
@@ -127,8 +131,13 @@ class SceneGameMain:
         self.file = "assets/img00.png"
         pyxel.images[0].from_image(self.file, incl_colors=True)
 
-        self.file_tmx = "assets/bg00.tmx"
+        if imp.game_state.stage_no == 0:
+            self.file_tmx = "assets/bg00.tmx"
+        else:
+            self.file_tmx = "assets/bg01.tmx"
+
         pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
+        pyxel.tilemaps[1] = pyxel.Tilemap.from_tmx(self.file_tmx, 1)
 
         # 敵セットのテーブル
         if imp.game_state.stage_no < 10:
@@ -156,7 +165,7 @@ class SceneGameMain:
 
         # 背景
         if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.STAGECLEAR:
-            imp.game_state.tile_pos.y -= 0.2
+            imp.game_state.tile_pos.y -= 1.0
             if imp.game_state.tile_pos.y < 0:
                 imp.game_state.tile_pos.y = 0
 
@@ -262,10 +271,15 @@ class SceneGameMain:
             if e.death != 0:
                 del imp.game_state.itm[n]        # リストから削除する
 
+        if input_manager.input_manager.is_quit_pressed():
+            SetMainScene(self, SceneTitle())
+            SetSubScene(self, None)
+
     def draw(self):
         # ゲーム画面
         # 背景
-        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H)
+        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, 512 - ((512 - imp.game_state.tile_pos.y) / 2), imp.WINDOW_W, imp.WINDOW_H, 0)
+        pyxel.bltm(0, 0, 1, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H, 0)
 
         # オブジェクト
         if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.GAMEOVER\
@@ -510,6 +524,10 @@ class SceneGameTest:
             t = e[3]
             imp.game_state.em.append(t(e[1], e[2], e[4], e[5], e[6]))
 
+        if input_manager.input_manager.is_quit_pressed():
+            SetMainScene(self, SceneTitle())
+            SetSubScene(self, None)
+
     def draw(self):
         # 敵Noの表示
         no = "{:02}".format(self.select_pos)
@@ -525,6 +543,7 @@ class SceneGameTest:
         pyxel.text(40, 100, "ID1:"+str(e[5]), 7)
         pyxel.text(40, 110, "Item:"+str(e[6]), 7)
 
+        pyxel.text(0, 232, "Q:Quit", 7)
 
 # ==================================================
 # Scene テスト
@@ -542,10 +561,6 @@ class SceneTest:
         self.reload_text_time = 0
 
         imp.game_state.pl.append(player.Player(128, 128, 0, 0, 0))
-
-    def __del__(self):
-        # 全てのオブジェクトを消す
-        self.DeathAllObject()
 
     # メイン---------------------------------------
     def update(self):
@@ -585,6 +600,10 @@ class SceneTest:
             pyxel.images[0].from_image(0, 0, self.file_anim, incl_colors=True)
             self.reload_text_time = 60
 
+        if input_manager.input_manager.is_quit_pressed():
+            SetMainScene(self, SceneTitle())
+            SetSubScene(self, None)
+
     def draw(self):
         st = ">"
         pyxel.text(32-10, 100 + (self.select_pos * 10), st, 7)
@@ -611,6 +630,7 @@ class SceneTest:
         for e in imp.game_state.em:
             e.TestSprite()
 
+        pyxel.text(0, 232, "Q:Quit", 7)
 
 # ==================================================
 # Scene テストBG
@@ -623,16 +643,20 @@ class SceneTestBG:
         self.file = "assets/img00.png"
         pyxel.images[0].from_image(self.file, incl_colors=True)
 
-        self.file_tmx = "assets/bg00.tmx"
+        if imp.game_state.stage_no == 0:
+            self.file_tmx = "assets/bg00.tmx"
+        else:
+            self.file_tmx = "assets/bg01.tmx"
+
         pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
+        pyxel.tilemaps[1] = pyxel.Tilemap.from_tmx(self.file_tmx, 1)
 
         imp.game_state.pl.append(player.Player(128, 128, 0, 0, 0))
         imp.game_state.tile_pos.x = 0
-        imp.game_state.tile_pos.y = 0
+        imp.game_state.tile_pos.y = 512
 
     def __del__(self):
-        # 全てのオブジェクトを消す
-        self.DeathAllObject()
+        pass
 
     # メイン---------------------------------------
     def update(self):
@@ -657,9 +681,14 @@ class SceneTestBG:
             if imp.game_state.tile_pos.x > 256 * 8:
                 imp.game_state.tile_pos.x = 0
 
+        if input_manager.input_manager.is_quit_pressed():
+            SetMainScene(self, SceneTitle())
+            SetSubScene(self, None)
+
     def draw(self):
         # 背景
-        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H)
+        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, 512 - ((512 - imp.game_state.tile_pos.y) / 2), imp.WINDOW_W, imp.WINDOW_H, 0)
+        pyxel.bltm(0, 0, 1, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H, 0)
 
         no = "{:02}".format(imp.game_state.tile_pos.x)
         pyxel.text(100, 80, no, 7)
@@ -673,3 +702,5 @@ class SceneTestBG:
         # プレイヤー
         for p in imp.game_state.pl:
             p.TestSprite()
+
+        pyxel.text(0, 232, "Q:Quit", 7)

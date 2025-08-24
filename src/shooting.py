@@ -28,9 +28,6 @@ class App:
     # メイン---------------------------------------
     def update(self):
 
-        # if input_manager.input_manager.is_quit_pressed():
-        #    pyxel.quit()
-
         # メインシーン
         if imp.game_state.main_scene is not None:
             imp.game_state.main_scene.update()
