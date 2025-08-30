@@ -20,16 +20,22 @@ class EnemyNorm(imp.Sprite):
     def __init__(self, x, y, i0, i1, item):
         imp.Sprite.__init__(self, imp.OBJEM, x, y, i0, i1, item)       # Spriteクラスのコンストラクタ
 
-        self.pos_adj = imp.Vector2(-6, -6)
+        self.pos_adj = imp.Vector2(-8, -8)
         self.hit_point = 1
-        self.hit_rectx = 10
-        self.hit_recty = 10
+        self.hit_rectx = 12
+        self.hit_recty = 12
         if self.id0 == 0:
             # まっすぐ下
+            self.vector = imp.Vector2(0, 1.2)
             self.score = 10
             self.life = 1
         elif self.id0 == 1:
-            # まっすぐ下、プレイヤーにカーブ
+            # まっすぐ下、左右往復
+            self.vector = imp.Vector2(0, 1.0)
+            if self.pos.x < 128:
+                self.vector.x = 1.8
+            else:
+                self.vector.x = -1.8
             self.score = 10
             self.life = 1
 
@@ -39,21 +45,17 @@ class EnemyNorm(imp.Sprite):
     # メイン
     def update(self):
         if self.id0 == 0:           # まっすぐ
-            self.pos.y += 0.9
+            self.pos += self.vector
 
-        elif self.id0 == 1:         # カーブ
-            self.pos.y += 0.9
-            if self.pos.y > 40:
-                pl = imp.GetPl(self)
-                if pl != 0:
-                    if self.pos.x < pl.pos.x:
-                        self.vector.x += 0.015
-                        self.st1 = 1    # 右へカーブ、右回転
-                    else:
-                        self.vector.x -= 0.015
-                        self.st1 = 2    # 左へカーブ、左回転
+        elif self.id0 == 1:         # 左右往復
+            if self.vector.x > 0:
+                if self.pos.x > imp.WINDOW_W - 50:
+                    self.vector.x *= -1
+            else:
+                if self.pos.x < 50:
+                    self.vector.x *= -1
 
-            self.pos.x += self.vector.x
+            self.pos += self.vector
 
 #                self.BulletTime -= 1
 #                if self.BulletTime <= 0:
@@ -83,30 +85,14 @@ class EnemyNorm(imp.Sprite):
 
         if self.id0 == 0:
             # まっすぐ下
-            self.sprite_draw(pos.x, pos.y, 0, 2, 6, 16, 16)
+            self.sprite_draw(pos.x, pos.y, 0, 0, 6, 16, 16)
 
         elif self.id0 == 1:
             # まっすぐ下、プレイヤーにカーブ
-            if self.st1 == 0:
-                # まっすぐ下
-                self.sprite_draw(pos.x, pos.y, 0, 0, 56, 12, 12)
+            if self.vector.x < 0:
+                self.sprite_draw(pos.x, pos.y, 0, 2, 6, 16, 16)
             else:
-                self.ptn_time -= 1
-                if self.ptn_time <= 0:
-                    self.ptn_time = 7
-
-                    if self.st1 == 1:
-                        # 右回転
-                        self.ptn_no += 1
-                        if self.ptn_no >= 7:
-                            self.ptn_no = 0
-                    else:
-                        # 左回転
-                        self.ptn_no -= 1
-                        if self.ptn_no < 0:
-                            self.ptn_no = 7
-
-                self.sprite_draw(pos.x, pos.y, 0, 16 * self.ptn_no, 56, 12, 12)
+                self.sprite_draw(pos.x, pos.y, 0, 2, 6, -16, 16)
 
         # 中心の表示
         if imp._DEBUG_HIT_:

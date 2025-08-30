@@ -4,7 +4,7 @@ from enum import Enum
 # _DEBUG_ = True
 _DEBUG_ = True
 _DEBUG_LV_ = False
-_DEBUG_HIT_ = False
+_DEBUG_HIT_ = True
 _DEBUG_CONSOLE_ = 0  # 0:無効 1:screen,hit  2:  3:
 
 
@@ -92,9 +92,9 @@ class Sprite:
 # 画面内チェック
     def CheckScreenIn(self):
         if self.screen_time >= SCREEN_TIME:
-            SafeArea = 10           # 画面外のチェックする幅
+            SafeArea = 16           # 画面外のチェックする幅
             if _DEBUG_:
-                SafeArea = -20       # Debug 画面の中で判定する
+                SafeArea = -10       # Debug 画面の中で判定する
 
             if -SafeArea < self.pos.x and self.pos.x < WINDOW_W + SafeArea:
                 if -SafeArea < self.pos.y and self.pos.y < WINDOW_H + SafeArea:
