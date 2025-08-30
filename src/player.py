@@ -193,52 +193,38 @@ class Player(imp.Sprite):
 # --------------------------------------------------
 # 前
     def DrawPlayer00(self, x, y):
-        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0, 16, 8, 16, 16)      # 前
+        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0, 2, 1, 16, 16)      # 前
 
         if pyxel.frame_count & 0x04:
-            self.sprite_draw(x + 0, y + 8, 0, 8, 16, 6, 6)
-            self.sprite_draw(x - 6, y + 8, 0, 8, 16, -6, 6)
+            self.sprite_draw(x + 0, y + 8, 0, 1, 3, 6, 6)
+            self.sprite_draw(x - 6, y + 8, 0, 1, 3, -6, 6)
         else:
-            self.sprite_draw(x + 0, y + 8, 0, 8, 24, 6, 6)
-            self.sprite_draw(x - 6, y + 8, 0, 8, 24, -6, 6)
+            self.sprite_draw(x + 0, y + 8, 0, 1, 4, 6, 6)
+            self.sprite_draw(x - 6, y + 8, 0, 1, 4, -6, 6)
 
 # --------------------------------------------------
 # 左
     def DrawPlayer01(self, x, y):
-        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0,  0, 8, 16, 16)      # 左
+        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0,  0, 1, 16, 16)      # 左
 
         if pyxel.frame_count & 0x04:
-            self.sprite_draw(x + 0, y + 8, 0, 8, 16, 6, 6)
-            self.sprite_draw(x - 6, y + 8, 0, 8, 16, -6, 6)
+            self.sprite_draw(x - 1, y + 8, 0, 1, 3, 6, 6)
+            self.sprite_draw(x - 5, y + 8, 0, 1, 4, -6, 6)
         else:
-            self.sprite_draw(x + 0, y + 8, 0, 8, 24, 6, 6)
-            self.sprite_draw(x - 6, y + 8, 0, 8, 24, -6, 6)
-
-        if pyxel.frame_count & 0x04:
-            self.sprite_draw(x - 1, y + 8, 0, 8, 16, 6, 6)
-            self.sprite_draw(x - 5, y + 8, 0, 8, 16, -6, 6)
-        else:
-            self.sprite_draw(x - 1, y + 8, 0, 8, 24, 6, 6)
-            self.sprite_draw(x - 5, y + 8, 0, 8, 24, -6, 6)
+            self.sprite_draw(x - 1, y + 8, 0, 1, 4, 6, 6)
+            self.sprite_draw(x - 5, y + 8, 0, 1, 3, -6, 6)
 
 # --------------------------------------------------
 # 右
     def DrawPlayer02(self, x, y):
-        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0,  32, 8, 16, 16)      # 右
+        self.sprite_draw(x + self.pos_adj.x, y + self.pos_adj.y, 0,  4, 1, 16, 16)      # 右
 
         if pyxel.frame_count & 0x04:
-            self.sprite_draw(x + 0, y + 8, 0, 8, 16, 6, 6)
-            self.sprite_draw(x - 6, y + 8, 0, 8, 16, -6, 6)
+            self.sprite_draw(x - 1, y + 8, 0, 1, 3, 6, 6)
+            self.sprite_draw(x - 5, y + 8, 0, 1, 4, -6, 6)
         else:
-            self.sprite_draw(x + 0, y + 8, 0, 8, 24, 6, 6)
-            self.sprite_draw(x - 6, y + 8, 0, 8, 24, -6, 6)
-
-        if pyxel.frame_count & 0x04:
-            self.sprite_draw(x - 1, y + 8, 0, 8, 16, 6, 6)
-            self.sprite_draw(x - 5, y + 8, 0, 8, 16, -6, 6)
-        else:
-            self.sprite_draw(x - 1, y + 8, 0, 8, 24, 6, 6)
-            self.sprite_draw(x - 5, y + 8, 0, 8, 24, -6, 6)
+            self.sprite_draw(x - 1, y + 8, 0, 1, 4, 6, 6)
+            self.sprite_draw(x - 5, y + 8, 0, 1, 3, -6, 6)
 
 # --------------------------------------------------
 # テスト用
@@ -251,11 +237,16 @@ class Player(imp.Sprite):
                 self.ptn_no = 0
 
     def TestSprite(self):
-        test_plptn = [0, 1, 2, 1]
+        test_plptn = [0, 1, 0, 2]
 
         x = self.pos.x
         y = self.pos.y
-        self.sprite_draw(x, y, 0, 16 * test_plptn[self.ptn_no], 0, 16, 16)
+        if test_plptn[self.ptn_no] == 0:
+            self.DrawPlayer00(x, y)
+        elif test_plptn[self.ptn_no] == 1:
+            self.DrawPlayer01(x, y)
+        else:
+            self.DrawPlayer02(x, y)
 
         pyxel.text(80, 80, str(self.ptn_no), 7)
 
@@ -296,7 +287,7 @@ class PlayerBullet(imp.Sprite):
     def __init__(self, x, y, id_0, id_1, item):
         imp.Sprite.__init__(self, imp.OBJPLB, x, y, id_0, id_1, item)
 
-        self.pos_adj = imp.Vector2(-3, -3)
+        self.pos_adj = imp.Vector2(-4, -4)
         self.life = 1
         self.hit_point = 1
         self.hit_rectx = 8
@@ -328,12 +319,12 @@ class PlayerBullet(imp.Sprite):
         if self.id1 == 0:
             # 通常弾
             pos = self.pos + self.pos_adj
-            self.sprite_draw(pos.x, pos.y, 0, 0, 16, 6, 6)
+            self.sprite_draw(pos.x, pos.y, 0, 0, 3, 8, 8)
         else:
             # 溜め弾
             pos = self.pos + self.pos_adj
             self.sprite_draw(pos.x, pos.y, 0, 80, 8, 8, 16)
 
         # 中心の表示
-        if imp._DEBUG_:
+        if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
