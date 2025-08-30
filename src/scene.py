@@ -141,7 +141,7 @@ class SceneGameMain:
 
         # 敵セットのテーブル
         if imp.game_state.stage_no < 10:
-            if imp.game_state.stage_no == 1:
+            if imp.game_state.stage_no == 0:
                 imp.game_state.StageSetTbl = enemy_set.STAGE_SET_1
         else:
             imp.game_state.StageSetTbl = enemy_set.STAGE_SET_TEST
@@ -155,7 +155,7 @@ class SceneGameMain:
 
     def __del__(self):
         # 全てのオブジェクトを消す
-        self.DeathAllObject()
+        SceneGameMain.DeathAllObject()
 
     # メイン---------------------------------------
     def update(self):
@@ -379,7 +379,8 @@ class SceneGameMain:
             n += 1
 
     #  ------------------------------------------
-    def DeathAllObject(self):
+    @staticmethod
+    def DeathAllObject():
         # プレイヤー・プレイヤーの弾を消す
         imp.game_state.pl.clear()
 
@@ -545,10 +546,10 @@ class SceneGameTest:
 
         pyxel.text(0, 232, "Q:Quit", 7)
 
+
 # ==================================================
 # Scene テスト
 class SceneTest:
-
     # 初期化---------------------------------------
     def __init__(self):
         imp.game_state.game_status = imp.GameStatus.TEST       # テスト
@@ -561,6 +562,10 @@ class SceneTest:
         self.reload_text_time = 0
 
         imp.game_state.pl.append(player.Player(128, 128, 0, 0, 0))
+
+    def __del__(self):
+        # 全てのオブジェクトを消す
+        SceneGameMain.DeathAllObject()
 
     # メイン---------------------------------------
     def update(self):
@@ -597,7 +602,7 @@ class SceneTest:
         t = os.path.getmtime(self.file_anim)
         if self.file_anim_time != t:
             self.file_anim_time = t
-            pyxel.images[0].from_image(0, 0, self.file_anim, incl_colors=True)
+            pyxel.images[0].load(0, 0, self.file_anim, incl_colors=True)
             self.reload_text_time = 60
 
         if input_manager.input_manager.is_quit_pressed():
@@ -632,16 +637,18 @@ class SceneTest:
 
         pyxel.text(0, 232, "Q:Quit", 7)
 
+
 # ==================================================
 # Scene テストBG
 class SceneTestBG:
-
     # 初期化---------------------------------------
     def __init__(self):
         imp.game_state.game_status = imp.GameStatus.TEST       # テスト
 
-        self.file = "assets/img00.png"
-        pyxel.images[0].from_image(self.file, incl_colors=True)
+        self.img_file = "assets/img00.png"
+        pyxel.images[0].from_image(self.img_file, incl_colors=True)
+        self.img_file = "assets/img01.png"
+        pyxel.images[1].from_image(self.img_file, incl_colors=True)
 
         if imp.game_state.stage_no == 0:
             self.file_tmx = "assets/bg00.tmx"
@@ -656,7 +663,8 @@ class SceneTestBG:
         imp.game_state.tile_pos.y = 512
 
     def __del__(self):
-        pass
+        # 全てのオブジェクトを消す
+        SceneGameMain.DeathAllObject()
 
     # メイン---------------------------------------
     def update(self):
