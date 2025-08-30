@@ -28,13 +28,16 @@ class App:
     # メイン---------------------------------------
     def update(self):
 
-        # メインシーン
-        if imp.game_state.main_scene is not None:
-            imp.game_state.main_scene.update()
+        # F1キーでPause
+        if pyxel.btn(pyxel.KEY_F1) is False and imp._DEBUG_ is True:
 
-        # サブシーン
-        if imp.game_state.sub_scene is not None:
-            imp.game_state.sub_scene.update()
+            # メインシーン
+            if imp.game_state.main_scene is not None:
+                imp.game_state.main_scene.update()
+
+            # サブシーン
+            if imp.game_state.sub_scene is not None:
+                imp.game_state.sub_scene.update()
 
 # 画面描画---------------------------------------
     def draw(self):
