@@ -35,6 +35,7 @@ class EnemyNorm(imp.Sprite):
 
 #        self.BulletTime = random.randrange(30, 80, 1)
 
+    # -----------------------------------------------
     # メイン
     def update(self):
         if self.id0 == 0:           # まっすぐ
@@ -76,17 +77,13 @@ class EnemyNorm(imp.Sprite):
         # 画面内チェック
         self.CheckScreenIn()
 
-        # -----------------------------------------------
+    # -----------------------------------------------
     def draw(self):
         pos = self.pos + self.pos_adj
-        self.sprite_draw(pos.x, pos.y, 0, 0, 56, 12, 12)
 
         if self.id0 == 0:
             # まっすぐ下
-            if pyxel.frame_count & 0x08:
-                self.sprite_draw(pos.x, pos.y, 0, 40, 72, 12, 12)
-            else:
-                self.sprite_draw(pos.x, pos.y, 0, 56, 72, 12, 12)
+            self.sprite_draw(pos.x, pos.y, 0, 2, 6, 16, 16)
 
         elif self.id0 == 1:
             # まっすぐ下、プレイヤーにカーブ
@@ -112,9 +109,10 @@ class EnemyNorm(imp.Sprite):
                 self.sprite_draw(pos.x, pos.y, 0, 16 * self.ptn_no, 56, 12, 12)
 
         # 中心の表示
-        if imp._DEBUG_:
+        if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
 
+    # -----------------------------------------------
     def TestSpriteUpdate(self):
         self.ptn_time -= 1
         if self.ptn_time <= 0:
@@ -124,7 +122,7 @@ class EnemyNorm(imp.Sprite):
                 self.ptn_no = 0
 
     def TestSprite(self):
-        self.sprite_draw(self.pos.x, self.pos.y, 0, 16 * self.ptn_no, 56, 12, 12)
+        self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y, 0, 2, 6, 16, 16)
 
 
 # ==================================================
@@ -238,5 +236,5 @@ class EnemyItemGroup(imp.Sprite):
                 self.sprite_draw(pos.x, pos.y, 0, 56, 72, 12, 12)
 
         # 中心の表示
-        if imp._DEBUG_:
+        if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
