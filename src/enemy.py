@@ -8,7 +8,7 @@ import shooting_sub
 # 敵：ノーマルクラス
 # id0
 # 0: まっすぐ下に移動するだけ
-# 1: まっすぐ下に降りてきてプレイヤーに向かってカーブ
+# 1: 下に移動しながら左右往復する
 class EnemyNorm(imp.Sprite):
     BulletTime = 0
 
@@ -24,13 +24,12 @@ class EnemyNorm(imp.Sprite):
         self.hit_point = 1
         self.hit_rectx = 12
         self.hit_recty = 12
-        if self.id0 == 0:
-            # まっすぐ下
+        if self.id0 == 0:            # まっすぐ下
             self.vector = imp.Vector2(0, 1.2)
             self.score = 10
             self.life = 1
-        elif self.id0 == 1:
-            # まっすぐ下、左右往復
+
+        elif self.id0 == 1:          # まっすぐ下、左右往復
             self.vector = imp.Vector2(0, 1.0)
             if self.pos.x < 128:
                 self.vector.x = 1.8
@@ -38,8 +37,6 @@ class EnemyNorm(imp.Sprite):
                 self.vector.x = -1.8
             self.score = 10
             self.life = 1
-
-#        self.BulletTime = random.randrange(30, 80, 1)
 
     # -----------------------------------------------
     # メイン
@@ -56,12 +53,6 @@ class EnemyNorm(imp.Sprite):
                     self.vector.x *= -1
 
             self.pos += self.vector
-
-#                self.BulletTime -= 1
-#                if self.BulletTime <= 0:
-#                    self.BulletTime = random.randrange(10, 20, 1)
-#                    self.BulletTime = 99999     # 1回しか打たない
-#                    imp.Em.append(EnemyBullet(self.pos_x,self.pos_y,0,0,0))
 
         # -----------------------------------------------
         # 死にチェック
@@ -88,7 +79,7 @@ class EnemyNorm(imp.Sprite):
             self.sprite_draw(pos.x, pos.y, 0, 0, 6, 16, 16)
 
         elif self.id0 == 1:
-            # まっすぐ下、プレイヤーにカーブ
+            # まっすぐ下、移動方向を見て表示反転
             if self.vector.x < 0:
                 self.sprite_draw(pos.x, pos.y, 0, 2, 6, 16, 16)
             else:
@@ -108,7 +99,9 @@ class EnemyNorm(imp.Sprite):
                 self.ptn_no = 0
 
     def TestSprite(self):
-        self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y, 0, 2, 6, 16, 16)
+        self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y, 0, 0, 6, 16, 16)
+
+        self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y + 64, 0, 2, 6, 16, 16)
 
 
 # ==================================================
