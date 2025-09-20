@@ -39,7 +39,7 @@ class EnemyNorm(imp.Sprite):
             self.score = 10
             self.life = 1
 
-        elif self.id0 == 2:          # まっすぐ下、左右往復
+        elif self.id0 == 2 or self.id0 == 3:          # まっすぐ下、左右往復    まっすぐ下、左右往復して画面下の方で上に帰る
             self.score = 10
             self.life = 1
 
@@ -60,7 +60,7 @@ class EnemyNorm(imp.Sprite):
             self.pos += self.vector
 
         # -----------------------------------------------
-        elif self.id0 == 2:         # 左右往復
+        elif self.id0 == 2 or self.id0 == 3:         # 左右往復 左右往復して画面下の方で上に帰る
             if self.st0 == 0:       # 下移動
                 self.vector = imp.Vector2(0, 1.2)
                 self.tmp_ctr += 1
@@ -72,14 +72,23 @@ class EnemyNorm(imp.Sprite):
                         self.vector.x = -2.2
                     self.tmp_ctr = 0
                     self.st0 = 1
-            else:                   # 左右移動
+
+                if self.id0 == 3:         # 左右往復して画面下の方で上に帰る
+                    if self.pos.y > imp.WINDOW_H - 50:
+                        self.vector = imp.Vector2(0, -2.2)  # 上に帰る速度
+                        self.st0 = 2
+
+            elif self.st0 == 1:                   # 左右移動
                 self.tmp_ctr += 1
                 if self.tmp_ctr >= 45:
                     self.tmp_ctr = 0
                     self.st0 = 0
 
-            self.pos += self.vector
+            else:                   # 上に帰る
+                pass
 
+            self.pos += self.vector
+            
         # -----------------------------------------------
         # 死にチェック
         if self.life <= 0:          # 0以下なら死ぬ
@@ -111,7 +120,7 @@ class EnemyNorm(imp.Sprite):
             else:
                 self.sprite_draw(pos.x, pos.y, 0, 2, 6, -16, 16)
 
-        elif self.id0 == 2:
+        elif self.id0 == 2 or self.id0 == 3:
             # まっすぐ下、移動方向を見て表示反転
             if self.vector.x < 0:
                 self.sprite_draw(pos.x, pos.y, 0, 4, 6, 16, 16)
