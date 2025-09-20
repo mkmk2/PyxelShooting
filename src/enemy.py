@@ -8,7 +8,8 @@ import shooting_sub
 # 敵：ノーマルクラス
 # id0
 # 0: まっすぐ下に移動するだけ
-# 1: 下に移動しながら左右往復する
+# 1: 下に移動しながら斜めに左右往復する
+# 2: 下に移動しながら左右往復する
 class EnemyNorm(imp.Sprite):
     BulletTime = 0
 
@@ -29,7 +30,7 @@ class EnemyNorm(imp.Sprite):
             self.score = 10
             self.life = 1
 
-        elif self.id0 == 1:          # まっすぐ下、左右往復
+        elif self.id0 == 1:          # まっすぐ下、斜めに左右往復
             self.vector = imp.Vector2(0, 1.0)
             if self.pos.x < 128:
                 self.vector.x = 1.8
@@ -38,19 +39,44 @@ class EnemyNorm(imp.Sprite):
             self.score = 10
             self.life = 1
 
+        elif self.id0 == 2:          # まっすぐ下、左右往復
+            self.score = 10
+            self.life = 1
+
     # -----------------------------------------------
     # メイン
     def update(self):
         if self.id0 == 0:           # まっすぐ
             self.pos += self.vector
-
-        elif self.id0 == 1:         # 左右往復
+        # -----------------------------------------------
+        elif self.id0 == 1:         # 斜めに左右往復
             if self.vector.x > 0:
                 if self.pos.x > imp.WINDOW_W - 50:
                     self.vector.x *= -1
             else:
                 if self.pos.x < 50:
                     self.vector.x *= -1
+
+            self.pos += self.vector
+
+        # -----------------------------------------------
+        elif self.id0 == 2:         # 左右往復
+            if self.st0 == 0:       # 下移動
+                self.vector = imp.Vector2(0, 1.2)
+                self.tmp_ctr += 1
+                if self.tmp_ctr >= 30:
+                    self.vector = imp.Vector2(0, 0)
+                    if self.pos.x < 128:
+                        self.vector.x = 2.2
+                    else:
+                        self.vector.x = -2.2
+                    self.tmp_ctr = 0
+                    self.st0 = 1
+            else:                   # 左右移動
+                self.tmp_ctr += 1
+                if self.tmp_ctr >= 45:
+                    self.tmp_ctr = 0
+                    self.st0 = 0
 
             self.pos += self.vector
 
@@ -85,6 +111,13 @@ class EnemyNorm(imp.Sprite):
             else:
                 self.sprite_draw(pos.x, pos.y, 0, 2, 6, -16, 16)
 
+        elif self.id0 == 2:
+            # まっすぐ下、移動方向を見て表示反転
+            if self.vector.x < 0:
+                self.sprite_draw(pos.x, pos.y, 0, 4, 6, 16, 16)
+            else:
+                self.sprite_draw(pos.x, pos.y, 0, 6, 6, -16, 16)
+
         # 中心の表示
         if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
@@ -101,7 +134,15 @@ class EnemyNorm(imp.Sprite):
     def TestSprite(self):
         self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y, 0, 0, 6, 16, 16)
 
-        self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y + 64, 0, 2, 6, 16, 16)
+        if self.ptn_no <= 3:
+            self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y + 32, 0, 2, 6, 16, 16)
+        else:
+            self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y + 32, 0, 2, 6, -16, 16)
+
+        if self.ptn_no <= 3:
+            self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y + 64, 0, 4, 6, 16, 16)
+        else:
+            self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y + 64, 0, 6, 6, 16, 16)
 
 
 # ==================================================

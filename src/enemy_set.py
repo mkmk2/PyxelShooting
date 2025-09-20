@@ -9,8 +9,8 @@ STAGE_SET_1 = [
     [120,  128-30,   0,  enemy.EnemyNorm,  0, 0, 0,],
     [0,    128-60,   0,  enemy.EnemyNorm,  0, 0, 0,],
 
-    [120,  128+30,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [0,    128+60,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [120,  128+30,   0,  enemy.EnemyNorm,  2, 0, 0,],
+    [0,    128+60,   0,  enemy.EnemyNorm,  2, 0, 0,],
 
     [120,  128-30,   0,  enemy.EnemyNorm,  0, 0, 0,],
     [0,    128-60,   0,  enemy.EnemyNorm,  0, 0, 0,],
@@ -69,7 +69,8 @@ STAGE_SET_TEST = [
 STAGE_SET_TEST_ENEMY = [
     # 時間, X, Y, class, id0, id1, item
     [0,    128,   0,  enemy.EnemyNorm,  0, 0, 0,],          # まっすぐ
-    [0,    128,   0,  enemy.EnemyNorm,  1, 0, 0,],          # 左右往復
+    [0,    128,   0,  enemy.EnemyNorm,  1, 0, 0,],          # 斜め左右往復
+    [0,    128,   0,  enemy.EnemyNorm,  2, 0, 0,],          # 左右往復
 
     [9999, 128,   0,  enemy.EnemyNorm,  1, 0, 0,],
 ]
