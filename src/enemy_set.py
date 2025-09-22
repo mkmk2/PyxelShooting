@@ -12,8 +12,8 @@ STAGE_SET_1 = [
     [120,  128+30,   0,  enemy.EnemyNorm,  2, 0, 0,],
     [0,    128+60,   0,  enemy.EnemyNorm,  2, 0, 0,],
 
-    [120,  128-30,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [0,    128-60,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [120,  128-30,   0,  enemy.EnemyNorm,  3, 0, 0,],
+    [0,    128-60,   0,  enemy.EnemyNorm,  3, 0, 0,],
 
     [120,  128+30,   0,  enemy.EnemyNorm,  1, 0, 0,],
     [30,    128+60,   0,  enemy.EnemyNorm,  1, 0, 0,],

@@ -26,20 +26,21 @@ class EnemyNorm(imp.Sprite):
         self.hit_rectx = 12
         self.hit_recty = 12
         if self.id0 == 0:            # まっすぐ下
-            self.vector = imp.Vector2(0, 1.2)
+            self.vector = imp.Vector2(0, 2.2)
             self.score = 10
             self.life = 1
 
-        elif self.id0 == 1:          # まっすぐ下、斜めに左右往復
-            self.vector = imp.Vector2(0, 1.0)
+        elif self.id0 == 1:          # 斜めに左右往復
+            self.vector = imp.Vector2(0, 1.4)
             if self.pos.x < 128:
-                self.vector.x = 1.8
+                self.vector.x = 2.8
             else:
-                self.vector.x = -1.8
+                self.vector.x = -2.8
             self.score = 10
             self.life = 1
 
         elif self.id0 == 2 or self.id0 == 3:          # まっすぐ下、左右往復    まっすぐ下、左右往復して画面下の方で上に帰る
+            self.vector = imp.Vector2(0, 2.2)
             self.score = 10
             self.life = 1
 
@@ -62,25 +63,25 @@ class EnemyNorm(imp.Sprite):
         # -----------------------------------------------
         elif self.id0 == 2 or self.id0 == 3:         # 左右往復 左右往復して画面下の方で上に帰る
             if self.st0 == 0:       # 下移動
-                self.vector = imp.Vector2(0, 1.2)
+                self.vector = imp.Vector2(0, 2.2)
                 self.tmp_ctr += 1
                 if self.tmp_ctr >= 30:
                     self.vector = imp.Vector2(0, 0)
                     if self.pos.x < 128:
-                        self.vector.x = 2.2
+                        self.vector.x = 2.4
                     else:
-                        self.vector.x = -2.2
+                        self.vector.x = -2.4
                     self.tmp_ctr = 0
                     self.st0 = 1
 
                 if self.id0 == 3:         # 左右往復して画面下の方で上に帰る
                     if self.pos.y > imp.WINDOW_H - 50:
-                        self.vector = imp.Vector2(0, -2.2)  # 上に帰る速度
+                        self.vector = imp.Vector2(0, -1.8)  # 上に帰る速度
                         self.st0 = 2
 
             elif self.st0 == 1:                   # 左右移動
                 self.tmp_ctr += 1
-                if self.tmp_ctr >= 45:
+                if self.tmp_ctr >= 35:
                     self.tmp_ctr = 0
                     self.st0 = 0
 

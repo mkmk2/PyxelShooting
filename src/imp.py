@@ -93,8 +93,6 @@ class Sprite:
     def CheckScreenIn(self):
         if self.screen_time >= SCREEN_TIME:
             SafeArea = 16           # 画面外のチェックする幅
-            if _DEBUG_:
-                SafeArea = -10       # Debug 画面の中で判定する
 
             if -SafeArea < self.pos.x and self.pos.x < WINDOW_W + SafeArea:
                 if -SafeArea < self.pos.y and self.pos.y < WINDOW_H + SafeArea:
