@@ -1,4 +1,5 @@
 import pyxel
+import math
 import imp
 import plitem
 import shooting_sub
@@ -10,6 +11,8 @@ import shooting_sub
 # 0: まっすぐ下に移動するだけ
 # 1: 下に移動しながら斜めに左右往復する
 # 2: 下に移動しながら左右往復する
+# 3: 左右往復して画面下の方で上に帰る
+# 4: サイン波で左右に揺れながら下降
 class EnemyNorm(imp.Sprite):
     BulletTime = 0
 
@@ -43,6 +46,15 @@ class EnemyNorm(imp.Sprite):
             self.vector = imp.Vector2(0, 2.2)
             self.score = 10
             self.life = 1
+
+        elif self.id0 == 4:          # サイン波で左右に揺れながら下降
+            self.vector = imp.Vector2(0, 1.8)
+            self.score = 10
+            self.life = 1
+            self.swing_amplitude = imp.WINDOW_W / 3  # 揺れ幅（画面の1/3）
+            self.swing_speed = 2 * math.pi / 100     # 周期100フレーム（左右のピークが50フレーム）
+            self.initial_x = self.pos.x              # 初期X座標を記録
+            self.swing_timer = 0                     # 個別の揺れタイマー
 
     # -----------------------------------------------
     # メイン
@@ -89,7 +101,29 @@ class EnemyNorm(imp.Sprite):
                 pass
 
             self.pos += self.vector
-            
+
+        # -----------------------------------------------
+        elif self.id0 == 4:         # サイン波で左右に揺れながら下降
+            # Y方向は一定速度で下降
+            self.pos.y += self.vector.y
+
+            # 個別タイマーを更新
+            self.swing_timer += 1
+
+            # X方向はサイン波で左右に揺れる
+            # 個別タイマーを基準にサイン波を計算
+            swing_offset = self.swing_amplitude * math.sin(self.swing_timer * self.swing_speed)
+            self.pos.x = self.initial_x + swing_offset
+
+            # 移動方向を記録（描画時の反転用）
+            if self.swing_timer > 0:
+                current_swing = math.sin(self.swing_timer * self.swing_speed)
+                previous_swing = math.sin((self.swing_timer - 1) * self.swing_speed)
+                if current_swing > previous_swing:
+                    self.vector.x = 1  # 右向き
+                else:
+                    self.vector.x = -1  # 左向き
+
         # -----------------------------------------------
         # 死にチェック
         if self.life <= 0:          # 0以下なら死ぬ
@@ -127,6 +161,13 @@ class EnemyNorm(imp.Sprite):
                 self.sprite_draw(pos.x, pos.y, 0, 4, 6, 16, 16)
             else:
                 self.sprite_draw(pos.x, pos.y, 0, 6, 6, -16, 16)
+
+        elif self.id0 == 4:
+            # サイン波で揺れながら下降、移動方向を見て表示反転（id0=1と同じスプライト使用）
+            if self.vector.x < 0:
+                self.sprite_draw(pos.x, pos.y, 0, 2, 6, 16, 16)
+            else:
+                self.sprite_draw(pos.x, pos.y, 0, 2, 6, -16, 16)
 
         # 中心の表示
         if imp._DEBUG_HIT_:
