@@ -5,6 +5,7 @@
 
 https://kitao.github.io/pyxel/wasm/launcher/?play=mkmk2.PyxelShooting.src.shooting&gamepad=enabled
 
+
 ## 主な特徴
 - タイトル画面、メインゲーム、サブシーン（例：ポーズやゲームオーバー）を管理するシーン制を採用しています。
 - プレイヤーの操作や敵の出現、弾の発射など、シューティングゲームの基本的な要素を備えています。
