@@ -148,7 +148,7 @@ class SceneGameMain:
 
         imp.game_state.stage_pos = 0              # ステージ
         imp.game_state.tile_pos.x = 0
-        imp.game_state.tile_pos.y = 256 * 2
+        imp.game_state.tile_pos.y = imp.TILE_Y_START
 
         # プレイヤーのセット
         imp.game_state.pl.append(player.Player(30, 40, 0, 100, 0))
@@ -278,8 +278,8 @@ class SceneGameMain:
     def draw(self):
         # ゲーム画面
         # 背景
-        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, 512 - ((512 - imp.game_state.tile_pos.y) / 2), imp.WINDOW_W, imp.WINDOW_H, 0)
-        pyxel.bltm(0, 0, 1, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H, 0)
+        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H, 0)
+        pyxel.bltm(0, 0, 1, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y / 2, imp.WINDOW_W, imp.WINDOW_H, 0)
 
         # オブジェクト
         if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.GAMEOVER\
@@ -660,7 +660,7 @@ class SceneTestBG:
 
         imp.game_state.pl.append(player.Player(128, 128, 0, 0, 0))
         imp.game_state.tile_pos.x = 0
-        imp.game_state.tile_pos.y = 512
+        imp.game_state.tile_pos.y = imp.TILE_Y_START
 
     def __del__(self):
         # 全てのオブジェクトを消す
@@ -678,15 +678,15 @@ class SceneTestBG:
                 imp.game_state.tile_pos.y = 0
         if input_manager.input_manager.is_input_down_held():
             imp.game_state.tile_pos.y += step
-            if imp.game_state.tile_pos.y > 256 * 8:
-                imp.game_state.tile_pos.y = 0
+            if imp.game_state.tile_pos.y > imp.TILE_Y_START:
+                imp.game_state.tile_pos.y = imp.TILE_Y_START
         if input_manager.input_manager.is_input_left_held():
             imp.game_state.tile_pos.x -= step
             if imp.game_state.tile_pos.x < 0:
                 imp.game_state.tile_pos.x = 0
         if input_manager.input_manager.is_input_right_held():
             imp.game_state.tile_pos.x += step
-            if imp.game_state.tile_pos.x > 256 * 8:
+            if imp.game_state.tile_pos.x > 256 * 2:
                 imp.game_state.tile_pos.x = 0
 
         if input_manager.input_manager.is_quit_pressed():
@@ -695,13 +695,15 @@ class SceneTestBG:
 
     def draw(self):
         # 背景
-        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, 512 - ((512 - imp.game_state.tile_pos.y) / 2), imp.WINDOW_W, imp.WINDOW_H, 0)
-        pyxel.bltm(0, 0, 1, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H, 0)
+        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H, 0)
+        pyxel.bltm(0, 0, 1, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y / 2, imp.WINDOW_W, imp.WINDOW_H, 0)
 
         no = "{:02}".format(imp.game_state.tile_pos.x)
         pyxel.text(100, 80, no, 7)
         no = "{:02}".format(imp.game_state.tile_pos.y)
         pyxel.text(100, 100, no, 7)
+        no = "{:02}".format(imp.game_state.tile_pos.y / 2)
+        pyxel.text(140, 100, no, 7)
 
         # ステージNoの表示
         no = "{:02}".format(imp.game_state.stage_no)
