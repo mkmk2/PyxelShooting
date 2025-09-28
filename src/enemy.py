@@ -1,5 +1,6 @@
 import pyxel
 import math
+import random
 import imp
 import plitem
 import shooting_sub
@@ -47,7 +48,18 @@ class EnemyNorm(imp.Sprite):
             self.score = 10
             self.life = 1
 
-        elif self.id0 == 4:          # サイン波で左右に揺れながら下降
+        elif self.id0 == 4:                           # 画面左右から出現、中央まで移動後、降りながら弾を撃つ
+            self.vector = imp.Vector2(0, -1.8)
+
+            if self.pos.x < 128:
+                self.vector.x = 2.8
+            else:
+                self.vector.x = -2.8
+
+            self.score = 10
+            self.life = 1
+
+        elif self.id0 == 5:                         # サイン波で左右に揺れながら下降
             self.vector = imp.Vector2(0, 1.8)
             self.score = 10
             self.life = 1
@@ -103,7 +115,44 @@ class EnemyNorm(imp.Sprite):
             self.pos += self.vector
 
         # -----------------------------------------------
-        elif self.id0 == 4:         # サイン波で左右に揺れながら下降
+        elif self.id0 == 4:         # 画面左右から出現、中央まで移動後、降りながら弾を撃つ
+            if self.st0 == 0:       # 上移動
+                self.vector.y -= 0.08
+                if self.vector.x > 0:
+                    self.vector.x -= 0.02
+                    if self.vector.x < 0:
+                        self.vector.x = 0
+                else:
+                    self.vector.x += 0.02
+                    if self.vector.x > 0:
+                        self.vector.x = 0
+
+                if self.pos.y < 50:
+                    self.vector = imp.Vector2(0, 0)
+                    self.tmp_ctr = 0
+                    self.st0 = 1
+
+            elif self.st0 == 1:       # 一時停止
+                self.tmp_ctr += 1
+                if self.tmp_ctr >= 13:
+                    if random.random() > 0.5:
+                        shooting_sub.SetVector(self, math.radians(130), 2.8)
+                    else:
+                        shooting_sub.SetVector(self, math.radians(50), 2.8)
+                    self.tmp_ctr = 0
+                    self.st0 = 2
+
+            elif self.st0 == 2:       # 降下
+                self.tmp_ctr += 1
+                if self.tmp_ctr >= 20:
+                    self.vector = imp.Vector2(0, 0)
+                    self.tmp_ctr = 0
+                    self.st0 = 1
+
+            self.pos += self.vector
+
+        # -----------------------------------------------
+        elif self.id0 == 5:         # サイン波で左右に揺れながら下降
             # Y方向は一定速度で下降
             self.pos.y += self.vector.y
 
@@ -163,6 +212,13 @@ class EnemyNorm(imp.Sprite):
                 self.sprite_draw(pos.x, pos.y, 0, 6, 6, -16, 16)
 
         elif self.id0 == 4:
+            # サイン波で揺れながら下降、移動方向を見て表示反転（id0=1と同じスプライト使用）
+            if self.vector.x < 0:
+                self.sprite_draw(pos.x, pos.y, 0, 2, 6, 16, 16)
+            else:
+                self.sprite_draw(pos.x, pos.y, 0, 2, 6, -16, 16)
+
+        elif self.id0 == 5:
             # サイン波で揺れながら下降、移動方向を見て表示反転（id0=1と同じスプライト使用）
             if self.vector.x < 0:
                 self.sprite_draw(pos.x, pos.y, 0, 2, 6, 16, 16)
