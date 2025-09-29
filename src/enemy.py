@@ -4,6 +4,7 @@ import random
 import imp
 import plitem
 import shooting_sub
+from EnemyBullet import EnemyBullet
 
 
 # ==================================================
@@ -140,6 +141,8 @@ class EnemyNorm(imp.Sprite):
                     else:
                         shooting_sub.SetVector(self, math.radians(50), 2.8)
                     self.tmp_ctr = 0
+                    # 弾を撃つ
+                    imp.game_state.em.append(EnemyBullet(self.pos.x, self.pos.y + 4, imp.BulletId.PLAYER, 0, 0))
                     self.st0 = 2
 
             elif self.st0 == 2:       # 降下
@@ -331,7 +334,7 @@ class EnemyItemGroup(imp.Sprite):
                     imp.game_state.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
 
         # 画面内チェック
-        self.CheckScreenIn(self)
+        self.CheckScreenIn()
 
         # -----------------------------------------------
     def draw(self):
