@@ -4,7 +4,7 @@ from enum import Enum
 # _DEBUG_ = True
 _DEBUG_ = True
 _DEBUG_LV_ = False
-_DEBUG_HIT_ = True
+_DEBUG_HIT_ = False
 _DEBUG_CONSOLE_ = 0  # 0:無効 1:screen,hit  2:  3:
 
 
@@ -47,6 +47,14 @@ STAGE_NO_MAX = 4       # 最終ステージ
 PL_ITEM_LEVEL_UP = 3    # レベルアップする個数
 
 TILE_Y_START = 256 * 12 - WINDOW_H
+
+
+class BulletId(Enum):
+    STRAIGHT = 0
+    PLAYER = 1
+    LEFT = 2
+    RIGHT = 3
+    DEFAULT = 4
 
 
 # --------------------------------------------------

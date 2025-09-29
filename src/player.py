@@ -187,7 +187,7 @@ class Player(imp.Sprite):
             pyxel.rect(imp.WINDOW_W / 2 - self.shot_time / 2, imp.WINDOW_H - 12, self.shot_time / 2, 4, 7)
 
         # 中心の表示
-        if imp._DEBUG_:
+        if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
 
 # --------------------------------------------------
