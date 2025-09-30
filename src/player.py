@@ -41,7 +41,7 @@ class Player(imp.Sprite):
 
         self.pos_adj = imp.Vector2(-8, -8)
 
-        self.life = 3
+        self.life = 300
         self.hit_rectx = 4
         self.hit_recty = 4
 
