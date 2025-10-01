@@ -15,7 +15,6 @@ class Effect(imp.Sprite):
         imp.Sprite.__init__(self, imp.OBJEFF, x, y, id_0, id_1, item)       # Spriteクラスのコンストラクタ
 
         self.ptn_time = 0
-        self.ptn_no = 0
 
 #        if self.id0 == 1:       # 移動する
 #            shooting_sub.SetVector(self, self.id1, (random.randrange(5, 20, 1) / 10))
@@ -26,13 +25,9 @@ class Effect(imp.Sprite):
     # メイン
     def update(self):
         self.ptn_time += 1
-        if self.ptn_time >= 4:
+        if self.ptn_time >= 14:
             self.ptn_time = 0
-
-            self.ptn_no += 1
-            if self.ptn_no > 2:
-                self.ptn_no = 2
-                self.death = 1
+            self.death = 1
 
         if self.id0 == 1:       # 移動する
             self.pos.x += self.vector.x
@@ -40,11 +35,11 @@ class Effect(imp.Sprite):
 
     # 描画
     def draw(self):
-        if self.ptn_no == 0:
+        if self.ptn_time < 4:
             self.sprite_draw(self.pos.x - 8, self.pos.y - 8, 0, 16, 1, 16, 16)
-        elif self.ptn_no == 1:
+        elif self.ptn_time < 8:
             self.sprite_draw(self.pos.x - 8, self.pos.y - 8, 0, 18, 1, 16, 16)
-        elif self.ptn_no == 2:
+        else:
             self.sprite_draw(self.pos.x - 8, self.pos.y - 8, 0, 20, 1, 16, 16)
 
 # --------------------------------------------------
