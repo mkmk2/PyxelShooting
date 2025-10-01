@@ -1,4 +1,5 @@
 import enemy
+import imp
 
 # --------------------------------------------------
 # 敵のセット位置
@@ -6,28 +7,28 @@ import enemy
 STAGE_SET_1 = [
     # 時間, X, Y, class, id0, id1, item
     # まっすぐ
-    [120,  128-30,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [0,    128-60,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [120,  128-30,   0,  imp.EnemyId.EM_STR_DOWN,  0, 0, 0,],
+    [0,    128-60,   0,  imp.EnemyId.EM_STR_DOWN,  0, 0, 0,],
 
-    [120,  128+30,   0,  enemy.EnemyNorm,  2, 0, 0,],
-    [0,    128+60,   0,  enemy.EnemyNorm,  2, 0, 0,],
+    [120,  128+30,   0,  imp.EnemyId.EM_LR_HORI,  2, 0, 0,],
+    [0,    128+60,   0,  imp.EnemyId.EM_LR_HORI,  2, 0, 0,],
 
-    [120,  128-30,   0,  enemy.EnemyNorm,  3, 0, 0,],
-    [0,    128-60,   0,  enemy.EnemyNorm,  3, 0, 0,],
+    [120,  128-30,   0,  imp.EnemyId.EM_LE_HORI_RET,  3, 0, 0,],
+    [0,    128-60,   0,  imp.EnemyId.EM_LE_HORI_RET,  3, 0, 0,],
 
-    [120,  0,   200,  enemy.EnemyNorm,  4, 0, 0,],
-    [0,    256,   200,  enemy.EnemyNorm,  4, 0, 0,],
+    [120,  0,   200,  imp.EnemyId.EM_SIDE_LR,  4, 0, 0,],
+    [0,    256,   200,  imp.EnemyId.EM_SIDE_LR,  4, 0, 0,],
 
-    [120,  128+30,   0,  enemy.EnemyNorm,  1, 0, 0,],
-    [30,    128+60,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [120,  128+30,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
+    [30,    128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
 
-    [120,  128+30,   0,  enemy.EnemyNorm,  1, 0, 0,],
-    [30,    128+60,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [120,  128+30,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
+    [30,    128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
 
-    [120,  128+30,   0,  enemy.EnemyNorm,  1, 0, 0,],
-    [30,    128+60,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [120,  128+30,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
+    [30,    128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
 
-    [100000, 128+60,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [100000, 128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
 
 
 
@@ -69,7 +70,7 @@ STAGE_SET_TEST = [
 ]
 
 
-STAGE_SET_TEST_ENEMY = [
+STAGE_SET_ENEMY = [
     # 時間, X, Y, class, id0, id1, item
     [0,    128,   0,  enemy.EnemyNorm,  0, 0, 0,],          # まっすぐ
     [0,    128,   0,  enemy.EnemyNorm,  1, 0, 0,],          # 斜め左右往復

@@ -368,7 +368,14 @@ class SceneGameMain:
             pos += e[0]
             if imp.game_state.stage_pos == pos:          # 等しい時のみ敵セットする
                 while imp.game_state.stage_pos == pos:   # 同じPosを繰り返しセット
-                    t = e[3]
+                    em_id = e[3]
+                    # em_idがEnum型の場合、値（int）に変換する
+                    if hasattr(em_id, 'value'):
+                        em_id_value = em_id.value
+                    else:
+                        em_id_value = em_id
+                    em_tbl = enemy_set.STAGE_SET_ENEMY[em_id_value]
+                    t = em_tbl[3]
                     imp.game_state.em.append(t(e[1], e[2], e[4], e[5], e[6]))
 
                     n += 1                      # 次のTblへ
@@ -510,7 +517,7 @@ class SceneGameTest:
     def update(self):
         # 敵選択
         if input_manager.input_manager.is_menu_right_pressed():
-            e = enemy_set.STAGE_SET_TEST_ENEMY[self.select_pos + 1]
+            e = enemy_set.STAGE_SET_ENEMY[self.select_pos + 1]
             if e[0] != 9999:
                 self.select_pos += 1
 
@@ -521,7 +528,7 @@ class SceneGameTest:
         # スペース
         if input_manager.input_manager.is_menu_enemy_set_pressed():
             # 敵セット
-            e = enemy_set.STAGE_SET_TEST_ENEMY[self.select_pos]
+            e = enemy_set.STAGE_SET_ENEMY[self.select_pos]
             t = e[3]
             imp.game_state.em.append(t(e[1], e[2], e[4], e[5], e[6]))
 
@@ -536,7 +543,7 @@ class SceneGameTest:
 
         pyxel.text(40, 60, "Set Enemy 'A'", 7)
         # enemy_set.pyのSTAGE_SET_TEST_ENEMYで指定されているクラス名の文字列を表示する
-        e = enemy_set.STAGE_SET_TEST_ENEMY[self.select_pos]
+        e = enemy_set.STAGE_SET_ENEMY[self.select_pos]
         t = e[3]
         class_str = f"{t.__module__}.{t.__name__}"  # クラス名を表示
         pyxel.text(40, 80, class_str, 7)

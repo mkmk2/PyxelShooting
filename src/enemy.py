@@ -14,7 +14,8 @@ from EnemyBullet import EnemyBullet
 # 1: 下に移動しながら斜めに左右往復する
 # 2: 下に移動しながら左右往復する
 # 3: 左右往復して画面下の方で上に帰る
-# 4: サイン波で左右に揺れながら下降
+# 4: 画面左右から出現、中央まで移動後、降りながら弾を撃つ
+# 5: サイン波で左右に揺れながら下降
 class EnemyNorm(imp.Sprite):
     BulletTime = 0
 

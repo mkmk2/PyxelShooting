@@ -49,6 +49,15 @@ PL_ITEM_LEVEL_UP = 3    # レベルアップする個数
 TILE_Y_START = 256 * 12 - WINDOW_H
 
 
+class EnemyId(Enum):
+    EM_STR_DOWN = 0     # まっすぐ下に移動するだけ
+    EM_LR_TILT = 1      # 下に移動しながら斜めに左右往復する
+    EM_LR_HORI = 2      # 下に移動しながら左右往復する
+    EM_LE_HORI_RET = 3  # 左右往復して画面下の方で上に帰る
+    EM_SIDE_LR = 4      # 画面左右から出現、中央まで移動後、降りながら弾を撃つ
+    EM_SIN_DOWN = 5     # サイン波で左右に揺れながら下降
+
+
 class BulletId(Enum):
     STRAIGHT = 0
     PLAYER = 1
