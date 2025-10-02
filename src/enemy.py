@@ -29,8 +29,8 @@ class EnemyNorm(imp.Sprite):
 
         self.pos_adj = imp.Vector2(-8, -8)
         self.hit_point = 1
-        self.hit_rectx = 12
-        self.hit_recty = 12
+        self.hit_rectx = 14
+        self.hit_recty = 14
         if self.id0 == 0:            # まっすぐ下
             self.vector = imp.Vector2(0, 2.2)
             self.score = 10

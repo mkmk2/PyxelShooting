@@ -7,6 +7,7 @@ _DEBUG_LV_ = False
 _DEBUG_HIT_ = False
 _DEBUG_CONSOLE_ = 0  # 0:無効 1:screen,hit  2:  3:
 
+pause_flag = False
 
 WINDOW_W = 255
 WINDOW_H = 240
