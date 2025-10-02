@@ -23,13 +23,18 @@ class App:
         # メインScene タイトル　セット
         scene.SetSubScene(self, scene.SceneTitle())
 
+        imp.pause_flag = False
+
         pyxel.run(self.update, self.draw)
 
     # メイン---------------------------------------
     def update(self):
 
         # F1キーでPause
-        if pyxel.btn(pyxel.KEY_F1) is False and imp._DEBUG_ is True:
+        if pyxel.btnp(pyxel.KEY_F1) is True and imp._DEBUG_ is True:
+            imp.pause_flag = not imp.pause_flag
+
+        if imp.pause_flag is False and imp._DEBUG_ is True:
 
             # メインシーン
             if imp.game_state.main_scene is not None:
