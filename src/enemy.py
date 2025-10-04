@@ -277,7 +277,7 @@ class EnemyBoss(imp.Sprite):
             self.hit_rectx = 14
             self.hit_recty = 14
 
-            self.vector = imp.Vector2(0, 0.5)
+            self.vector = imp.Vector2(0, 0.8)
             self.score = 10
             self.life = 1
 
