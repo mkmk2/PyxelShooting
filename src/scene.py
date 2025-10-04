@@ -242,13 +242,13 @@ class SceneGameMain:
                         SetSubScene(self, SceneGameOver())
 
         # ボスが死んだらステージクリアへ
-        if imp.game_state.game_status == imp.GameStatus.MAIN:       # ゲーム中のみ
-            for e in imp.game_state.em:
-                if e.__class__.__name__ == "EnemyBoss":
-                    if e.death == 1:
+#        if imp.game_state.game_status == imp.GameStatus.MAIN:       # ゲーム中のみ
+#            for e in imp.game_state.em:
+#                if e.__class__.__name__ == "EnemyBoss":
+#                    if e.death == 1:
 
                         # サブシーン ゲームクリアー　セット
-                        SetSubScene(self, SceneGameClear())
+#                        SetSubScene(self, SceneGameClear())
 
         # オブジェクトを消す ---------------------------------
         # プレイヤー・プレイヤーの弾を消す

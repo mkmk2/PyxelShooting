@@ -257,6 +257,137 @@ class EnemyNorm(imp.Sprite):
 
 
 # ==================================================
+# 敵：中ボスクラス
+# id0
+# 0: まっすぐ下に移動するだけ
+class EnemyBoss(imp.Sprite):
+    BulletTime = 0
+
+    MvTime = 0
+    MvWait = 0
+    BossMoveTblPtr = 0
+
+    # コンストラクタ
+    def __init__(self, x, y, i0, i1, item):
+        imp.Sprite.__init__(self, imp.OBJEM, x, y, i0, i1, item)       # Spriteクラスのコンストラクタ
+
+        self.pos_adj = imp.Vector2(-12, -12)
+        if self.id0 == 0:            # まっすぐ下
+            self.hit_point = 10
+            self.hit_rectx = 14
+            self.hit_recty = 14
+
+            self.vector = imp.Vector2(0, 0.5)
+            self.score = 10
+            self.life = 1
+
+        elif self.id0 == 1:          # 斜めに左右往復
+            self.vector = imp.Vector2(0, 1.4)
+            if self.pos.x < 128:
+                self.vector.x = 2.8
+            else:
+                self.vector.x = -2.8
+            self.score = 10
+            self.life = 1
+
+        elif self.id0 == 2 or self.id0 == 3:          # まっすぐ下、左右往復    まっすぐ下、左右往復して画面下の方で上に帰る
+            self.vector = imp.Vector2(0, 2.2)
+            self.score = 10
+            self.life = 1
+
+    # -----------------------------------------------
+    # メイン
+    def update(self):
+        if self.id0 == 0:           # まっすぐ
+            if self.pos.y > 50:
+                self.vector = imp.Vector2(0, 0)
+
+            self.pos += self.vector
+        # -----------------------------------------------
+        elif self.id0 == 1:         # 斜めに左右往復
+            if self.vector.x > 0:
+                if self.pos.x > imp.WINDOW_W - 50:
+                    self.vector.x *= -1
+            else:
+                if self.pos.x < 50:
+                    self.vector.x *= -1
+
+            self.pos += self.vector
+
+        # -----------------------------------------------
+        elif self.id0 == 2 or self.id0 == 3:         # 左右往復 左右往復して画面下の方で上に帰る
+            if self.st0 == 0:       # 下移動
+                self.vector = imp.Vector2(0, 2.2)
+                self.tmp_ctr += 1
+                if self.tmp_ctr >= 30:
+                    self.vector = imp.Vector2(0, 0)
+                    if self.pos.x < 128:
+                        self.vector.x = 2.4
+                    else:
+                        self.vector.x = -2.4
+                    self.tmp_ctr = 0
+                    self.st0 = 1
+
+                if self.id0 == 3:         # 左右往復して画面下の方で上に帰る
+                    if self.pos.y > imp.WINDOW_H - 50:
+                        self.vector = imp.Vector2(0, -1.8)  # 上に帰る速度
+                        self.st0 = 2
+
+            elif self.st0 == 1:                   # 左右移動
+                self.tmp_ctr += 1
+                if self.tmp_ctr >= 35:
+                    self.tmp_ctr = 0
+                    self.st0 = 0
+
+            else:                   # 上に帰る
+                pass
+
+            self.pos += self.vector
+
+        # -----------------------------------------------
+        # 死にチェック
+        if self.life <= 0:          # 0以下なら死ぬ
+            self.death = 1          # 死ぬ
+            imp.game_state.score += self.score     # scoreを加算
+            if imp._DEBUG_:
+                print("enemy die")
+            # アイテムセット
+            if self.item_set != 0:
+                if imp._DEBUG_:
+                    print("item")
+                imp.game_state.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
+
+        # 画面内チェック
+        self.CheckScreenIn()
+
+    # -----------------------------------------------
+    def draw(self):
+        pos = self.pos + self.pos_adj
+
+        if self.id0 == 0:
+            # まっすぐ下
+            self.sprite_draw(pos.x, pos.y, 0, 0, 8, 24, 24)
+
+        elif self.id0 == 1:
+            # まっすぐ下、移動方向を見て表示反転
+            if self.vector.x < 0:
+                self.sprite_draw(pos.x, pos.y, 0, 2, 6, 16, 16)
+            else:
+                self.sprite_draw(pos.x, pos.y, 0, 2, 6, -16, 16)
+
+        elif self.id0 == 2 or self.id0 == 3:
+            # まっすぐ下、移動方向を見て表示反転
+            if self.vector.x < 0:
+                self.sprite_draw(pos.x, pos.y, 0, 4, 6, 16, 16)
+            else:
+                self.sprite_draw(pos.x, pos.y, 0, 6, 6, -16, 16)
+
+        # 中心の表示
+        if imp._DEBUG_HIT_:
+            shooting_sub.DebugDrawPosHitRect(self)
+
+
+# ==================================================
 # 敵ItemGroupクラス
 # セットされたグループNoにより、全滅させた際にアイテムを落とす
 # id0

@@ -28,6 +28,8 @@ STAGE_SET_1 = [
     [120,  128+30,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
     [30,    128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
 
+    [100,   128,   0,  imp.EnemyId.EM_MID_BOSS_0,  1, 0, 0,],
+
     [100000, 128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
 
 
@@ -78,6 +80,7 @@ STAGE_SET_ENEMY = [
     [0,    128,   0,  enemy.EnemyNorm,  3, 0, 0,],          # 左右往復して画面下の方で上に帰る
     [0,    0,   200,  enemy.EnemyNorm,  4, 0, 0,],          # 画面左右から出現、中央まで移動後、降りながら弾を撃つ
     [0,    128,   0,  enemy.EnemyNorm,  5, 0, 0,],          # サイン波で左右に揺れながら下降
+    [0,    128,   0,  enemy.EnemyBoss,  0, 0, 0,],          # 中ボス
 
     [9999, 128,   0,  enemy.EnemyNorm,  1, 0, 0,],
 ]
