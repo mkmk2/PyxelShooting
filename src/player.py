@@ -290,7 +290,7 @@ class PlayerBullet(imp.Sprite):
         self.pos_adj = imp.Vector2(-4, -4)
         self.life = 1
         self.hit_point = 1
-        self.hit_rectx = 8
+        self.hit_rectx = 6
         self.hit_recty = 8
 
         if self.id1 == 0:

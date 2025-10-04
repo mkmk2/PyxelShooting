@@ -279,13 +279,13 @@ class SceneGameMain:
         # ゲーム画面
         # 後景
         pyxel.bltm(
-            0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y,
+            0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y / 2,
             imp.WINDOW_W, imp.WINDOW_H, 0
         )
         # 前景
         pyxel.bltm(
             0, 0, 1, imp.game_state.tile_pos.x,
-            imp.TILE_Y_START - ((imp.TILE_Y_START - imp.game_state.tile_pos.y) / 2),
+            imp.game_state.tile_pos.y,
             imp.WINDOW_W, imp.WINDOW_H, 0
         )
 
