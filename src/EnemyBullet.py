@@ -34,7 +34,7 @@ class EnemyBullet(imp.Sprite):
             # 実際の実装時にプレイヤーの位置を取得して角度を計算
             pl = imp.GetPl(self)
             if pl != 0:
-                shooting_sub.SetVector(self, shooting_sub.GetDirection(self, self.pos.x, self.pos.y, pl.pos.x, pl.pos.y), BULLET_SPEED)
+                shooting_sub.SetVector(self, shooting_sub.GetDirection32(self, self.pos.x, self.pos.y, pl.pos.x, pl.pos.y), BULLET_SPEED)
 
         elif self.id0 == imp.BulletId.LEFT:
             # 斜め左下に移動する弾
