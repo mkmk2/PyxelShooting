@@ -149,6 +149,7 @@ class SceneGameMain:
         imp.game_state.stage_pos = 0              # ステージ
         imp.game_state.tile_pos.x = 0
         imp.game_state.tile_pos.y = imp.TILE_Y_START
+        imp.game_state.BossArea = 0
 
         # プレイヤーのセット
         imp.game_state.pl.append(player.Player(30, 40, 0, 100, 0))
@@ -165,9 +166,20 @@ class SceneGameMain:
 
         # 背景
         if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.STAGECLEAR:
-            imp.game_state.tile_pos.y -= 1.0
-            if imp.game_state.tile_pos.y < 0:
-                imp.game_state.tile_pos.y = 0
+            if imp.game_state.BossArea == 0:
+                # ボスエリアに入っていない
+                imp.game_state.tile_pos.y -= 1.0
+                if imp.game_state.tile_pos.y < 0:
+                    imp.game_state.tile_pos.y = 0
+            else:
+                # ボスエリアに入っている
+                imp.game_state.tile_pos.y -= 1.0
+                if imp.game_state.tile_pos.y < 0:
+                    imp.game_state.tile_pos.y = imp.WINDOW_H * 2
+
+        # ボスエリア(2画面分前でボスエリアに入る)
+        if imp.game_state.BossArea == 0 and imp.game_state.tile_pos.y <= imp.WINDOW_H * 2:
+            imp.game_state.BossArea = 1
 
         # ステージに合わせて敵をセット
         self.SetStageEnemy()
@@ -710,8 +722,8 @@ class SceneTestBG:
 
     def draw(self):
         # 背景
-        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H, 0)
-        pyxel.bltm(0, 0, 1, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y / 2, imp.WINDOW_W, imp.WINDOW_H, 0)
+        pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y / 2, imp.WINDOW_W, imp.WINDOW_H, 0)
+        pyxel.bltm(0, 0, 1, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H, 0)
 
         no = "{:02}".format(imp.game_state.tile_pos.x)
         pyxel.text(100, 80, no, 7)

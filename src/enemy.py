@@ -273,13 +273,12 @@ class EnemyBoss(imp.Sprite):
 
         self.pos_adj = imp.Vector2(-12, -12)
         if self.id0 == 0:            # まっすぐ下
-            self.hit_point = 10
-            self.hit_rectx = 14
-            self.hit_recty = 14
+            self.hit_rectx = 24
+            self.hit_recty = 16
 
             self.vector = imp.Vector2(0, 0.8)
             self.score = 10
-            self.life = 1
+            self.life = 10
 
         elif self.id0 == 1:          # 斜めに左右往復
             self.vector = imp.Vector2(0, 1.4)
@@ -366,7 +365,7 @@ class EnemyBoss(imp.Sprite):
 
         if self.id0 == 0:
             # まっすぐ下
-            self.sprite_draw(pos.x, pos.y, 0, 0, 8, 24, 24)
+            self.sprite_draw(pos.x, pos.y, 0, 3, 8, 24, 24)
 
         elif self.id0 == 1:
             # まっすぐ下、移動方向を見て表示反転

@@ -173,6 +173,7 @@ class GameState:
         self.stage_no = 0           # ステージNo(1から)
         self.stage_pos = 0          # 敵セット
         self.StageSetTbl = ""       # 敵セットTbl
+        self.BossArea = 0           # ボスエリア
         # プレイヤーレベル
         self.pl_item_num = 0        # アイテム取得数
         self.pl_level = 0           # アイテム取得数
