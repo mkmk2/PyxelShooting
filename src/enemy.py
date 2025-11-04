@@ -16,6 +16,9 @@ from EnemyBullet import EnemyBullet
 # 3: 左右往復して画面下の方で上に帰る
 # 4: 画面左右から出現、中央まで移動後、降りながら弾を撃つ
 # 5: サイン波で左右に揺れながら下降
+# 6: 画面上部から登場、1/3まで降下→停止→斜め移動→停止を繰り返し
+# 7: 下に移動しながら左右往復する
+# 8: サイン波(小)で左右に揺れながら下降
 class EnemyNorm(imp.Sprite):
     BulletTime = 0
 
@@ -29,6 +32,7 @@ class EnemyNorm(imp.Sprite):
 
         self.pos_adj = imp.Vector2(-8, -8)
         self.hit_point = 1
+
         self.hit_rectx = 14
         self.hit_recty = 14
         if self.id0 == 0:            # まっすぐ下
@@ -67,6 +71,28 @@ class EnemyNorm(imp.Sprite):
             self.life = 1
             self.swing_amplitude = imp.WINDOW_W / 3  # 揺れ幅（画面の1/3）
             self.swing_speed = 2 * math.pi / 100     # 周期100フレーム（左右のピークが50フレーム）
+            self.initial_x = self.pos.x              # 初期X座標を記録
+            self.swing_timer = 0                     # 個別の揺れタイマー
+
+        elif self.id0 == 6:                         # 画面上部から登場、1/3まで降下→停止→斜め移動→停止を繰り返し
+            self.vector = imp.Vector2(0, 2.0)       # 初期は下向きに移動
+            self.score = 10
+            self.life = 1
+            self.target_y = imp.WINDOW_H / 3         # 最初の目標Y座標（画面の1/3）
+            self.tmp_ctr = 0                         # 停止時間カウンタ
+
+        elif self.id0 == 7:                         # 下に移動しながら左右往復する
+            self.ptn_no = random.randint(0, 1)
+
+            self.score = 10
+            self.life = 1
+
+        elif self.id0 == 8:                         # サイン波で左右に揺れながら下降
+            self.vector = imp.Vector2(0, 1.8)
+            self.score = 10
+            self.life = 1
+            self.swing_amplitude = imp.WINDOW_W / 5  # 揺れ幅（画面の1/5）
+            self.swing_speed = 2 * math.pi / 60      # 周期60フレーム（左右のピークが30フレーム）
             self.initial_x = self.pos.x              # 初期X座標を記録
             self.swing_timer = 0                     # 個別の揺れタイマー
 
@@ -178,6 +204,81 @@ class EnemyNorm(imp.Sprite):
                     self.vector.x = -1  # 左向き
 
         # -----------------------------------------------
+        elif self.id0 == 6:         # 画面上部から登場、1/3まで降下→停止→斜め移動→停止を繰り返し
+            if self.st0 == 0:       # 初期降下状態
+                self.pos += self.vector
+                # 目標Y座標に到達したら停止
+                if self.pos.y >= self.target_y:
+                    self.vector = imp.Vector2(0, 0)  # 停止
+                    self.tmp_ctr = 0
+                    self.st0 = 1  # 停止状態に移行
+
+            elif self.st0 == 1:     # 停止状態
+                self.tmp_ctr += 1
+                if self.tmp_ctr >= 30:  # 30フレーム停止
+                    # 斜め移動の方向をランダムに決定
+                    if random.random() > 0.5:
+                        shooting_sub.SetVector(self, math.radians(90 + 45), 2.0)
+                    else:
+                        shooting_sub.SetVector(self, math.radians(90 - 45), 2.0)
+
+                    self.tmp_ctr = 0   # 移動時間
+                    self.st0 = 2  # 斜め移動状態に移行
+
+            elif self.st0 == 2:     # 斜め移動状態
+                self.pos += self.vector
+
+                # 一定時間移動したら再度停止
+                self.tmp_ctr += 1
+                if self.tmp_ctr >= 20:
+                    self.tmp_ctr = 0
+                    self.vector = imp.Vector2(0, 0)  # 停止
+                    self.stop_timer = 0
+                    self.target_y = self.pos.y + 60  # 次の目標Y座標を設定
+                    self.st0 = 1  # 停止状態に戻る
+
+        # -----------------------------------------------
+        elif self.id0 == 7:         # 下に移動しながら左右往復する
+            if self.st0 == 0:       # 移動方向設定
+                if self.ptn_no == 0:
+                    shooting_sub.SetVector(self, math.radians(90 + 45), 1.8)
+                    self.ptn_no = 1
+                else:
+                    shooting_sub.SetVector(self, math.radians(90 - 45), 1.8)
+                    self.ptn_no = 0
+                self.tmp_ctr = 0
+                self.st0 = 1
+
+            elif self.st0 == 1:       # 移動
+                self.pos += self.vector
+                self.tmp_ctr += 1
+                if self.tmp_ctr >= 40:
+                    self.tmp_ctr = 0
+                    self.st0 = 0
+
+        # -----------------------------------------------
+        elif self.id0 == 8:         # サイン波(小)で左右に揺れながら下降
+            # Y方向は一定速度で下降
+            self.pos.y += self.vector.y
+
+            # 個別タイマーを更新
+            self.swing_timer += 1
+
+            # X方向はサイン波で左右に揺れる
+            # 個別タイマーを基準にサイン波を計算
+            swing_offset = self.swing_amplitude * math.sin(self.swing_timer * self.swing_speed)
+            self.pos.x = self.initial_x + swing_offset
+
+            # 移動方向を記録（描画時の反転用）
+            if self.swing_timer > 0:
+                current_swing = math.sin(self.swing_timer * self.swing_speed)
+                previous_swing = math.sin((self.swing_timer - 1) * self.swing_speed)
+                if current_swing > previous_swing:
+                    self.vector.x = 1  # 右向き
+                else:
+                    self.vector.x = -1  # 左向き
+
+        # -----------------------------------------------
         # 死にチェック
         if self.life <= 0:          # 0以下なら死ぬ
             self.death = 1          # 死ぬ
@@ -229,6 +330,34 @@ class EnemyNorm(imp.Sprite):
             else:
                 self.sprite_draw(pos.x, pos.y, 0, 2, 6, -16, 16)
 
+        elif self.id0 == 6:
+            # 斜め移動パターン、移動方向を見て表示反転（id0=4と同じスプライト使用）
+            if self.vector.x == 0:
+                self.sprite_draw(pos.x, pos.y, 0, 8, 6, 16, 16)
+            else:
+                self.sprite_draw(pos.x, pos.y, 0, 10, 6, -16, 16)
+
+        elif self.id0 == 7:
+            # 下に移動しながら左右往復する、移動方向を見て表示反転（id0=4と同じスプライト使用）
+            if self.ptn_no == 0:
+                self.sprite_draw(pos.x, pos.y, 0, 2, 6, 16, 16)
+            else:
+                self.sprite_draw(pos.x, pos.y, 0, 2, 6, -16, 16)
+
+        elif self.id0 == 8:
+            if self.ptn_no == 0:
+                self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y, 0, 12, 6, 16, 16)
+            else:
+                self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y, 0, 12, 6, -16, 16)
+
+            self.ptn_time -= 1
+            if self.ptn_time <= 0:
+                self.ptn_time = 10
+                if self.ptn_no == 0:
+                    self.ptn_no = 1
+                else:
+                    self.ptn_no = 0
+
         # 中心の表示
         if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
@@ -254,6 +383,16 @@ class EnemyNorm(imp.Sprite):
             self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y + 64, 0, 4, 6, 16, 16)
         else:
             self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y + 64, 0, 6, 6, 16, 16)
+
+        if self.ptn_no <= 3:
+            self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y + 96, 0, 8, 6, 16, 16)
+        else:
+            self.sprite_draw(self.pos.x + self.pos_adj.x, self.pos.y + self.pos_adj.y + 96, 0, 10, 6, 16, 16)
+        # --
+        if self.ptn_no <= 3:
+            self.sprite_draw(self.pos.x + self.pos_adj.x + 32, self.pos.y + self.pos_adj.y, 0, 12, 6, 16, 16)
+        else:
+            self.sprite_draw(self.pos.x + self.pos_adj.x + 32, self.pos.y + self.pos_adj.y, 0, 12, 6, -16, 16)
 
 
 # ==================================================

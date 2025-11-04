@@ -57,7 +57,10 @@ class EnemyId(Enum):
     EM_LE_HORI_RET = 3  # 左右往復して画面下の方で上に帰る
     EM_SIDE_LR = 4      # 画面左右から出現、中央まで移動後、降りながら弾を撃つ
     EM_SIN_DOWN = 5     # サイン波で左右に揺れながら下降
-    EM_MID_BOSS_0 = 6   # 中ボス0
+    EM_STR_ANGLE = 6    # 上から出現、左右にランダム移動と停止を繰り返す
+    EM_LR_DOWN = 7      # 下に移動しながら左右往復する
+    EM_SIN_DOWN_S = 8     # サイン波(小)で左右に揺れながら下降
+    EM_MID_BOSS_0 = 9   # 中ボス0
 
 
 class BulletId(Enum):

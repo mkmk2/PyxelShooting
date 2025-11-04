@@ -396,7 +396,7 @@ class SceneGameMain:
                         em_id_value = em_id
                     em_tbl = enemy_set.STAGE_SET_ENEMY[em_id_value]
                     t = em_tbl[3]
-                    imp.game_state.em.append(t(e[1], e[2], e[4], e[5], e[6]))
+                    imp.game_state.em.append(t(e[1], e[2], em_tbl[4], e[5], e[6]))
 
                     n += 1                      # 次のTblへ
                     e = imp.game_state.StageSetTbl[n]
