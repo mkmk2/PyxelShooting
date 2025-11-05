@@ -96,6 +96,16 @@ class EnemyNorm(imp.Sprite):
             self.initial_x = self.pos.x              # 初期X座標を記録
             self.swing_timer = 0                     # 個別の揺れタイマー
 
+        elif self.id0 == 9:                          # 三角波で左右に揺れながら下降
+            self.vector = imp.Vector2(0, 1.4)
+            if random.random() > 0.5:
+                self.vector.x = 1.6
+            else:
+                self.vector.x = -1.6
+            self.swing_timer = 0
+            self.score = 10
+            self.life = 1
+
     # -----------------------------------------------
     # メイン
     def update(self):
@@ -279,6 +289,18 @@ class EnemyNorm(imp.Sprite):
                     self.vector.x = -1  # 左向き
 
         # -----------------------------------------------
+        elif self.id0 == 9:         # 三角波で左右に揺れながら下降
+            # 個別タイマーを更新
+            self.swing_timer += 1
+
+            # 移動方向を記録（描画時の反転用）
+            if self.swing_timer > 25:
+                self.vector.x *= -1
+                self.swing_timer = 0
+
+            self.pos += self.vector
+
+        # -----------------------------------------------
         # 死にチェック
         if self.life <= 0:          # 0以下なら死ぬ
             self.death = 1          # 死ぬ
@@ -357,6 +379,12 @@ class EnemyNorm(imp.Sprite):
                     self.ptn_no = 1
                 else:
                     self.ptn_no = 0
+
+        elif self.id0 == 9:
+            if self.vector.x < 0:
+                self.sprite_draw(pos.x, pos.y, 0, 2, 6, 16, 16)
+            else:
+                self.sprite_draw(pos.x, pos.y, 0, 2, 6, -16, 16)
 
         # 中心の表示
         if imp._DEBUG_HIT_:

@@ -41,6 +41,10 @@ STAGE_SET_1 = [
     [20,   128-50,   0,  imp.EnemyId.EM_SIN_DOWN_S,  0, 0, 0,],
     [20,   128+50,   0,  imp.EnemyId.EM_SIN_DOWN_S,  0, 0, 0,],
 
+    [100,  128,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
+    [20,   128-50,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
+    [20,   128+50,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
+
     [100,   128,   0,  imp.EnemyId.EM_MID_BOSS_0,  0, 0, 0,],
     [100000, 128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
 ]
@@ -92,6 +96,7 @@ STAGE_SET_ENEMY = [
     [0,    128,   0,  enemy.EnemyNorm,  6, 0, 0,],          # 画面上部から登場、1/3まで降下→停止→斜め移動→停止を繰り返し
     [0,    128,   0,  enemy.EnemyNorm,  7, 0, 0,],          # 下に移動しながら左右往復する
     [0,    128,   0,  enemy.EnemyNorm,  8, 0, 0,],          # サイン波(小)で左右に揺れながら下降
+    [0,    128,   0,  enemy.EnemyNorm,  9, 0, 0,],          # 三角波で左右に揺れながら下降
     [0,    128,   0,  enemy.EnemyBoss,  0, 0, 0,],          # 中ボス
 
     [9999, 128,   0,  enemy.EnemyNorm,  1, 0, 0,],
