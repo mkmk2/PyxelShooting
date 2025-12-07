@@ -35,7 +35,7 @@ class SceneTitle:
         imp.game_state.game_status = imp.GameStatus.TITLE    # タイトルに戻る
 
         self.file = "assets/img00.png"
-        pyxel.images[0].from_image(self.file, incl_colors=True)
+        pyxel.images[0].load(0, 0, self.file, incl_colors=True)
 
         self.file_tmx = "assets/bg00.tmx"
         pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
@@ -65,7 +65,7 @@ class SceneTitle:
 
         # 左
         if input_manager.input_manager.is_menu_left_pressed():
-            if imp.game_state.stage_no > 1:
+            if imp.game_state.stage_no > 0:
                 imp.game_state.stage_no -= 1
 
         # スペース
@@ -95,6 +95,7 @@ class SceneTitle:
 
     def draw(self):
         # タイトル画面
+        pyxel.tilemaps[0].imgsrc = 0
         pyxel.bltm(0, 0, 0, 0, 0, imp.WINDOW_W, imp.WINDOW_H)
 
 #        ti = "TITLE"
@@ -129,7 +130,9 @@ class SceneGameMain:
         imp.game_state.game_status = imp.GameStatus.MAIN
 
         self.file = "assets/img00.png"
-        pyxel.images[0].from_image(self.file, incl_colors=True)
+        pyxel.images[0].load(0, 0, self.file, incl_colors=True)
+        self.file = "assets/img01.png"
+        pyxel.images[1].load(0, 0, self.file, incl_colors=False)
 
         if imp.game_state.stage_no == 0:
             self.file_tmx = "assets/bg00.tmx"
@@ -290,11 +293,13 @@ class SceneGameMain:
     def draw(self):
         # ゲーム画面
         # 後景
+        pyxel.tilemaps[0].imgsrc = 1
         pyxel.bltm(
             0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y / 2,
             imp.WINDOW_W, imp.WINDOW_H, 0
         )
         # 前景
+        pyxel.tilemaps[1].imgsrc = 1
         pyxel.bltm(
             0, 0, 1, imp.game_state.tile_pos.x,
             imp.game_state.tile_pos.y,
@@ -673,9 +678,9 @@ class SceneTestBG:
         imp.game_state.game_status = imp.GameStatus.TEST       # テスト
 
         self.img_file = "assets/img00.png"
-        pyxel.images[0].from_image(self.img_file, incl_colors=True)
+        pyxel.images[0].load(0, 0, self.img_file, incl_colors=True)
         self.img_file = "assets/img01.png"
-        pyxel.images[1].from_image(self.img_file, incl_colors=True)
+        pyxel.images[1].load(0, 0, self.img_file, incl_colors=False)
 
         if imp.game_state.stage_no == 0:
             self.file_tmx = "assets/bg00.tmx"
@@ -722,8 +727,12 @@ class SceneTestBG:
 
     def draw(self):
         # 背景
+        pyxel.tilemaps[0].imgsrc = 1
         pyxel.bltm(0, 0, 0, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y / 2, imp.WINDOW_W, imp.WINDOW_H, 0)
+        pyxel.tilemaps[1].imgsrc = 1
         pyxel.bltm(0, 0, 1, imp.game_state.tile_pos.x, imp.game_state.tile_pos.y, imp.WINDOW_W, imp.WINDOW_H, 0)
+
+        pyxel.blt(128, 128, 1, 0, 0, 32, 32, 0)
 
         no = "{:02}".format(imp.game_state.tile_pos.x)
         pyxel.text(100, 80, no, 7)
@@ -739,5 +748,8 @@ class SceneTestBG:
         # プレイヤー
         for p in imp.game_state.pl:
             p.TestSprite()
+
+        for i in range(32):
+            pyxel.rect(i*2, 0, i*2+1, 10, i)
 
         pyxel.text(0, 232, "Q:Quit", 7)
