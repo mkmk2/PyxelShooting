@@ -37,7 +37,7 @@ class SceneTitle:
         self.file = "assets/img00.png"
         pyxel.images[0].load(0, 0, self.file, incl_colors=True)
 
-        self.file_tmx = "assets/bg00.tmx"
+        self.file_tmx = "assets/ui00.tmx"
         pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
 
         self.select_pos = 0
@@ -80,10 +80,14 @@ class SceneTitle:
             imp.game_state.pl_level = 0       # レベル
             imp.game_state.pl_levelup_eff = 0
 
-            if self.select_pos <= 1:
-                # ゲームメイン、ゲームテスト
+            if self.select_pos == 0:
+                # ゲームメイン
                 SetMainScene(self, SceneGameMain())
                 SetSubScene(self, SceneStart())
+            if self.select_pos == 1:
+                # ゲームテスト
+                SetMainScene(self, SceneGameMain())
+                SetSubScene(self, SceneGameTest())
             elif self.select_pos == 2:
                 # テスト
                 SetMainScene(self, SceneTest())
@@ -96,7 +100,7 @@ class SceneTitle:
     def draw(self):
         # タイトル画面
         pyxel.tilemaps[0].imgsrc = 0
-        pyxel.bltm(0, 0, 0, 0, 0, imp.WINDOW_W, imp.WINDOW_H)
+        pyxel.bltm(0, 0, 0, 0, imp.WINDOW_H * 13, imp.WINDOW_W, imp.WINDOW_H)
 
 #        ti = "TITLE"
 #        pyxel.text(100, 100, ti, 7)
@@ -438,10 +442,7 @@ class SceneStart:
     def update(self):
         self.WaitTime -= 1
         if self.WaitTime <= 0:
-            if imp.game_state.stage_no < 10:
-                imp.game_state.sub_scene = None
-            else:
-                SetSubScene(self, SceneGameTest())
+            imp.game_state.sub_scene = None
 
     def draw(self):
         # タイトル画面

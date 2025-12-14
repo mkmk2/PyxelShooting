@@ -427,7 +427,7 @@ class EnemyNorm(imp.Sprite):
 # 敵：中ボスクラス
 # id0
 # 0: まっすぐ下に移動するだけ
-class EnemyBoss(imp.Sprite):
+class EnemyMBoss(imp.Sprite):
     BulletTime = 0
 
     MvTime = 0

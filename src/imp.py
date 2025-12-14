@@ -47,7 +47,7 @@ STAGE_NO_MAX = 4       # 最終ステージ
 # プレイヤーレベル
 PL_ITEM_LEVEL_UP = 3    # レベルアップする個数
 
-TILE_Y_START = 256 * 12 - WINDOW_H
+TILE_Y_START = WINDOW_H * (14 - 1)
 
 
 class EnemyId(Enum):
@@ -62,7 +62,8 @@ class EnemyId(Enum):
     EM_SIN_DOWN_S = 8   # サイン波(小)で左右に揺れながら下降
     EM_TRI_DOWN_S = 9   # 三角左右に揺れながら下降
     EM_MID_BOSS_0 = 10  # 中ボス0
-
+    EM_BOSS_0 = 11      # ボス0
+    
 
 class BulletId(Enum):
     STRAIGHT = 0

@@ -1,5 +1,6 @@
-import enemy
 import imp
+import enemy
+import enemy_boss0
 
 # --------------------------------------------------
 # 敵のセット位置
@@ -97,7 +98,8 @@ STAGE_SET_ENEMY = [
     [0,    128,   0,  enemy.EnemyNorm,  7, 0, 0,],          # 下に移動しながら左右往復する
     [0,    128,   0,  enemy.EnemyNorm,  8, 0, 0,],          # サイン波(小)で左右に揺れながら下降
     [0,    128,   0,  enemy.EnemyNorm,  9, 0, 0,],          # 三角波で左右に揺れながら下降
-    [0,    128,   0,  enemy.EnemyBoss,  0, 0, 0,],          # 中ボス
+    [0,    128,   0,  enemy.EnemyMBoss,  0, 0, 0,],          # 中ボス
+    [0,    128,   0,  enemy_boss0.EnemyBoss0,  0, 0, 0,],         # ボス0
 
     [9999, 128,   0,  enemy.EnemyNorm,  1, 0, 0,],
 ]
