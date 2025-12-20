@@ -100,7 +100,7 @@ class SceneTitle:
     def draw(self):
         # タイトル画面
         pyxel.tilemaps[0].imgsrc = 0
-        pyxel.bltm(0, 0, 0, 0, imp.WINDOW_H * 13, imp.WINDOW_W, imp.WINDOW_H)
+        pyxel.bltm(0, 0, 0, 0, 0, imp.WINDOW_W, imp.WINDOW_H)
 
 #        ti = "TITLE"
 #        pyxel.text(100, 100, ti, 7)
@@ -140,11 +140,14 @@ class SceneGameMain:
 
         if imp.game_state.stage_no == 0:
             self.file_tmx = "assets/bg00.tmx"
+            self.file_tmx_boss = "assets/boss00.tmx"
         else:
             self.file_tmx = "assets/bg01.tmx"
+            self.file_tmx_boss = "assets/boss00.tmx"
 
         pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
         pyxel.tilemaps[1] = pyxel.Tilemap.from_tmx(self.file_tmx, 1)
+        pyxel.tilemaps[2] = pyxel.Tilemap.from_tmx(self.file_tmx_boss, 0)
 
         # 敵セットのテーブル
         if imp.game_state.stage_no < 10:
@@ -156,7 +159,7 @@ class SceneGameMain:
         imp.game_state.stage_pos = 0              # ステージ
         imp.game_state.tile_pos.x = 0
         imp.game_state.tile_pos.y = imp.TILE_Y_START
-        imp.game_state.BossArea = 0
+        imp.game_state.boss_area = 0
 
         # プレイヤーのセット
         imp.game_state.pl.append(player.Player(30, 40, 0, 100, 0))
@@ -173,7 +176,7 @@ class SceneGameMain:
 
         # 背景
         if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.STAGECLEAR:
-            if imp.game_state.BossArea == 0:
+            if imp.game_state.boss_area == 0:
                 # ボスエリアに入っていない
                 imp.game_state.tile_pos.y -= 1.0
                 if imp.game_state.tile_pos.y < 0:
@@ -183,10 +186,6 @@ class SceneGameMain:
                 imp.game_state.tile_pos.y -= 1.0
                 if imp.game_state.tile_pos.y < 0:
                     imp.game_state.tile_pos.y = imp.WINDOW_H * 2
-
-        # ボスエリア(2画面分前でボスエリアに入る)
-        if imp.game_state.BossArea == 0 and imp.game_state.tile_pos.y <= imp.WINDOW_H * 2:
-            imp.game_state.BossArea = 1
 
         # ステージに合わせて敵をセット
         self.SetStageEnemy()
@@ -309,7 +308,14 @@ class SceneGameMain:
             imp.game_state.tile_pos.y,
             imp.WINDOW_W, imp.WINDOW_H, 0
         )
-
+        # ボスエリア
+        if imp.game_state.boss_area == 1:
+            pyxel.tilemaps[2].imgsrc = 0
+            pyxel.bltm(
+                0, 0, 2,
+                imp.game_state.tile_pos_boss.x, imp.game_state.tile_pos_boss.y,
+                imp.WINDOW_W, imp.WINDOW_H, 0
+            )
         # オブジェクト
         if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.GAMEOVER\
                 or imp.game_state.game_status == imp.GameStatus.STAGECLEAR:
@@ -322,62 +328,61 @@ class SceneGameMain:
             for p in imp.game_state.pl:
                 if p.obj_type == imp.OBJPLB:
                     p.draw()
+        # 敵
+        for e in imp.game_state.em:
+            if e.obj_type == imp.OBJEM:
+                e.draw()
 
-            # 敵
-            for e in imp.game_state.em:
-                if e.obj_type == imp.OBJEM:
-                    e.draw()
+        # 敵の弾
+        for e in imp.game_state.em:
+            if e.obj_type == imp.OBJEMB:
+                e.draw()
 
-            # 敵の弾
-            for e in imp.game_state.em:
-                if e.obj_type == imp.OBJEMB:
-                    e.draw()
+        # エフェクト
+        for n in imp.game_state.eff:
+            n.draw()
 
-            # エフェクト
-            for n in imp.game_state.eff:
-                n.draw()
+        # アイテム
+        for n in imp.game_state.itm:
+            n.draw()
 
-            # アイテム
-            for n in imp.game_state.itm:
-                n.draw()
+        # スコアの表示
+        sc = "{:5}".format(imp.game_state.score)
+        pyxel.text(220, 230, sc, 7)
 
-            # スコアの表示
-            sc = "{:5}".format(imp.game_state.score)
-            pyxel.text(220, 230, sc, 7)
+        # ゲージ
+        for p in imp.game_state.pl:
+            if p.obj_type == imp.OBJPL:
+                # Itemゲージ
+                if imp.game_state.pl_levelup_eff == 0:
+                    # for n in range(imp.PL_ITEM_LEVEL_UP):
+                    #    if n >= imp.game_state.pl_item_num:
+                    #        pyxel.blt(
+                    #            ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
+                    #            imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0
+                    #        )
+                    #    else:
+                    #        pyxel.blt(
+                    #            ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
+                    #            imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0
+                    #        )
+                    #    else:
+                    # ステージの位置から敵をセットする
+                    # 点滅
+                    imp.game_state.pl_levelup_eff -= 1
+                    if pyxel.frame_count & 0x02:
+                        for n in range(imp.PL_ITEM_LEVEL_UP):
+                            pyxel.blt(
+                                ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
+                                imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0
+                            )
 
-            # ゲージ
-            for p in imp.game_state.pl:
-                if p.obj_type == imp.OBJPL:
-                    # Itemゲージ
-                    if imp.game_state.pl_levelup_eff == 0:
-                        # for n in range(imp.PL_ITEM_LEVEL_UP):
-                        #    if n >= imp.game_state.pl_item_num:
-                        #        pyxel.blt(
-                        #            ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
-                        #            imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0
-                        #        )
-                        #    else:
-                        #        pyxel.blt(
-                        #            ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
-                        #            imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0
-                        #        )
-                        #    else:
-                        # ステージの位置から敵をセットする
-                        # 点滅
-                        imp.game_state.pl_levelup_eff -= 1
-                        if pyxel.frame_count & 0x02:
-                            for n in range(imp.PL_ITEM_LEVEL_UP):
-                                pyxel.blt(
-                                    ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
-                                    imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0
-                                )
-
-                    # lifeゲージ
-                    for n in range(3):
-                        if n >= p.life:
-                            pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 1, 8, 8, 0)  # 空
-                        else:
-                            pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
+                # lifeゲージ
+                for n in range(3):
+                    if n >= p.life:
+                        pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 1, 8, 8, 0)  # 空
+                    else:
+                        pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
             # スクロールPos
             if imp._DEBUG_:
                 pos = "{:3}".format(imp.game_state.tile_pos.y)
@@ -536,6 +541,8 @@ class SceneGameTest:
 
     # 初期化---------------------------------------
     def __init__(self):
+        imp.game_state.game_mode = imp.GameStatus.TEST       # テストモード
+
         self.select_pos = 0
         self.WaitTime = 60 * 3
 
@@ -543,15 +550,18 @@ class SceneGameTest:
     def update(self):
         # 敵選択
         if input_manager.input_manager.is_menu_right_pressed():
-            e = enemy_set.STAGE_SET_ENEMY[self.select_pos + 1]
-            if e[0] != 9999:
+            if self.select_pos + 1 < len(enemy_set.STAGE_SET_ENEMY):
                 self.select_pos += 1
+            else:
+                self.select_pos = 0
 
         if input_manager.input_manager.is_menu_left_pressed():
             if self.select_pos > 0:
                 self.select_pos -= 1
+            else:
+                self.select_pos = len(enemy_set.STAGE_SET_ENEMY) - 1
 
-        # スペース
+        # Aボタンで敵セット
         if input_manager.input_manager.is_menu_enemy_set_pressed():
             # 敵セット
             e = enemy_set.STAGE_SET_ENEMY[self.select_pos]
@@ -586,6 +596,7 @@ class SceneTest:
     # 初期化---------------------------------------
     def __init__(self):
         imp.game_state.game_status = imp.GameStatus.TEST       # テスト
+
         self.select_pos = 0                     # 敵No
 
         self.file_anim = "assets/img00.png"             # セットしたい敵に応じてロードを変える必要？

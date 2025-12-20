@@ -47,7 +47,7 @@ class App:
 # 画面描画---------------------------------------
     def draw(self):
         # 画面クリア
-        pyxel.cls(0)
+        pyxel.cls(6)
 
         # メインシーン
         if imp.game_state.main_scene is not None:

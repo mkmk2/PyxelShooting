@@ -63,7 +63,7 @@ class EnemyId(Enum):
     EM_TRI_DOWN_S = 9   # 三角左右に揺れながら下降
     EM_MID_BOSS_0 = 10  # 中ボス0
     EM_BOSS_0 = 11      # ボス0
-    
+
 
 class BulletId(Enum):
     STRAIGHT = 0
@@ -178,12 +178,13 @@ class GameState:
         self.stage_no = 0           # ステージNo(1から)
         self.stage_pos = 0          # 敵セット
         self.StageSetTbl = ""       # 敵セットTbl
-        self.BossArea = 0           # ボスエリア
         # プレイヤーレベル
         self.pl_item_num = 0        # アイテム取得数
         self.pl_level = 0           # アイテム取得数
         self.pl_levelup_eff = 0     # レベルアップ点滅
         self.tile_pos = Vector2(0, 0)   # タイルPos
+        self.boss_area = 0           # ボスエリア
+        self.tile_pos_boss = Vector2(0, 0)   # BossタイルPos
 
 
 # GameStateのインスタンスを作成

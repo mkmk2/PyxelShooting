@@ -47,6 +47,7 @@ STAGE_SET_1 = [
     [20,   128+50,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
 
     [100,   128,   0,  imp.EnemyId.EM_MID_BOSS_0,  0, 0, 0,],
+    [400,   128,   -128,  imp.EnemyId.EM_BOSS_0,  0, 0, 0,],
     [100000, 128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
 ]
 
@@ -100,7 +101,5 @@ STAGE_SET_ENEMY = [
     [0,    128,   0,  enemy.EnemyNorm,  9, 0, 0,],          # 三角波で左右に揺れながら下降
     [0,    128,   0,  enemy.EnemyMBoss,  0, 0, 0,],          # 中ボス
     [0,    128,   0,  enemy_boss0.EnemyBoss0,  0, 0, 0,],         # ボス0
-
-    [9999, 128,   0,  enemy.EnemyNorm,  1, 0, 0,],
 ]
 # ==================================================
