@@ -3,6 +3,7 @@ import imp
 import shooting_sub
 import EnemyBullet as enemybullet
 import random
+import effect
 
 
 # ==================================================
@@ -35,10 +36,12 @@ class EnemyBoss0(imp.Sprite):
         imp.game_state.boss_area = 1   # ボスエリアに入った
 
         # Canon
-        imp.game_state.em.append(EnemyBossCanon0(84, 90, 0, 0, 0))
-        imp.game_state.em.append(EnemyBossCanon0(100, 90, 0, 0, 0))
-        imp.game_state.em.append(EnemyBossCanon0(156, 90, 0, 0, 0))
-        imp.game_state.em.append(EnemyBossCanon0(172, 90, 0, 0, 0))
+        imp.game_state.em.append(EnemyBossCanon0(68, 92, 0, 0, 0))
+        imp.game_state.em.append(EnemyBossCanon0(84, 92, 0, 0, 0))
+        imp.game_state.em.append(EnemyBossCanon0(100, 92, 0, 0, 0))
+        imp.game_state.em.append(EnemyBossCanon0(156, 92, 0, 0, 0))
+        imp.game_state.em.append(EnemyBossCanon0(172, 92, 0, 0, 0))
+        imp.game_state.em.append(EnemyBossCanon0(188, 92, 0, 0, 0))
 
         if imp.game_state.game_status == imp.GameStatus.TEST:       # テスト
             self.file_tmx = "assets/boss00.tmx"
@@ -73,11 +76,16 @@ class EnemyBoss0(imp.Sprite):
         if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
 
+    # -----------------------------------------------
+    def collision_damage(self):
+        # エフェクト
+        imp.game_state.eff.append(effect.Effect(imp.game_state.collision_hit_pos.x, imp.game_state.collision_hit_pos.y, 0, 0, 0))
+
 
 # ==================================================
 # 敵：ボスCanon0
 # id0
-# 0: 
+# 0:
 class EnemyBossCanon0(imp.Sprite):
     BulletTime = 0
 
@@ -115,6 +123,8 @@ class EnemyBossCanon0(imp.Sprite):
             if imp._DEBUG_:
                 print("canon die")
 
+                pyxel.tilemaps[2].pset(self.offset_pos.x // 8, self.offset_pos.y // 8, (1, 11))
+
     # -----------------------------------------------
     def draw(self):
 
@@ -129,3 +139,9 @@ class EnemyBossCanon0(imp.Sprite):
         # 中心の表示
         if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
+
+    # -----------------------------------------------
+    def collision_damage(self):
+        # エフェクト
+        imp.game_state.eff.append(effect.Effect(self.pos.x, self.pos.y, 0, 0, 0))
+

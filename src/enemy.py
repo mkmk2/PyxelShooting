@@ -4,6 +4,7 @@ import random
 import imp
 import plitem
 import shooting_sub
+import effect
 from EnemyBullet import EnemyBullet
 
 
@@ -391,6 +392,11 @@ class EnemyNorm(imp.Sprite):
             shooting_sub.DebugDrawPosHitRect(self)
 
     # -----------------------------------------------
+    def collision_damage(self):
+        # エフェクト
+        imp.game_state.eff.append(effect.Effect(self.pos.x, self.pos.y, 0, 0, 0))
+
+    # -----------------------------------------------
     def TestSpriteUpdate(self):
         self.ptn_time -= 1
         if self.ptn_time <= 0:
@@ -551,6 +557,11 @@ class EnemyMBoss(imp.Sprite):
         # 中心の表示
         if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
+
+    # -----------------------------------------------
+    def collision_damage(self):
+        # エフェクト
+        imp.game_state.eff.append(effect.Effect(imp.game_state.collision_hit_pos.x, imp.game_state.collision_hit_pos.y, 0, 0, 0))
 
 
 # ==================================================

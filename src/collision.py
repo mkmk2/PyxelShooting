@@ -1,5 +1,4 @@
 import imp
-import effect
 
 
 # ==================================================
@@ -14,11 +13,12 @@ def CheckColli(self, plat, embd):       # plat 攻撃側　　embd ダメージ�
 
             if xx < rx and yy < ry:
                 plat.death = 1          # 攻撃側は消える
-                # エフェクト
-                imp.game_state.eff.append(effect.Effect(plat.pos.x, plat.pos.y, 0, 0, 0))
 
                 plat.hit = 1
                 embd.hit = 1
+                imp.game_state.collision_hit_pos = plat.pos
+                embd.collision_damage()         # 被ダメージ処理
+
                 embd.life -= plat.hit_point      # ダメージ計算
                 if embd.life <= 0:              # 0以下なら死ぬ
                     embd.life = 0
@@ -42,13 +42,14 @@ def CheckColliBody(self, at, bd):       # at 攻撃側　　bd ダメージ側
             if xx < rx and yy < ry:
                 if at.__class__.__name__ != "EnemyBoss":    # ボス以外
                     at.death = 1          # 攻撃側は消える
-                # エフェクト
-                imp.game_state.eff.append(effect.Effect(at.pos.x, at.pos.y, 0, 0, 0))
                 if imp._DEBUG_CONSOLE_ == 1:
                     print("hit body:" + bd.__class__.__name__)
 
                 at.hit = 1
                 bd.hit = 1
+                imp.game_state.collision_hit_pos = at.pos
+                bd.collision_damage()         # 被ダメージ処理
+
                 bd.life -= 1                  # ダメージ計算
                 if bd.life <= 0:              # 0以下なら死ぬ
                     bd.life = 0

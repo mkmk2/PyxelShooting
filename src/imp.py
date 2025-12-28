@@ -186,6 +186,8 @@ class GameState:
         self.boss_area = 0           # ボスエリア
         self.tile_pos_boss = Vector2(0, 0)   # BossタイルPos
 
+        self.collision_hit_pos = Vector2(0, 0)     # 当たりダメージエフェクトの位置
+
 
 # GameStateのインスタンスを作成
 # これを他ファイルでimportして使う

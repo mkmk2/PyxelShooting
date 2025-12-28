@@ -39,8 +39,10 @@ class Effect(imp.Sprite):
             self.sprite_draw(self.pos.x - 8, self.pos.y - 8, 0, 16, 1, 16, 16)
         elif self.ptn_time < 8:
             self.sprite_draw(self.pos.x - 8, self.pos.y - 8, 0, 18, 1, 16, 16)
-        else:
+        elif self.ptn_time < 12:
             self.sprite_draw(self.pos.x - 8, self.pos.y - 8, 0, 20, 1, 16, 16)
+        else:
+            self.sprite_draw(self.pos.x - 8, self.pos.y - 8, 0, 22, 1, 16, 16)
 
 # --------------------------------------------------
 

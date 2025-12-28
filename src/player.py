@@ -9,9 +9,6 @@ from enum import Enum
 
 PL_SPEED = 2.5
 
-# 溜めMAX
-SHOT_TIME_MAX = 50
-
 
 class PlayerState(Enum):
     DEMO = 0
@@ -24,8 +21,6 @@ class PlayerState(Enum):
 # --------------------------------------------------
 # プレイヤークラス
 class Player(imp.Sprite):
-
-    shot_time = 0
 
     # コンストラクタ
     def __init__(self, x, y, id0, id1, item):
@@ -94,17 +89,6 @@ class Player(imp.Sprite):
                         imp.game_state.pl.append(PlayerBullet(self.pos.x - 6, self.pos.y, 1, 0, 0))  # 左側
                         imp.game_state.pl.append(PlayerBullet(self.pos.x, self.pos.y, 0, 0, 0))
                         imp.game_state.pl.append(PlayerBullet(self.pos.x + 6, self.pos.y, 2, 0, 0))  # 右側
-
-                # 弾セット(溜め)
-                if input_manager.input_manager.is_shot_held():
-                    self.shot_time += 1
-                    if self.shot_time > SHOT_TIME_MAX:
-                        self.shot_time = SHOT_TIME_MAX
-                else:
-                    # 溜めが終わったら弾セット
-                    if self.shot_time == SHOT_TIME_MAX:
-                        imp.game_state.pl.append(PlayerBullet(self.pos.x, self.pos.y, 0, 1, 0))
-                    self.shot_time = 0
 
                 if imp.game_state.pl_item_num >= imp.PL_ITEM_LEVEL_UP:
                     imp.game_state.pl_item_num = 0
@@ -181,14 +165,14 @@ class Player(imp.Sprite):
         else:
             self.DrawPlayer02(x, y)
 
-        # 溜めの表示
-        if self.shot_time > 0:
-            pyxel.rect(imp.WINDOW_W / 2, imp.WINDOW_H - 12, self.shot_time / 2, 4, 7)
-            pyxel.rect(imp.WINDOW_W / 2 - self.shot_time / 2, imp.WINDOW_H - 12, self.shot_time / 2, 4, 7)
-
         # 中心の表示
         if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
+
+    # -----------------------------------------------
+    def collision_damage(self):
+        # エフェクト
+        imp.game_state.eff.append(effect.Effect(self.pos.x, self.pos.y, 0, 0, 0))
 
 # --------------------------------------------------
 # 前
@@ -328,3 +312,9 @@ class PlayerBullet(imp.Sprite):
         # 中心の表示
         if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
+
+    # -----------------------------------------------
+    def collision_damage(self):
+        # エフェクト
+        imp.game_state.eff.append(effect.Effect(self.pos.x, self.pos.y, 0, 0, 0))
+
