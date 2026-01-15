@@ -21,12 +21,6 @@ from EnemyBullet import EnemyBullet
 # 7: 下に移動しながら左右往復する
 # 8: サイン波(小)で左右に揺れながら下降
 class EnemyNorm(imp.Sprite):
-    BulletTime = 0
-
-    MvTime = 0
-    MvWait = 0
-    BossMoveTblPtr = 0
-
     # コンストラクタ
     def __init__(self, x, y, i0, i1, item):
         imp.Sprite.__init__(self, imp.OBJEM, x, y, i0, i1, item)       # Spriteクラスのコンストラクタ
@@ -434,11 +428,7 @@ class EnemyNorm(imp.Sprite):
 # id0
 # 0: まっすぐ下に移動するだけ
 class EnemyMBoss(imp.Sprite):
-    BulletTime = 0
-
-    MvTime = 0
-    MvWait = 0
-    BossMoveTblPtr = 0
+    MoveTime = 0
 
     # コンストラクタ
     def __init__(self, x, y, i0, i1, item):
@@ -452,6 +442,8 @@ class EnemyMBoss(imp.Sprite):
             self.vector = imp.Vector2(0, 0.8)
             self.score = 10
             self.life = 10
+
+            self.MoveTime = 0
 
         elif self.id0 == 1:          # 斜めに左右往復
             self.vector = imp.Vector2(0, 1.4)
@@ -471,10 +463,20 @@ class EnemyMBoss(imp.Sprite):
     # メイン
     def update(self):
         if self.id0 == 0:           # まっすぐ
-            if self.pos.y > 50:
-                self.vector = imp.Vector2(0, 0)
+            if self.st0 == 0:       # 下移動
+                if self.pos.y > 50:
+                    self.vector = imp.Vector2(0, 0)
+                    self.st0 = 1
 
+            elif self.st0 == 1:                   # 待機
+                self.MoveTime += 1
+                if self.MoveTime >= 60*3:
+                    self.vector = imp.Vector2(0, 0.8)
+                    self.st0 = 2
+            else:
+                pass
             self.pos += self.vector
+
         # -----------------------------------------------
         elif self.id0 == 1:         # 斜めに左右往復
             if self.vector.x > 0:
@@ -577,12 +579,6 @@ class EnemyMBoss(imp.Sprite):
 # 例：5機のグループをセットしたい時には、画面街などに同時にセットしなければならない
 # 同時に複数のグループをセットしようとするとき、それぞれ別のIdを設定しなければならない
 class EnemyItemGroup(imp.Sprite):
-    BulletTime = 0
-
-    MvTime = 0
-    MvWait = 0
-    BossMoveTblPtr = 0
-
     # コンストラクタ
     def __init__(self, x, y, i0, i1, item):
         imp.Sprite.__init__(self, imp.OBJEM, x, y, i0, i1, item)       # Spriteクラスのコンストラクタ

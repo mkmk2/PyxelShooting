@@ -183,9 +183,10 @@ class SceneGameMain:
                     imp.game_state.tile_pos.y = 0
             else:
                 # ボスエリアに入っている
+                # 背景ループ
                 imp.game_state.tile_pos.y -= 1.0
                 if imp.game_state.tile_pos.y < 0:
-                    imp.game_state.tile_pos.y = imp.WINDOW_H * 2
+                    imp.game_state.tile_pos.y = 256
 
         # ステージに合わせて敵をセット
         self.SetStageEnemy()

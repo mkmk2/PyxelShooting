@@ -144,4 +144,3 @@ class EnemyBossCanon0(imp.Sprite):
     def collision_damage(self):
         # エフェクト
         imp.game_state.eff.append(effect.Effect(self.pos.x, self.pos.y, 0, 0, 0))
-
