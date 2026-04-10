@@ -20,6 +20,7 @@ from EnemyBullet import EnemyBullet
 # 6: 画面上部から登場、1/3まで降下→停止→斜め移動→停止を繰り返し
 # 7: 下に移動しながら左右往復する
 # 8: サイン波(小)で左右に揺れながら下降
+# 9: 三角波で左右に揺れながら下降
 class EnemyNorm(imp.Sprite):
     # コンストラクタ
     def __init__(self, x, y, i0, i1, item):
@@ -439,83 +440,80 @@ class EnemyMBoss(imp.Sprite):
             self.hit_rectx = 24
             self.hit_recty = 16
 
-            self.vector = imp.Vector2(0, 0.8)
+            self.vector = imp.Vector2(0, 0.5)
             self.score = 10
             self.life = 10
 
             self.MoveTime = 0
 
-        elif self.id0 == 1:          # 斜めに左右往復
-            self.vector = imp.Vector2(0, 1.4)
-            if self.pos.x < 128:
-                self.vector.x = 2.8
-            else:
-                self.vector.x = -2.8
-            self.score = 10
-            self.life = 1
+        elif self.id0 == 1:          # 待機後、左右往復5回して降りる
+            self.hit_rectx = 24
+            self.hit_recty = 16
 
-        elif self.id0 == 2 or self.id0 == 3:          # まっすぐ下、左右往復    まっすぐ下、左右往復して画面下の方で上に帰る
-            self.vector = imp.Vector2(0, 2.2)
+            self.vector = imp.Vector2(0, 0.8)
             self.score = 10
-            self.life = 1
+            self.life = 10
+
+            self.MoveTime = 0
+            self.initial_x = self.pos.x
+            self.bounce_count = 0
+
 
     # -----------------------------------------------
     # メイン
     def update(self):
-        if self.id0 == 0:           # まっすぐ
+        if self.id0 == 0:           # まっすぐ下移動
+            self.MoveTime += 1
+            if self.MoveTime >= 50:
+                # 弾を撃つ
+                imp.game_state.em.append(EnemyBullet(self.pos.x - 8, self.pos.y, imp.BulletId.ANGLE, 90, 0))
+                imp.game_state.em.append(EnemyBullet(self.pos.x + 8, self.pos.y, imp.BulletId.ANGLE, 90, 0))
+                self.MoveTime = 0
+
+            self.pos += self.vector
+
+        # -----------------------------------------------
+        elif self.id0 == 1:         # 待機後、左右往復5回して降りる
             if self.st0 == 0:       # 下移動
                 if self.pos.y > 50:
                     self.vector = imp.Vector2(0, 0)
                     self.st0 = 1
 
-            elif self.st0 == 1:                   # 待機
+            elif self.st0 == 1:     # 待機
                 self.MoveTime += 1
                 if self.MoveTime >= 60*3:
-                    self.vector = imp.Vector2(0, 0.8)
+                    self.vector = imp.Vector2(1.5, 0)
+                    if self.pos.x > 128:
+                        self.vector.x = -1.5
                     self.st0 = 2
-            else:
-                pass
-            self.pos += self.vector
 
-        # -----------------------------------------------
-        elif self.id0 == 1:         # 斜めに左右往復
-            if self.vector.x > 0:
-                if self.pos.x > imp.WINDOW_W - 50:
-                    self.vector.x *= -1
-            else:
-                if self.pos.x < 50:
-                    self.vector.x *= -1
-
-            self.pos += self.vector
-
-        # -----------------------------------------------
-        elif self.id0 == 2 or self.id0 == 3:         # 左右往復 左右往復して画面下の方で上に帰る
-            if self.st0 == 0:       # 下移動
-                self.vector = imp.Vector2(0, 2.2)
-                self.tmp_ctr += 1
-                if self.tmp_ctr >= 30:
-                    self.vector = imp.Vector2(0, 0)
-                    if self.pos.x < 128:
-                        self.vector.x = 2.4
+            elif self.st0 == 2:     # 左右往復 (10回端に当たると5往復)
+                if self.vector.x > 0:
+                    if self.pos.x >= imp.WINDOW_W - 50:
+                        self.vector.x *= -1
+                        self.bounce_count += 1
+                else:
+                    if self.pos.x <= 50:
+                        self.vector.x *= -1
+                        self.bounce_count += 1
+                
+                if self.bounce_count >= 10:
+                    self.st0 = 3
+                    # 初期X座標へ向かう
+                    if self.pos.x < self.initial_x:
+                        self.vector.x = 1.5
                     else:
-                        self.vector.x = -2.4
-                    self.tmp_ctr = 0
-                    self.st0 = 1
+                        self.vector.x = -1.5
 
-                if self.id0 == 3:         # 左右往復して画面下の方で上に帰る
-                    if self.pos.y > imp.WINDOW_H - 50:
-                        self.vector = imp.Vector2(0, -1.8)  # 上に帰る速度
-                        self.st0 = 2
-
-            elif self.st0 == 1:                   # 左右移動
-                self.tmp_ctr += 1
-                if self.tmp_ctr >= 35:
-                    self.tmp_ctr = 0
-                    self.st0 = 0
-
-            else:                   # 上に帰る
+            elif self.st0 == 3:     # 最初のX座標へ戻る
+                if abs(self.pos.x - self.initial_x) <= abs(self.vector.x):
+                    self.pos.x = self.initial_x
+                    self.vector = imp.Vector2(0, 1.5)  # 下に降りる
+                    self.st0 = 4
+            
+            elif self.st0 == 4:     # 下へ降りて消える
                 pass
-
+            
             self.pos += self.vector
 
         # -----------------------------------------------
@@ -543,18 +541,10 @@ class EnemyMBoss(imp.Sprite):
             self.sprite_draw(pos.x, pos.y, 0, 3, 8, 24, 24)
 
         elif self.id0 == 1:
-            # まっすぐ下、移動方向を見て表示反転
-            if self.vector.x < 0:
-                self.sprite_draw(pos.x, pos.y, 0, 2, 6, 16, 16)
-            else:
-                self.sprite_draw(pos.x, pos.y, 0, 2, 6, -16, 16)
+            self.sprite_draw(pos.x, pos.y, 0, 3, 8, 24, 24)
 
         elif self.id0 == 2 or self.id0 == 3:
-            # まっすぐ下、移動方向を見て表示反転
-            if self.vector.x < 0:
-                self.sprite_draw(pos.x, pos.y, 0, 4, 6, 16, 16)
-            else:
-                self.sprite_draw(pos.x, pos.y, 0, 6, 6, -16, 16)
+            self.sprite_draw(pos.x, pos.y, 0, 3, 8, 24, 24)
 
         # 中心の表示
         if imp._DEBUG_HIT_:

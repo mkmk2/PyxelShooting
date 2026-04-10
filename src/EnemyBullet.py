@@ -36,14 +36,11 @@ class EnemyBullet(imp.Sprite):
             if pl != 0:
                 shooting_sub.SetVector(self, shooting_sub.GetDirection32(self, self.pos.x, self.pos.y, pl.pos.x, pl.pos.y), BULLET_SPEED)
 
-        elif self.id0 == imp.BulletId.LEFT:
-            # 斜め左下に移動する弾
-            shooting_sub.SetVector(self, math.radians(130), BULLET_SPEED)
+        elif self.id0 == imp.BulletId.ANGLE:
+            # 指定角度
+            shooting_sub.SetVector(self, math.radians(self.id1), BULLET_SPEED)
 
-        elif self.id0 == imp.BulletId.RIGHT:
-            # 斜め右下に移動する弾
-            shooting_sub.SetVector(self, math.radians(50), BULLET_SPEED)
-
+#        elif self.id0 == imp.BulletId.DEFAULT:
         else:
             # デフォルト（まっすぐ下）
             self.vector = imp.Vector2(0, 3.5)
@@ -70,14 +67,9 @@ class EnemyBullet(imp.Sprite):
             # プレイヤー追跡弾
             self.sprite_draw(pos.x-3, pos.y-3, 0, 2, 3, 6, 6)
 
-        elif self.id0 == imp.BulletId.LEFT:
+        elif self.id0 == imp.BulletId.ANGLE:
             # 斜め左下弾
             self.sprite_draw(pos.x-3, pos.y-3, 0, 2, 3, 6, 6)
-
-        elif self.id0 == imp.BulletId.RIGHT:
-            # 斜め右下弾
-            self.sprite_draw(pos.x-3, pos.y-3, 0, 2, 3, 6, 6)
-
         else:
             # デフォルト表示
             self.sprite_draw(pos.x-3, pos.y-3, 0, 2, 3, 6, 6)
