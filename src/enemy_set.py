@@ -7,7 +7,6 @@ import enemy_boss0
 # 1
 STAGE_SET_1 = [
     # 時間, X, Y, id0, id1, item, 0
-    # まっすぐ
     [120,  128-30,   0,  imp.EnemyId.EM_STR_DOWN,  0, 0, 0,],
     [0,    128-60,   0,  imp.EnemyId.EM_STR_DOWN,  0, 0, 0,],
 
@@ -46,13 +45,60 @@ STAGE_SET_1 = [
     [20,   128-50,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
     [20,   128+50,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
 
-    [100,   128,   0,  imp.EnemyId.EM_MID_BOSS_0,  0, 0, 0,],
-    [400,   128,   -128,  imp.EnemyId.EM_BOSS_0,  0, 0, 0,],
+    [100,   128 - 80,   -30,  imp.EnemyId.EM_MID_BOSS_0,  2, 0, 0,],
+    [100,   128,        -30,  imp.EnemyId.EM_MID_BOSS_0,  2, 0, 0,],
+    [100,   128 + 80,   -30,  imp.EnemyId.EM_MID_BOSS_0,  2, 0, 0,],
+
+    [800,   128,   -128,  imp.EnemyId.EM_BOSS_0,  0, 0, 0,],
     [100000, 128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
 ]
 
 STAGE_SET_2 = [
     # 時間, X, Y, id0, id1, item, 0
+    [120,  128-30,   0,  imp.EnemyId.EM_STR_DOWN,  0, 0, 0,],
+    [0,    128-60,   0,  imp.EnemyId.EM_STR_DOWN,  0, 0, 0,],
+
+    [120,  128+30,   0,  imp.EnemyId.EM_LR_HORI,  0, 0, 0,],
+    [0,    128+60,   0,  imp.EnemyId.EM_LR_HORI,  0, 0, 0,],
+
+    [120,  128-30,   0,  imp.EnemyId.EM_LE_HORI_RET,  0, 0, 0,],
+    [0,    128-60,   0,  imp.EnemyId.EM_LE_HORI_RET,  0, 0, 0,],
+
+    [120,  0,   200,  imp.EnemyId.EM_SIDE_LR,  0, 0, 0,],
+    [0,    256,   200,  imp.EnemyId.EM_SIDE_LR,  0, 0, 0,],
+
+    [120,  128+30,   0,  imp.EnemyId.EM_SIN_DOWN,  0, 0, 0,],
+    [30,    128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  0, 0, 0,],
+
+    [120,  128+30,   0,  imp.EnemyId.EM_SIN_DOWN,  0, 0, 0,],
+    [30,    128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  0, 0, 0,],
+
+    [120,  128+30,   0,  imp.EnemyId.EM_SIN_DOWN,  0, 0, 0,],
+    [30,    128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  0, 0, 0,],
+
+    [100,  128,   0,  imp.EnemyId.EM_STR_ANGLE,  0, 0, 0,],
+    [20,  100,   0,  imp.EnemyId.EM_STR_ANGLE,  0, 0, 0,],
+    [20,  148,   0,  imp.EnemyId.EM_STR_ANGLE,  0, 0, 0,],
+    [20,  128,   0,  imp.EnemyId.EM_STR_ANGLE,  0, 0, 0,],
+
+    [100,  128,   0,  imp.EnemyId.EM_LR_DOWN,  0, 0, 0,],
+    [20,   128-50,   0,  imp.EnemyId.EM_LR_DOWN,  0, 0, 0,],
+    [20,   128+50,   0,  imp.EnemyId.EM_LR_DOWN,  0, 0, 0,],
+
+    [100,  128,   0,  imp.EnemyId.EM_SIN_DOWN_S,  0, 0, 0,],
+    [20,   128-50,   0,  imp.EnemyId.EM_SIN_DOWN_S,  0, 0, 0,],
+    [20,   128+50,   0,  imp.EnemyId.EM_SIN_DOWN_S,  0, 0, 0,],
+
+    [100,  128,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
+    [20,   128-50,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
+    [20,   128+50,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
+
+    [100,   128 - 80,   -30,  imp.EnemyId.EM_MID_BOSS_0,  2, 0, 0,],
+    [100,   128,        -30,  imp.EnemyId.EM_MID_BOSS_0,  2, 0, 0,],
+    [100,   128 + 80,   -30,  imp.EnemyId.EM_MID_BOSS_0,  2, 0, 0,],
+
+    [800,   128,   -128,  imp.EnemyId.EM_BOSS_0,  0, 0, 0,],
+    [100000, 128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
 
 
 ]
@@ -99,7 +145,9 @@ STAGE_SET_ENEMY = [
     [0,    128,   0,  enemy.EnemyNorm,  7, 0, 0,],          # 下に移動しながら左右往復する
     [0,    128,   0,  enemy.EnemyNorm,  8, 0, 0,],          # サイン波(小)で左右に揺れながら下降
     [0,    128,   0,  enemy.EnemyNorm,  9, 0, 0,],          # 三角波で左右に揺れながら下降
-    [0,    128,   0,  enemy.EnemyMBoss,  0, 0, 0,],          # 中ボス
+    [0,    128,   -30,  enemy.EnemyMBoss,  0, 0, 0,],          # 中ボス
+    [0,    128,   -30,  enemy.EnemyMBoss,  1, 0, 0,],          # 中ボス
+    [0,    128,   -30,  enemy.EnemyMBoss,  2, 0, 0,],          # 中ボス
     [0,    128,   0,  enemy_boss0.EnemyBoss0,  0, 0, 0,],         # ボス0
 ]
 # ==================================================
