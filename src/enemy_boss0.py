@@ -33,16 +33,6 @@ class EnemyBoss0(imp.Sprite):
         self.score = 10
         self.life = 100
 
-        imp.game_state.boss_area = 1   # ボスエリアに入った
-
-        # Canon
-        imp.game_state.em.append(EnemyBossCanon0(68, 92, 0, 0, 0))
-        imp.game_state.em.append(EnemyBossCanon0(84, 92, 0, 0, 0))
-        imp.game_state.em.append(EnemyBossCanon0(100, 92, 0, 0, 0))
-        imp.game_state.em.append(EnemyBossCanon0(156, 92, 0, 0, 0))
-        imp.game_state.em.append(EnemyBossCanon0(172, 92, 0, 0, 0))
-        imp.game_state.em.append(EnemyBossCanon0(188, 92, 0, 0, 0))
-
         if imp.game_state.game_status == imp.GameStatus.TEST:       # テスト
             self.file_tmx = "assets/boss00.tmx"
             pyxel.tilemaps[1] = pyxel.Tilemap.from_tmx(self.file_tmx, 1)
@@ -51,15 +41,32 @@ class EnemyBoss0(imp.Sprite):
     # メイン
     def update(self):
 
-        self.tmx_pos += self.vector
+        if self.st0 == 0:
+            self.st0 = 1
 
-        if self.tmx_pos.y < 0:
-            self.vector = imp.Vector2(0, 0)
+        elif self.st0 == 1:
+            if imp.game_state.em_num == 1:      # 敵が1体だけになってから登場
+                imp.game_state.boss_area = 1    # ボスエリアに入った
 
-        imp.game_state.tile_pos_boss = self.tmx_pos
+                # Canon
+                imp.game_state.em.append(EnemyBossCanon0(68, 92, 0, 0, 0))
+                imp.game_state.em.append(EnemyBossCanon0(84, 92, 0, 0, 0))
+                imp.game_state.em.append(EnemyBossCanon0(100, 92, 0, 0, 0))
+                imp.game_state.em.append(EnemyBossCanon0(156, 92, 0, 0, 0))
+                imp.game_state.em.append(EnemyBossCanon0(172, 92, 0, 0, 0))
+                imp.game_state.em.append(EnemyBossCanon0(188, 92, 0, 0, 0))
+                self.st0 = 2
 
-        self.pos.x = self.tmx_pos.x + 128
-        self.pos.y = 80 - self.tmx_pos.y
+        elif self.st0 == 2:
+            self.tmx_pos += self.vector
+
+            if self.tmx_pos.y < 0:
+                self.vector = imp.Vector2(0, 0)
+
+            imp.game_state.tile_pos_boss = self.tmx_pos
+
+            self.pos.x = self.tmx_pos.x + 128
+            self.pos.y = 80 - self.tmx_pos.y
 
         # -----------------------------------------------
         # 死にチェック
