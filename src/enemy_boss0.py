@@ -45,7 +45,7 @@ class EnemyBoss0(imp.Sprite):
             self.st0 = 1
 
         elif self.st0 == 1:
-            if imp.game_state.em_num == 1:      # 敵が1体だけになってから登場
+            if imp.game_state.em_num == 1:      # 敵が1体だけ(Boss自身だけ)になってから登場
                 imp.game_state.boss_area = 1    # ボスエリアに入った
 
                 # Canon
