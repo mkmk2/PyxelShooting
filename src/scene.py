@@ -170,26 +170,22 @@ class SceneGameMain:
 
     # メイン---------------------------------------
     def update(self):
-        # ゲームオーバーになったらスクロール(敵セット)止める
+        # ゲーム中のみスクロール、ゲームオーバーになったら(敵セット)止める
         if imp.game_state.game_status == imp.GameStatus.MAIN:
             imp.game_state.stage_pos += 1
 
         # 背景
         if imp.game_state.game_status == imp.GameStatus.MAIN or imp.game_state.game_status == imp.GameStatus.STAGECLEAR:
-            if imp.game_state.boss_area == 0:
-                # ボスエリアに入っていない
-                imp.game_state.tile_pos.y -= 1.0
-                if imp.game_state.tile_pos.y < 0:
-                    imp.game_state.tile_pos.y = 0
-            else:
-                # ボスエリアに入っている
-                # 背景ループ
-                imp.game_state.tile_pos.y -= 1.0
-                if imp.game_state.tile_pos.y < 0:
-                    imp.game_state.tile_pos.y = 256
+            # 背景ループ
+            imp.game_state.tile_pos.y -= 1.0
+            if imp.game_state.tile_pos.y < 0:
+                imp.game_state.tile_pos.y = 256
 
         # ステージに合わせて敵をセット
         self.SetStageEnemy()
+
+        imp.game_state.em_num = 0             # 敵数
+        imp.game_state.emb_num = 0            # 敵の弾数
 
         # プレイヤー
         for p in imp.game_state.pl:
@@ -201,15 +197,22 @@ class SceneGameMain:
         for p in imp.game_state.pl:
             if p.obj_type == imp.OBJPLB:
                 p.update()
-                p.hit = 0
 
         # 敵
+        for e in imp.game_state.em:
+            if e.obj_type == imp.OBJEM:
+                imp.game_state.em_num += 1  # 敵数
+
         for e in imp.game_state.em:
             if e.obj_type == imp.OBJEM:
                 e.update()
                 e.hit = 0
 
         # 敵の弾
+        for e in imp.game_state.em:
+            if e.obj_type == imp.OBJEMB:
+                imp.game_state.emb_num += 1  # 敵の弾数
+
         for e in imp.game_state.em:
             if e.obj_type == imp.OBJEMB:
                 e.update()
@@ -384,13 +387,20 @@ class SceneGameMain:
                         pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 1, 8, 8, 0)  # 空
                     else:
                         pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
-            # スクロールPos
+
             if imp._DEBUG_:
+                # スクロールPos
                 pos = "{:3}".format(imp.game_state.tile_pos.y)
                 pyxel.text(220, 190, pos, 7)
 
                 pos = "{:3}".format(imp.game_state.stage_pos)
                 pyxel.text(220, 200, pos, 7)
+
+                # オブジェクト数
+                em = "{:3}".format(imp.game_state.em_num)
+                pyxel.text(230, 120, em, 7)
+                emb = "{:3}".format(imp.game_state.emb_num)
+                pyxel.text(230, 130, emb, 7)
 
 #  ------------------------------------------
     def SetStageEnemy(self):

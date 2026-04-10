@@ -24,7 +24,7 @@ class App:
         scene.SetSubScene(self, scene.SceneTitle())
 
         imp.pause_flag = False
-
+ 
         pyxel.run(self.update, self.draw)
 
     # メイン---------------------------------------

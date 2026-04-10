@@ -62,15 +62,16 @@ class EnemyId(Enum):
     EM_SIN_DOWN_S = 8   # サイン波(小)で左右に揺れながら下降
     EM_TRI_DOWN_S = 9   # 三角左右に揺れながら下降
     EM_MID_BOSS_0 = 10  # 中ボス0
-    EM_BOSS_0 = 11      # ボス0
+    EM_MID_BOSS_1 = 11  # 中ボス1
+    EM_MID_BOSS_2 = 12  # 中ボス2
+    EM_BOSS_0 = 13      # ボス0
 
 
 class BulletId(Enum):
     STRAIGHT = 0
     PLAYER = 1
-    LEFT = 2
-    RIGHT = 3
-    DEFAULT = 4
+    ANGLE = 2
+    DEFAULT = 3
 
 
 # --------------------------------------------------
@@ -187,6 +188,9 @@ class GameState:
         self.tile_pos_boss = Vector2(0, 0)   # BossタイルPos
 
         self.collision_hit_pos = Vector2(0, 0)     # 当たりダメージエフェクトの位置
+
+        self.em_num = 0             # 敵数
+        self.emb_num = 0            # 敵の弾数
 
 
 # GameStateのインスタンスを作成
