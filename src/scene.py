@@ -33,6 +33,7 @@ class SceneTitle:
     # 初期化---------------------------------------
     def __init__(self):
         imp.game_state.game_status = imp.GameStatus.TITLE    # タイトルに戻る
+        imp.game_state.game_status_next = imp.GameStatus.TITLE
 
         self.file = "assets/img00.png"
         pyxel.images[0].load(0, 0, self.file, incl_colors=True)
@@ -132,6 +133,7 @@ class SceneGameMain:
     def __init__(self):
 
         imp.game_state.game_status = imp.GameStatus.MAIN
+        imp.game_state.game_status_next = imp.GameStatus.MAIN
 
         self.file = "assets/img00.png"
         pyxel.images[0].load(0, 0, self.file, incl_colors=True)
@@ -141,9 +143,15 @@ class SceneGameMain:
         if imp.game_state.stage_no == 0:
             self.file_tmx = "assets/bg00.tmx"
             self.file_tmx_boss = "assets/boss00.tmx"
-        else:
+        elif imp.game_state.stage_no == 1:
             self.file_tmx = "assets/bg01.tmx"
-            self.file_tmx_boss = "assets/boss00.tmx"
+            self.file_tmx_boss = "assets/boss01.tmx"
+        elif imp.game_state.stage_no == 2:
+            self.file_tmx = "assets/bg02.tmx"
+            self.file_tmx_boss = "assets/boss01.tmx"
+        elif imp.game_state.stage_no == 3:
+            self.file_tmx = "assets/bg03.tmx"
+            self.file_tmx_boss = "assets/boss01.tmx"
 
         pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
         pyxel.tilemaps[1] = pyxel.Tilemap.from_tmx(self.file_tmx, 1)
@@ -153,6 +161,12 @@ class SceneGameMain:
         if imp.game_state.stage_no < 10:
             if imp.game_state.stage_no == 0:
                 imp.game_state.StageSetTbl = enemy_set.STAGE_SET_1
+            if imp.game_state.stage_no == 1:
+                imp.game_state.StageSetTbl = enemy_set.STAGE_SET_2
+            if imp.game_state.stage_no == 2:
+                imp.game_state.StageSetTbl = enemy_set.STAGE_SET_3
+            if imp.game_state.stage_no == 3:
+                imp.game_state.StageSetTbl = enemy_set.STAGE_SET_4
         else:
             imp.game_state.StageSetTbl = enemy_set.STAGE_SET_TEST
 
@@ -256,21 +270,16 @@ class SceneGameMain:
                     collision.CheckColliPlItm(self, p, i)
 
         # プレイヤーが死んだらゲームオーバーへ
-        if imp.game_state.game_status != imp.GameStatus.GAMEOVER:       # ゲームオーバーでないとき
-            for p in imp.game_state.pl:
-                if p.obj_type == imp.OBJPL:
-                    if p.death == 1:
-                        # サブシーン ゲームオーバー セット
-                        SetSubScene(self, SceneGameOver())
+        if imp.game_state.game_status != imp.game_state.game_status_next:       # ゲームオーバー
+            if imp.game_state.game_status_next == imp.GameStatus.GAMEOVER:
+                # サブシーン ゲームオーバー セット
+                SetSubScene(self, SceneGameOver())
 
         # ボスが死んだらステージクリアへ
-#        if imp.game_state.game_status == imp.GameStatus.MAIN:       # ゲーム中のみ
-#            for e in imp.game_state.em:
-#                if e.__class__.__name__ == "EnemyBoss":
-#                    if e.death == 1:
-
-                        # サブシーン ゲームクリアー　セット
-#                        SetSubScene(self, SceneGameClear())
+        if imp.game_state.game_status != imp.game_state.game_status_next:       # ゲームクリア
+            if imp.game_state.game_status_next == imp.GameStatus.STAGECLEAR:
+                # サブシーン ゲームクリアー　セット
+                SetSubScene(self, SceneGameClear())
 
         # オブジェクトを消す ---------------------------------
         # プレイヤー・プレイヤーの弾を消す
@@ -473,6 +482,7 @@ class SceneGameOver:
     # 初期化---------------------------------------
     def __init__(self):
         imp.game_state.game_status = imp.GameStatus.GAMEOVER       # ゲームオーバー
+        imp.game_state.game_status_next = imp.GameStatus.GAMEOVER
 
         self.pos_x = 128 - (8 * 4) - 4
         self.pos_y = 100
@@ -489,8 +499,10 @@ class SceneGameOver:
 
     def draw(self):
         # GAME OVER
-        pyxel.blt(self.pos_x,      self.pos_y, 0, 0,    8*18, 8*4, 16, 0)
-        pyxel.blt(self.pos_x + 40, self.pos_y, 0, 8*4,  8*18, 8*4, 16, 0)
+#        pyxel.blt(self.pos_x,      self.pos_y, 0, 0,    8*18, 8*4, 16, 0)
+#        pyxel.blt(self.pos_x + 40, self.pos_y, 0, 8*4,  8*18, 8*4, 16, 0)
+        st = "GAME OVER"
+        pyxel.text(100, 100, st, 7)
 
 
 # ==================================================
@@ -499,6 +511,7 @@ class SceneGameClear:
     # 初期化---------------------------------------
     def __init__(self):
         imp.game_state.game_status = imp.GameStatus.STAGECLEAR       # ステージクリア
+        imp.game_state.game_status_next = imp.GameStatus.STAGECLEAR
 
         self.pos_x = 128 - (8 * 2.5)
         self.pos_y = 100
@@ -515,8 +528,9 @@ class SceneGameClear:
 
     def draw(self):
         # STAGE CLEAR
-        pyxel.blt(self.pos_x - (8 * 2.5),      self.pos_y, 0, 8*9,  8*18, 8*5, 16, 0)
-
+#        pyxel.blt(self.pos_x - (8 * 2.5),      self.pos_y, 0, 8*9,  8*18, 8*5, 16, 0)
+        st = "STAGE CLEAR"
+        pyxel.text(100, 100, st, 7)
 
 # ==================================================
 # Scene 次のステージへ送る
@@ -524,6 +538,7 @@ class SceneNextStage:
     # 初期化---------------------------------------
     def __init__(self):
         imp.game_state.game_status = imp.GameStatus.NEXTSTAGE       # 次のステージ
+        imp.game_state.game_status_next = imp.GameStatus.NEXTSTAGE
 
     # メイン---------------------------------------
     def update(self):
@@ -538,8 +553,7 @@ class SceneNextStage:
             # 次のステージ
             SetMainScene(self, SceneGameMain())
 
-            # サブシーン Game Test セット
-            SetSubScene(self, SceneGameTest())
+            SetSubScene(self, SceneStart())
 
     def draw(self):
         pass
@@ -553,6 +567,7 @@ class SceneGameTest:
     # 初期化---------------------------------------
     def __init__(self):
         imp.game_state.game_mode = imp.GameStatus.TEST       # テストモード
+        imp.game_state.game_mode_next = imp.GameStatus.TEST
 
         self.select_pos = 0
         self.WaitTime = 60 * 3
@@ -607,6 +622,7 @@ class SceneTest:
     # 初期化---------------------------------------
     def __init__(self):
         imp.game_state.game_status = imp.GameStatus.TEST       # テスト
+        imp.game_state.game_status_next = imp.GameStatus.TEST
 
         self.select_pos = 0                     # 敵No
 
@@ -699,6 +715,7 @@ class SceneTestBG:
     # 初期化---------------------------------------
     def __init__(self):
         imp.game_state.game_status = imp.GameStatus.TEST       # テスト
+        imp.game_state.game_status_next = imp.GameStatus.TEST
 
         self.img_file = "assets/img00.png"
         pyxel.images[0].load(0, 0, self.img_file, incl_colors=True)

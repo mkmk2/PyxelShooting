@@ -31,7 +31,7 @@ class EnemyBoss0(imp.Sprite):
         self.hit_recty = 40
         self.vector = imp.Vector2(0, -0.2)
         self.score = 10
-        self.life = 100
+        self.life = 30
 
         if imp.game_state.game_status == imp.GameStatus.TEST:       # テスト
             self.file_tmx = "assets/boss00.tmx"
@@ -73,6 +73,9 @@ class EnemyBoss0(imp.Sprite):
         if self.life <= 0:          # 0以下なら死ぬ
             self.death = 1          # 死ぬ
             imp.game_state.score += self.score     # scoreを加算
+
+            imp.game_state.game_status_next = imp.GameStatus.STAGECLEAR    # ステージクリア
+
             if imp._DEBUG_:
                 print("boss die")
 

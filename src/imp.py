@@ -175,6 +175,7 @@ class GameState:
         self.eff = []               # エフェクト
         self.itm = []               # アイテム
         self.game_status = GameStatus.TITLE
+        self.game_status_next = GameStatus.TITLE
         self.score = 0
         self.stage_no = 0           # ステージNo(1から)
         self.stage_pos = 0          # 敵セット

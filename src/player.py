@@ -36,7 +36,7 @@ class Player(imp.Sprite):
 
         self.pos_adj = imp.Vector2(-8, -8)
 
-        self.life = 300
+        self.life = 10
         self.hit_rectx = 4
         self.hit_recty = 4
 
@@ -145,6 +145,9 @@ class Player(imp.Sprite):
                 self.mv_wait -= 1
                 if self.mv_wait <= 0:
                     self.death = 1          # 死ぬ
+                    # プレイヤーが死んだらゲームオーバーへ
+                    imp.game_state.game_status_next = imp.GameStatus.GAMEOVER    # ゲームオーバー
+
                     if imp._DEBUG_:
                         print("pl die")
 
@@ -168,6 +171,10 @@ class Player(imp.Sprite):
         # 中心の表示
         if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
+
+        if imp._DEBUG_:
+            life = "{:3}".format(self.life)
+            pyxel.text(100, 0, life, 7)
 
     # -----------------------------------------------
     def collision_damage(self):

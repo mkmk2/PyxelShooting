@@ -8,6 +8,7 @@ import scene
 class App:
     # ゲームの状態
     imp.game_state.game_status = imp.GameStatus.TITLE
+    imp.game_state.game_status_next = imp.GameStatus.TITLE
     # メインシーン
     imp.game_state.main_scene = None
     # サブシーン
@@ -29,7 +30,6 @@ class App:
 
     # メイン---------------------------------------
     def update(self):
-
         # F1キーでPause
         if pyxel.btnp(pyxel.KEY_F1) is True and imp._DEBUG_ is True:
             imp.pause_flag = not imp.pause_flag
