@@ -464,7 +464,7 @@ class EnemyMBoss(imp.Sprite):
     def update(self):
         if self.id0 == 0:           # まっすぐ下移動
             self.MoveTime += 1
-            if self.MoveTime >= 50:
+            if self.MoveTime >= 80:
                 # 弾を撃つ
                 imp.game_state.em.append(EnemyBullet(self.pos.x - 8, self.pos.y, imp.BulletId.ANGLE, 90, 0))
                 imp.game_state.em.append(EnemyBullet(self.pos.x + 8, self.pos.y, imp.BulletId.ANGLE, 90, 0))

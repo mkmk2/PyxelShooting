@@ -149,7 +149,7 @@ class SceneGameMain:
         elif imp.game_state.stage_no == 2:
             self.file_tmx = "assets/bg02.tmx"
             self.file_tmx_boss = "assets/boss01.tmx"
-        elif imp.game_state.stage_no == 3:
+        elif imp.game_state.stage_no >= 3:
             self.file_tmx = "assets/bg03.tmx"
             self.file_tmx_boss = "assets/boss01.tmx"
 
@@ -165,7 +165,7 @@ class SceneGameMain:
                 imp.game_state.StageSetTbl = enemy_set.STAGE_SET_2
             if imp.game_state.stage_no == 2:
                 imp.game_state.StageSetTbl = enemy_set.STAGE_SET_3
-            if imp.game_state.stage_no == 3:
+            if imp.game_state.stage_no >= 3:
                 imp.game_state.StageSetTbl = enemy_set.STAGE_SET_4
         else:
             imp.game_state.StageSetTbl = enemy_set.STAGE_SET_TEST
