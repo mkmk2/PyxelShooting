@@ -193,7 +193,7 @@ class SceneGameMain:
             # 背景ループ
             imp.game_state.tile_pos.y -= 1.0
             if imp.game_state.tile_pos.y < 0:
-                imp.game_state.tile_pos.y = 256
+                imp.game_state.tile_pos.y = 256 - 1
 
         # ステージに合わせて敵をセット
         self.SetStageEnemy()

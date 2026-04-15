@@ -63,10 +63,10 @@ class EnemyBoss0(imp.Sprite):
             if self.tmx_pos.y < 0:
                 self.vector = imp.Vector2(0, 0)
 
-            imp.game_state.tile_pos_boss = self.tmx_pos
-
             self.pos.x = self.tmx_pos.x + 128
             self.pos.y = 80 - self.tmx_pos.y
+
+        imp.game_state.tile_pos_boss = self.tmx_pos
 
         # -----------------------------------------------
         # 死にチェック
@@ -97,7 +97,7 @@ class EnemyBoss0(imp.Sprite):
 # id0
 # 0:
 class EnemyBossCanon0(imp.Sprite):
-    BulletTime = 0
+    BulletTime = 10
 
     # コンストラクタ
     def __init__(self, x, y, i0, i1, item):

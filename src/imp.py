@@ -47,8 +47,7 @@ STAGE_NO_MAX = 4       # 最終ステージ
 # プレイヤーレベル
 PL_ITEM_LEVEL_UP = 3    # レベルアップする個数
 
-TILE_Y_START = WINDOW_H * (14 - 1)
-
+TILE_Y_START = 4800 - WINDOW_H
 
 class EnemyId(Enum):
     EM_STR_DOWN = 0     # まっすぐ下に移動するだけ
