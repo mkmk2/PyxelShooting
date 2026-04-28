@@ -19,7 +19,7 @@ class App:
         pyxel.init(imp.WINDOW_W, imp.WINDOW_H, title="Pyxel Shooting",
                    display_scale=3, fps=60)
 
-        pyxel.images[0].load(0, 0, "assets/img00.png")
+        pyxel.images[0].load(0, 0, "assets/img10.png")
 
         # メインScene タイトル　セット
         scene.SetSubScene(self, scene.SceneTitle())

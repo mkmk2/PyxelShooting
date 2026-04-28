@@ -43,7 +43,7 @@ OBJITM = "OBJITM"
 EFF_BOOM = 0
 EFF_BOOM_MOVE = 1
 
-STAGE_NO_MAX = 4       # 最終ステージ
+STAGE_NO_MAX = 5       # 最終ステージ
 # プレイヤーレベル
 PL_ITEM_LEVEL_UP = 3    # レベルアップする個数
 

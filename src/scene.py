@@ -35,14 +35,14 @@ class SceneTitle:
         imp.game_state.game_status = imp.GameStatus.TITLE    # タイトルに戻る
         imp.game_state.game_status_next = imp.GameStatus.TITLE
 
-        self.file = "assets/img00.png"
+        self.file = "assets/img10.png"
         pyxel.images[0].load(0, 0, self.file, incl_colors=True)
 
-        self.file_tmx = "assets/ui00.tmx"
+        self.file_tmx = "assets/ui01.tmx"
         pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
 
         self.select_pos = 0
-        imp.game_state.stage_no = 0
+        imp.game_state.stage_no = 1
 
     # メイン---------------------------------------
     def update(self):
@@ -135,22 +135,25 @@ class SceneGameMain:
         imp.game_state.game_status = imp.GameStatus.MAIN
         imp.game_state.game_status_next = imp.GameStatus.MAIN
 
-        self.file = "assets/img00.png"
+        self.file = "assets/img10.png"
         pyxel.images[0].load(0, 0, self.file, incl_colors=True)
-        self.file = "assets/img01.png"
+        self.file = "assets/img11.png"
         pyxel.images[1].load(0, 0, self.file, incl_colors=False)
 
-        if imp.game_state.stage_no == 0:
-            self.file_tmx = "assets/bg00.tmx"
-            self.file_tmx_boss = "assets/boss00.tmx"
-        elif imp.game_state.stage_no == 1:
+        if imp.game_state.stage_no == 1:
             self.file_tmx = "assets/bg01.tmx"
             self.file_tmx_boss = "assets/boss01.tmx"
         elif imp.game_state.stage_no == 2:
             self.file_tmx = "assets/bg02.tmx"
             self.file_tmx_boss = "assets/boss01.tmx"
-        elif imp.game_state.stage_no >= 3:
+        elif imp.game_state.stage_no == 3:
             self.file_tmx = "assets/bg03.tmx"
+            self.file_tmx_boss = "assets/boss01.tmx"
+        elif imp.game_state.stage_no == 4:
+            self.file_tmx = "assets/bg04.tmx"
+            self.file_tmx_boss = "assets/boss01.tmx"
+        else:
+            self.file_tmx = "assets/bg05.tmx"
             self.file_tmx_boss = "assets/boss01.tmx"
 
         pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
@@ -159,14 +162,17 @@ class SceneGameMain:
 
         # 敵セットのテーブル
         if imp.game_state.stage_no < 10:
-            if imp.game_state.stage_no == 0:
-                imp.game_state.StageSetTbl = enemy_set.STAGE_SET_1
             if imp.game_state.stage_no == 1:
-                imp.game_state.StageSetTbl = enemy_set.STAGE_SET_2
+                imp.game_state.StageSetTbl = enemy_set.STAGE_SET_1
             if imp.game_state.stage_no == 2:
+                imp.game_state.StageSetTbl = enemy_set.STAGE_SET_2
+            if imp.game_state.stage_no == 3:
                 imp.game_state.StageSetTbl = enemy_set.STAGE_SET_3
-            if imp.game_state.stage_no >= 3:
+            if imp.game_state.stage_no == 4:
                 imp.game_state.StageSetTbl = enemy_set.STAGE_SET_4
+            if imp.game_state.stage_no >= 5:
+                imp.game_state.StageSetTbl = enemy_set.STAGE_SET_5
+
         else:
             imp.game_state.StageSetTbl = enemy_set.STAGE_SET_TEST
 
@@ -398,6 +404,10 @@ class SceneGameMain:
                         pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
 
             if imp._DEBUG_:
+                # ステージNoの表示
+                no = "Stg{:02}".format(imp.game_state.stage_no)
+                pyxel.text(220, 180, no, 7)
+
                 # スクロールPos
                 pos = "{:3}".format(imp.game_state.tile_pos.y)
                 pyxel.text(220, 190, pos, 7)
@@ -544,10 +554,10 @@ class SceneNextStage:
     def update(self):
         # メインシーン ゲームメイン セット
         imp.game_state.stage_no += 1
-        if imp.game_state.stage_no > imp.STAGE_NO_MAX:
+        if imp.game_state.stage_no >= imp.STAGE_NO_MAX:
             # メイン ゲームシーンのデリート
             SetMainScene(self, None)
-            # サブシーン Start セット
+            # サブシーン Title セット
             SetSubScene(self, SceneTitle())
         else:
             # 次のステージ
@@ -626,7 +636,7 @@ class SceneTest:
 
         self.select_pos = 0                     # 敵No
 
-        self.file_anim = "assets/img00.png"             # セットしたい敵に応じてロードを変える必要？
+        self.file_anim = "assets/img10.png"             # セットしたい敵に応じてロードを変える必要？
         self.file_anim_time = 0
         pyxel.images[0].load(0, 0, self.file_anim, incl_colors=True)
         self.file_anim_time = os.path.getmtime(self.file_anim)
@@ -717,15 +727,21 @@ class SceneTestBG:
         imp.game_state.game_status = imp.GameStatus.TEST       # テスト
         imp.game_state.game_status_next = imp.GameStatus.TEST
 
-        self.img_file = "assets/img00.png"
+        self.img_file = "assets/img10.png"
         pyxel.images[0].load(0, 0, self.img_file, incl_colors=True)
-        self.img_file = "assets/img01.png"
+        self.img_file = "assets/img11.png"
         pyxel.images[1].load(0, 0, self.img_file, incl_colors=False)
 
         if imp.game_state.stage_no == 0:
-            self.file_tmx = "assets/bg00.tmx"
-        else:
             self.file_tmx = "assets/bg01.tmx"
+        elif imp.game_state.stage_no == 1:
+            self.file_tmx = "assets/bg02.tmx"
+        elif imp.game_state.stage_no == 2:
+            self.file_tmx = "assets/bg03.tmx"
+        elif imp.game_state.stage_no == 3:
+            self.file_tmx = "assets/bg04.tmx"
+        else:
+            self.file_tmx = "assets/bg05.tmx"
 
         pyxel.tilemaps[0] = pyxel.Tilemap.from_tmx(self.file_tmx, 0)
         pyxel.tilemaps[1] = pyxel.Tilemap.from_tmx(self.file_tmx, 1)

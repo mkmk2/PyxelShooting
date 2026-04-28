@@ -217,6 +217,68 @@ STAGE_SET_4 = [
     [100000, 128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
 ]
 
+STAGE_SET_5 = [
+    # 時間, X, Y, id0, id1, item, 0
+    # --- 全員揃い踏み！まっすぐ5連隊 ---
+    [120,  30,    0,  imp.EnemyId.EM_STR_DOWN,   0, 0, 0,],
+    [0,    80,    0,  imp.EnemyId.EM_STR_DOWN,   0, 0, 0,],
+    [0,    128,   0,  imp.EnemyId.EM_STR_DOWN,   0, 0, 0,],
+    [0,    176,   0,  imp.EnemyId.EM_STR_DOWN,   0, 0, 0,],
+    [0,    224,   0,  imp.EnemyId.EM_STR_DOWN,   0, 0, 0,],
+
+    # --- サイドから4方向挟撃 ---
+    [120,  0,    60,  imp.EnemyId.EM_SIDE_LR,  0, 0, 0,],
+    [0,    256,  60,  imp.EnemyId.EM_SIDE_LR,  0, 0, 0,],
+    [0,    0,   140,  imp.EnemyId.EM_SIDE_LR,  0, 0, 0,],
+    [0,    256, 140,  imp.EnemyId.EM_SIDE_LR,  0, 0, 0,],
+    [60,   0,   100,  imp.EnemyId.EM_SIDE_LR,  0, 0, 0,],
+    [0,    256, 100,  imp.EnemyId.EM_SIDE_LR,  0, 0, 0,],
+
+    # --- サイン波(大)とサイン波(小)の同時降下 ---
+    [120,  40,    0,  imp.EnemyId.EM_SIN_DOWN,    0, 0, 0,],
+    [20,   100,   0,  imp.EnemyId.EM_SIN_DOWN,    0, 0, 0,],
+    [20,   160,   0,  imp.EnemyId.EM_SIN_DOWN,    0, 0, 0,],
+    [20,   220,   0,  imp.EnemyId.EM_SIN_DOWN,    0, 0, 0,],
+    [0,    70,    0,  imp.EnemyId.EM_SIN_DOWN_S,  0, 0, 0,],
+    [0,    130,   0,  imp.EnemyId.EM_SIN_DOWN_S,  0, 0, 0,],
+    [0,    190,   0,  imp.EnemyId.EM_SIN_DOWN_S,  0, 0, 0,],
+
+    # --- 三角波(小)ジグザグ大群 ---
+    [120,  20,    0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
+    [15,   60,    0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
+    [15,   100,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
+    [15,   140,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
+    [15,   180,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
+    [15,   220,   0,  imp.EnemyId.EM_TRI_DOWN_S,  0, 0, 0,],
+
+    # --- 帰り型 + 斜め降下の複合波 ---
+    [120,  40,    0,  imp.EnemyId.EM_LE_HORI_RET,  0, 0, 0,],
+    [15,   100,   0,  imp.EnemyId.EM_LE_HORI_RET,  0, 0, 0,],
+    [15,   160,   0,  imp.EnemyId.EM_LE_HORI_RET,  0, 0, 0,],
+    [15,   220,   0,  imp.EnemyId.EM_LE_HORI_RET,  0, 0, 0,],
+    [0,    70,    0,  imp.EnemyId.EM_STR_ANGLE,    0, 0, 0,],
+    [0,    128,   0,  imp.EnemyId.EM_STR_ANGLE,    0, 0, 0,],
+    [0,    185,   0,  imp.EnemyId.EM_STR_ANGLE,    0, 0, 0,],
+
+    # --- 左右往復 + 横移動の波状攻撃 ---
+    [120,  40,    0,  imp.EnemyId.EM_LR_DOWN,  0, 0, 0,],
+    [20,   90,    0,  imp.EnemyId.EM_LR_DOWN,  0, 0, 0,],
+    [20,   140,   0,  imp.EnemyId.EM_LR_DOWN,  0, 0, 0,],
+    [20,   190,   0,  imp.EnemyId.EM_LR_DOWN,  0, 0, 0,],
+    [0,    65,    0,  imp.EnemyId.EM_LR_HORI,  0, 0, 0,],
+    [0,    115,   0,  imp.EnemyId.EM_LR_HORI,  0, 0, 0,],
+    [0,    165,   0,  imp.EnemyId.EM_LR_HORI,  0, 0, 0,],
+    [0,    215,   0,  imp.EnemyId.EM_LR_HORI,  0, 0, 0,],
+
+    # --- 中ボス3体、全パターン ---
+    [150,  128-80,  -30,  imp.EnemyId.EM_MID_BOSS_0,  0, 0, 0,],
+    [80,   128,     -30,  imp.EnemyId.EM_MID_BOSS_0,  1, 0, 0,],
+    [80,   128+80,  -30,  imp.EnemyId.EM_MID_BOSS_0,  2, 0, 0,],
+
+    [800,   128,   -128,  imp.EnemyId.EM_BOSS_0,  0, 0, 0,],
+    [100000, 128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
+]
+
 STAGE_SET_TEST = [
     # 時間, X, Y, class, id0, id1, item
     # [120,  128+30,   0,  enemy.EnemyNorm,  1, 0, 0,],
