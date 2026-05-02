@@ -180,6 +180,7 @@ class SceneGameMain:
         imp.game_state.tile_pos.x = 0
         imp.game_state.tile_pos.y = imp.TILE_Y_START
         imp.game_state.boss_area = 0
+        imp.game_state.group_counter = {}         # グループカウンターリセット
 
         # プレイヤーのセット
         imp.game_state.pl.append(player.Player(30, 40, 0, 100, 0))
@@ -463,6 +464,9 @@ class SceneGameMain:
 
         # アイテムを消す
         imp.game_state.itm.clear()
+
+        # グループカウンターをリセット
+        imp.game_state.group_counter = {}
 
 
 # ==================================================

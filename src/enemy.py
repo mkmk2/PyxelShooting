@@ -583,6 +583,11 @@ class EnemyItemGroup(imp.Sprite):
         elif self.item_set == 3:
             self.ent_wait = 36
 
+        # グループカウンターに登録（初回のみ辞書を作成、以降は total をインクリメント）
+        if self.id1 not in imp.game_state.group_counter:
+            imp.game_state.group_counter[self.id1] = {"total": 0, "killed": 0}
+        imp.game_state.group_counter[self.id1]["total"] += 1
+
     # メイン
     def update(self):
         # 登場待機
@@ -618,20 +623,17 @@ class EnemyItemGroup(imp.Sprite):
                 if imp._DEBUG_:
                     print("enemy die")
                 # アイテムセット
-                # GroupIdのチェック
-                find_group = 0
-                for eg in imp.game_state.em:
-                    if eg.obj_type == imp.OBJEM:
-                        if eg.__class__.__name__ == "EnemyItemGroup":
-                            if self.id1 == eg.id1:
-                                find_group += 1         # 同じId1を見つけた、自機と同じGroup
-                                if find_group >= 2:     # 2以上になったら > 1の時、自分自身も含んでいるため、2個目を発見したら、自分以外の同じGroupの敵が居るということ
-                                    break
-
-                if find_group == 1:
+                # グループカウンターで全滅チェック
+                # （画面外逃亡した敵は killed をインクリメントしないため除外される）
+                if self.id1 in imp.game_state.group_counter:
+                    imp.game_state.group_counter[self.id1]["killed"] += 1
+                    c = imp.game_state.group_counter[self.id1]
                     if imp._DEBUG_:
-                        print("item")
-                    imp.game_state.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
+                        print(f"group {self.id1}: killed={c['killed']} / total={c['total']}")
+                    if c["killed"] >= c["total"]:
+                        if imp._DEBUG_:
+                            print("item")
+                        imp.game_state.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
 
             # 画面内チェック
             self.CheckScreenIn()

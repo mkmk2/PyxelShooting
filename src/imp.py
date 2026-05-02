@@ -194,6 +194,8 @@ class GameState:
         self.em_num = 0             # 敵数
         self.emb_num = 0            # 敵の弾数
 
+        self.group_counter = {}     # グループ撃墜カウンター {id1: {"total": N, "killed": 0}}
+
 
 # GameStateのインスタンスを作成
 # これを他ファイルでimportして使う
