@@ -303,11 +303,6 @@ class EnemyNorm(imp.Sprite):
             imp.game_state.score += self.score     # scoreを加算
             if imp._DEBUG_:
                 print("enemy die")
-            # アイテムセット
-            if self.item_set != 0:
-                if imp._DEBUG_:
-                    print("item")
-                imp.game_state.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
 
         # 画面内チェック
         self.CheckScreenIn()
@@ -523,11 +518,6 @@ class EnemyMBoss(imp.Sprite):
             imp.game_state.score += self.score     # scoreを加算
             if imp._DEBUG_:
                 print("enemy die")
-            # アイテムセット
-            if self.item_set != 0:
-                if imp._DEBUG_:
-                    print("item")
-                imp.game_state.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
 
         # 画面内チェック
         self.CheckScreenIn()
@@ -573,10 +563,10 @@ class EnemyItemGroup(imp.Sprite):
     def __init__(self, x, y, i0, i1, item):
         imp.Sprite.__init__(self, imp.OBJEM, x, y, i0, i1, item)       # Spriteクラスのコンストラクタ
 
-        self.pos_adj = imp.Vector2(-6, -6)
+        self.pos_adj = imp.Vector2(-8, -8)
         self.hit_point = 1
-        self.hit_rectx = 8
-        self.hit_recty = 8
+        self.hit_rectx = 16
+        self.hit_recty = 16
         if self.id0 == 0:
             self.score = 10
             self.life = 2
@@ -584,10 +574,26 @@ class EnemyItemGroup(imp.Sprite):
             self.score = 10
             self.life = 1
 
+        if self.item_set == 0:
+            self.ent_wait = 0
+        elif self.item_set == 1:
+            self.ent_wait = 12
+        elif self.item_set == 2:
+            self.ent_wait = 24
+        elif self.item_set == 3:
+            self.ent_wait = 36
+
     # メイン
     def update(self):
-        if self.id0 == 0:           # カーブ
-            if self.st0 == 0:
+        # 登場待機
+        if self.st0 == 0:
+            if self.ent_wait > 0:
+                self.ent_wait -= 1
+            else:
+                self.st0 = 1
+                
+        else:
+            if self.id0 == 0:           # カーブ
                 self.pos.y += 1.2
                 if self.pos.y > 40:
                     pl = imp.GetPl(self)
@@ -601,26 +607,25 @@ class EnemyItemGroup(imp.Sprite):
 
                 self.pos.x += self.vector.x
 
-        elif self.id0 == 1:         # まっすぐ
-            self.pos.y += 0.9
+            elif self.id0 == 1:         # まっすぐ
+                self.pos.y += 0.9
 
-        # -----------------------------------------------
-        # 死にチェック
-        if self.life <= 0:          # 0以下なら死ぬ
-            self.death = 1          # 死ぬ
-            imp.game_state.score += self.score     # scoreを加算
-            if imp._DEBUG_:
-                print("enemy die")
-            # アイテムセット
-            if self.item_set != 0:
+            # -----------------------------------------------
+            # 死にチェック
+            if self.life <= 0:          # 0以下なら死ぬ
+                self.death = 1          # 死ぬ
+                imp.game_state.score += self.score     # scoreを加算
+                if imp._DEBUG_:
+                    print("enemy die")
+                # アイテムセット
                 # GroupIdのチェック
                 find_group = 0
                 for eg in imp.game_state.em:
                     if eg.obj_type == imp.OBJEM:
                         if eg.__class__.__name__ == "EnemyItemGroup":
                             if self.id1 == eg.id1:
-                                find_group += 1         # 同じId1を見つけた、同じGroup
-                                if find_group >= 2:     # 2以上になったら > 1の時、自分自身も含んでいるため、2個目を発見したら、自分以外の同じGroupが居るということ
+                                find_group += 1         # 同じId1を見つけた、自機と同じGroup
+                                if find_group >= 2:     # 2以上になったら > 1の時、自分自身も含んでいるため、2個目を発見したら、自分以外の同じGroupの敵が居るということ
                                     break
 
                 if find_group == 1:
@@ -628,8 +633,8 @@ class EnemyItemGroup(imp.Sprite):
                         print("item")
                     imp.game_state.itm.append(plitem.PlItem(self.pos.x, self.pos.y, 0, 0, 0))
 
-        # 画面内チェック
-        self.CheckScreenIn()
+            # 画面内チェック
+            self.CheckScreenIn()
 
         # -----------------------------------------------
     def draw(self):
@@ -637,7 +642,7 @@ class EnemyItemGroup(imp.Sprite):
 
         if self.id0 == 0:
             if self.st1 == 0:
-                self.sprite_draw(pos.x, pos.y, 0, 0, 56, 12, 12)
+                self.sprite_draw(pos.x, pos.y, 0, 14, 6, 16, 16)
             else:
                 self.ptn_time -= 1
                 if self.ptn_time <= 0:
@@ -652,14 +657,31 @@ class EnemyItemGroup(imp.Sprite):
                         if self.ptn_no < 0:
                             self.ptn_no = 7
 
-                self.sprite_draw(pos.x, pos.y, 0, 16 * self.ptn_no, 56, 12, 12)
+                self.sprite_draw(pos.x, pos.y, 0, 14, 6, 16, 16)
 
         elif self.id0 == 1:
             if pyxel.frame_count & 0x08:
-                self.sprite_draw(pos.x, pos.y, 0, 40, 72, 12, 12)
+                self.sprite_draw(pos.x, pos.y, 0, 14, 6, 16, 16)
             else:
-                self.sprite_draw(pos.x, pos.y, 0, 56, 72, 12, 12)
+                self.sprite_draw(pos.x, pos.y, 0, 14, 6, 16, 16)
 
         # 中心の表示
         if imp._DEBUG_HIT_:
             shooting_sub.DebugDrawPosHitRect(self)
+    # -----------------------------------------------
+    def collision_damage(self):
+        # エフェクト
+        imp.game_state.eff.append(effect.Effect(self.pos.x, self.pos.y, 0, 0, 0))
+
+    # -----------------------------------------------
+    def TestSpriteUpdate(self):
+        self.ptn_time -= 1
+        if self.ptn_time <= 0:
+            self.ptn_time = 10
+            self.ptn_no += 1
+            if self.ptn_no >= 7:
+                self.ptn_no = 0
+
+    def TestSprite(self):
+        self.sprite_draw(self.pos.x, self.pos.y, 0, 7, 6, 16, 16)
+

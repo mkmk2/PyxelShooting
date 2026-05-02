@@ -30,7 +30,7 @@ class App:
 
     # メイン---------------------------------------
     def update(self):
-        # F1キーでPause
+        # F1キーでPause   
         if pyxel.btnp(pyxel.KEY_F1) is True and imp._DEBUG_ is True:
             imp.pause_flag = not imp.pause_flag
 

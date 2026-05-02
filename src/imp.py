@@ -4,7 +4,7 @@ from enum import Enum
 # _DEBUG_ = True
 _DEBUG_ = True
 _DEBUG_LV_ = False
-_DEBUG_HIT_ = False
+_DEBUG_HIT_ = True
 _DEBUG_CONSOLE_ = 0  # 0:無効 1:screen,hit  2:  3:
 
 pause_flag = False
@@ -64,6 +64,8 @@ class EnemyId(Enum):
     EM_MID_BOSS_1 = 11  # 中ボス1
     EM_MID_BOSS_2 = 12  # 中ボス2
     EM_BOSS_0 = 13      # ボス0
+    EM_ITEM_GROUP_CURVE = 14  # グループ敵：プレイヤーへカーブ（全滅でアイテム）
+    EM_ITEM_GROUP_DOWN  = 15  # グループ敵：まっすぐ下（全滅でアイテム）
 
 
 class BulletId(Enum):
