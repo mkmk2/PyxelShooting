@@ -373,30 +373,6 @@ class SceneGameMain:
         # ゲージ
         for p in imp.game_state.pl:
             if p.obj_type == imp.OBJPL:
-                # Itemゲージ
-                if imp.game_state.pl_levelup_eff == 0:
-                    # for n in range(imp.PL_ITEM_LEVEL_UP):
-                    #    if n >= imp.game_state.pl_item_num:
-                    #        pyxel.blt(
-                    #            ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
-                    #            imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0
-                    #        )
-                    #    else:
-                    #        pyxel.blt(
-                    #            ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
-                    #            imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0
-                    #        )
-                    #    else:
-                    # ステージの位置から敵をセットする
-                    # 点滅
-                    imp.game_state.pl_levelup_eff -= 1
-                    if pyxel.frame_count & 0x02:
-                        for n in range(imp.PL_ITEM_LEVEL_UP):
-                            pyxel.blt(
-                                ((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n,
-                                imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0
-                            )
-
                 # lifeゲージ
                 for n in range(3):
                     if n >= p.life:

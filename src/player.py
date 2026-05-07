@@ -89,11 +89,11 @@ class Player(imp.Sprite):
                         imp.game_state.pl.append(PlayerBullet(self.pos.x - 6, self.pos.y, 1, 0, 0))  # 左側
                         imp.game_state.pl.append(PlayerBullet(self.pos.x, self.pos.y, 0, 0, 0))
                         imp.game_state.pl.append(PlayerBullet(self.pos.x + 6, self.pos.y, 2, 0, 0))  # 右側
-
-                if imp.game_state.pl_item_num >= imp.PL_ITEM_LEVEL_UP:
+                # アイテム取得チェック
+                if imp.game_state.pl_item_num >= imp.PL_ITEM_LEVEL_UP and imp.game_state.pl_level < 2:   # 設定数以上取った
                     imp.game_state.pl_item_num = 0
-                    imp.game_state.pl_level += 1
-                    imp.game_state.pl_levelup_eff = 40      # 点滅時間
+                    imp.game_state.pl_level = 1                    # レベルアップ(今はLevel1だけにする)
+                    imp.game_state.pl_levelup_eff = 40              # 点滅時間
 
         elif self.pl_st0 == PlayerState.DAMAGE:           # ダメージ
             self.hit_st = 1                          # 当たりナシ

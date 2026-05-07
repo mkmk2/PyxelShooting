@@ -45,7 +45,7 @@ EFF_BOOM_MOVE = 1
 
 STAGE_NO_MAX = 5       # 最終ステージ
 # プレイヤーレベル
-PL_ITEM_LEVEL_UP = 3    # レベルアップする個数
+PL_ITEM_LEVEL_UP = 1    # レベルアップするアイテムの個数
 
 TILE_Y_START = 4800 - WINDOW_H
 

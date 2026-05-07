@@ -435,7 +435,7 @@ class EnemyMBoss(imp.Sprite):
             self.hit_rectx = 24
             self.hit_recty = 16
 
-            self.vector = imp.Vector2(0, 0.5)
+            self.vector = imp.Vector2(0, 0.75)
             self.score = 10
             self.life = 10
 
