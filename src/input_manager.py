@@ -32,6 +32,7 @@ class InputManager:
 
     def is_menu_select_pressed(self):
         return (pyxel.btnp(pyxel.KEY_SPACE) or
+                pyxel.btnp(pyxel.KEY_Z) or
                 pyxel.btnp(pyxel.GAMEPAD1_BUTTON_A) or
                 pyxel.btnp(pyxel.GAMEPAD1_BUTTON_B))
 
@@ -104,11 +105,13 @@ class InputManager:
     # ショット
     def is_shot_held(self):
         return (pyxel.btn(pyxel.KEY_SPACE) or
+                pyxel.btn(pyxel.KEY_Z) or
                 pyxel.btn(pyxel.GAMEPAD1_BUTTON_A) or
                 pyxel.btn(pyxel.GAMEPAD1_BUTTON_B))
 
     def is_shot_pressed(self):
         return (pyxel.btnp(pyxel.KEY_SPACE) or
+                pyxel.btnp(pyxel.KEY_Z) or
                 pyxel.btnp(pyxel.GAMEPAD1_BUTTON_A) or
                 pyxel.btnp(pyxel.GAMEPAD1_BUTTON_B))
 

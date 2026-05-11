@@ -55,7 +55,7 @@ STAGE_SET_1 = [
     [100,   128,        -30,  imp.EnemyId.EM_MID_BOSS_0,  2, 0, 0,],
     [100,   128 + 80,   -30,  imp.EnemyId.EM_MID_BOSS_0,  2, 0, 0,],
 
-    [800,   128,   -128,  imp.EnemyId.EM_BOSS_0,  0, 0, 0,],
+    [400,   128,   -128,  imp.EnemyId.EM_BOSS_0,  0, 0, 0,],
     [100000, 128+60,   0,  imp.EnemyId.EM_SIN_DOWN,  1, 0, 0,],
 ]
 
